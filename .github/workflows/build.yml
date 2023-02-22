@@ -1,0 +1,53 @@
+name: Gradle check
+
+on:
+  push:
+    branches: [ main, dev ]
+  pull_request:
+    branches: [ main, dev ]
+  workflow_dispatch:
+
+jobs:
+  static-analysis:
+    name: Static analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Execute check without tests
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: check -x test
+
+  test:
+    runs-on: ubuntu-latest
+    name: Testing on JDK 11
+    permissions:
+      checks: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+          cache: 'gradle'
+          
+      - name: Execute tests
+        uses: gradle/gradle-build-action@v2.2.1
+        with:
+          arguments: test
+          cache-read-only: ${{ github.ref != 'refs/heads/main' && github.ref != 'refs/heads/dev' }}
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action/@v2
+
+        with:
+          files: "build/test-results/**/*.xml"
