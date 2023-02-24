@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.8'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'checkstyle'
     id 'org.ec4j.editorconfig' version '0.0.3'
 }
 
@@ -30,6 +31,17 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+task checkstyle {
+    dependsOn tasks.withType(Checkstyle)
+    dependsOn editorconfigCheck
+}
+
+checkstyle {
+    maxWarnings = 0
+    configFile = rootProject.file("checkstyle/naver-checkstyle-rules.xml")
+    toolVersion = "10.2"
 }
 
 editorconfig {
