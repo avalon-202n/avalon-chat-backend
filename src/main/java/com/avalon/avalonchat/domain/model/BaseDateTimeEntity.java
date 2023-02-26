@@ -1,15 +1,18 @@
-package com.avalon.avalonchat.domain.embed;
+package com.avalon.avalonchat.domain.model;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
 import java.time.LocalDateTime;
 
 /**
- * 엔티티의 생성일, 수정일에 대한 Embeddable
+ * 객체의 공통 매핑 정보
+ * 생성일, 수정일
  */
-public class EntityDate {
+@MappedSuperclass
+public class BaseDateTimeEntity {
 	@CreatedDate
 	@Column(name = "created_at", updatable = false, nullable = false)
 	private LocalDateTime createdAt;
