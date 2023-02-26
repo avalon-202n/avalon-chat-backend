@@ -1,5 +1,6 @@
 package com.avalon.avalonchat.domain.user.domain;
 
+import com.avalon.avalonchat.domain.embed.EntityDate;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,9 +27,6 @@ public class User {
     @Column(nullable = false)
     private String status;
 
-    @Column(name = "created_at", updatable = false, nullable = false)
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
+	@Embedded
+	private EntityDate entityDate;
 }
