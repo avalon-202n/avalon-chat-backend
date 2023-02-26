@@ -39,7 +39,7 @@ jobs:
           distribution: 'temurin'
           java-version: '11'
           cache: 'gradle'
-          
+
       - name: Execute tests
         uses: gradle/gradle-build-action@v2.2.1
         with:
