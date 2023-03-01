@@ -1,15 +1,11 @@
 package com.avalon.avalonchat.domain.user.repository;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.*;
-import static org.junit.jupiter.api.Assertions.*;
-
-import java.util.List;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import com.avalon.avalonchat.domain.user.domain.User;
 import com.avalon.avalonchat.testsupport.Fixture;
