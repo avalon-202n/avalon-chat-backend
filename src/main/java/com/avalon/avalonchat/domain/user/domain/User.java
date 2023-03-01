@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "users")
 public class User extends BaseDateTimeEntity {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(updatable = false)
@@ -31,4 +32,10 @@ public class User extends BaseDateTimeEntity {
 
 	@Column(nullable = false)
 	private String status;
+
+	public User(String email, String password, String status) {
+		this.email = email;
+		this.password = password;
+		this.status = status;
+	}
 }
