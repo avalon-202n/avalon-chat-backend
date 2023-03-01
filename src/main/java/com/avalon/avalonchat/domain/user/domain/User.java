@@ -17,11 +17,11 @@ public class User extends BaseDateTimeEntity {
 	@Column(updatable = false)
 	private Long id;
 
-	@Column(unique = true, nullable = false)
-	private String email;
+    @Column(unique = true, nullable = false)
+    private String email;
 
-	@Column(nullable = false)
-	private String password;
+    @Column(nullable = false)
+    private String password;
 
 	@Column(nullable = false)
 	private String status;
