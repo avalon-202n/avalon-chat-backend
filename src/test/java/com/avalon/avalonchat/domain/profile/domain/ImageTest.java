@@ -39,18 +39,18 @@ class ImageTest {
 		assertThatNullPointerException().isThrownBy(image::getPath);
 
 		String expectedPath = "path/to/image";
-		ImageUploadService imageUploadService = mockImageUploadService(image, expectedPath);
+		ImageUploader imageUploader = mockImageUploadService(image, expectedPath);
 
 		//when
-		image.upload(imageUploadService);
+		image.uploadBy(imageUploader);
 
 		//then
 		assertThat(image.getPath()).isEqualTo(expectedPath);
 	}
 
-	private static ImageUploadService mockImageUploadService(Image image, final String expectedPath1) {
-		ImageUploadService imageUploadService = mock(ImageUploadService.class);
-		when(imageUploadService.upload(image)).thenReturn(expectedPath1);
-		return imageUploadService;
+	private static ImageUploader mockImageUploadService(Image image, final String expectedPath1) {
+		ImageUploader imageUploader = mock(ImageUploader.class);
+		when(imageUploader.upload(image)).thenReturn(expectedPath1);
+		return imageUploader;
 	}
 }

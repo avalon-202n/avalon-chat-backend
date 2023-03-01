@@ -1,6 +1,6 @@
 package com.avalon.avalonchat.domain.profile.domain;
 
-public interface ImageUploadService {
+public interface ImageUploader {
 
 	/**
 	 * @param image

@@ -19,7 +19,7 @@ public class Image extends InputStreamResource {
 		this.type = imageType;
 	}
 
-	public void upload(ImageUploadService service) {
+	public void uploadBy(ImageUploader service) {
 		this.path = service.upload(this);
 	}
 
