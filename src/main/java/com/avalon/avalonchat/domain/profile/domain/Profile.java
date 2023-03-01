@@ -34,7 +34,7 @@ public class Profile extends BaseDateTimeEntity {
 	@Column
 	private String bio;
 
-	@Column(name = "birth_date")
+	@Column
 	private LocalDate birthDate;
 
 	@Column

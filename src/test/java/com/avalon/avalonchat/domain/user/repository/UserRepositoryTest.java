@@ -32,7 +32,6 @@ class UserRepositoryTest {
 		assertThat(foundUser.getId()).isNotNull();
 		assertThat(foundUser.getEmail()).isEqualTo(user.getEmail());
 		assertThat(foundUser.getPassword()).isEqualTo(user.getPassword());
-		assertThat(foundUser.getStatus()).isEqualTo(user.getStatus());
 		assertThat(foundUser.getCreatedAt()).isNotNull();
 		assertThat(foundUser.getUpdatedAt()).isNotNull();
 	}

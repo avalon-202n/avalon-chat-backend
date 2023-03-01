@@ -12,8 +12,7 @@ class UserTest {
 		//given when
 		User user = new User(
 			"avalon@e.com",
-			"passW0rd",
-			"happy"
+			"passW0rd"
 		);
 
 		//then

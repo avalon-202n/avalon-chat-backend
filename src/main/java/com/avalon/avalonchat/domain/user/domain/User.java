@@ -30,12 +30,8 @@ public class User extends BaseDateTimeEntity {
 	@Column(nullable = false)
 	private String password;
 
-	@Column(nullable = false)
-	private String status;
-
-	public User(String email, String password, String status) {
+	public User(String email, String password) {
 		this.email = email;
 		this.password = password;
-		this.status = status;
 	}
 }
