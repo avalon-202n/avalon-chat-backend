@@ -9,6 +9,8 @@ import java.io.InputStream;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import com.avalon.avalonchat.testsupport.Fixture;
 
@@ -32,9 +34,22 @@ class ImageTest {
 		assertThatNullPointerException().isThrownBy(image::getPath);
 	}
 
+	@DisplayName("허용되지 않는 확장자를 가진 Image 생성 실패")
+	@ParameterizedTest
+	@ValueSource(strings = {"illegal_file_name.pdf", "file_with_no_extension", ".gitignore"})
+	void name2(String illegalFileNames) {
+		//given
+		InputStream inputStream = new ByteArrayInputStream("test-image-byte".getBytes());
+		Image.Type type = Image.Type.PROFILE;
+
+		//when then
+		assertThatIllegalArgumentException()
+			.isThrownBy(() -> new Image(illegalFileNames, inputStream, type));
+	}
+
 	@DisplayName("Image.upload 호출 한 뒤에는 경로를 조회할 수 있다.")
 	@Test
-	void name2() {
+	void name3() {
 		//given
 		Image image = Fixture.createProfileImage();
 		assertThatNullPointerException().isThrownBy(image::getPath);
