@@ -16,6 +16,7 @@ public final class Fixture {
 
 	public static Image createProfileImage() {
 		return new Image(
+			"profile.png",
 			new ByteArrayInputStream("test-image-byte".getBytes()),
 			Image.Type.PROFILE
 		);

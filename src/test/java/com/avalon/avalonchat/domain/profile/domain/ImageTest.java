@@ -19,11 +19,12 @@ class ImageTest {
 	void name() throws IOException {
 		//given
 		byte[] byteArray = "test-image-byte".getBytes();
+		String originalFileName = "profile.png";
 		InputStream inputStream = new ByteArrayInputStream(byteArray);
 		Image.Type type = Image.Type.PROFILE;
 
 		//when
-		Image image = new Image(inputStream, type);
+		Image image = new Image(originalFileName, inputStream, type);
 
 		//then
 		assertThat(image.getType()).isEqualTo(type);
