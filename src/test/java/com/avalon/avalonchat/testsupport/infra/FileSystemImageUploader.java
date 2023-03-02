@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import com.avalon.avalonchat.domain.profile.domain.Image;
 import com.avalon.avalonchat.domain.profile.domain.ImageUploader;
+import com.avalon.avalonchat.domain.profile.exception.ImageUploadException;
 
 public class FileSystemImageUploader implements ImageUploader {
 
@@ -23,7 +24,7 @@ public class FileSystemImageUploader implements ImageUploader {
 			bos.flush();
 			bos.close();
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			throw new ImageUploadException("파일시스템 이미지 업로드 중 예외 발생", e);
 		}
 		return imagePath;
 	}
