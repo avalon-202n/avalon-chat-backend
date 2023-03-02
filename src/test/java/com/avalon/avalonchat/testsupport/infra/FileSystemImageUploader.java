@@ -12,7 +12,7 @@ import com.avalon.avalonchat.domain.profile.domain.ImageUploader;
 
 public class FileSystemImageUploader implements ImageUploader {
 
-	final static String IMAGE_STORE_PATH = "src/test/resources/store/images";
+	static final String IMAGE_STORE_PATH = "src/test/resources/store/images";
 
 	private static String fileWrite(Image image, String fileName) {
 		String imagePath = String.join("/", IMAGE_STORE_PATH, image.getType().name().toLowerCase(), fileName);
