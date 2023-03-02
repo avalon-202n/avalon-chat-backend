@@ -16,6 +16,12 @@ import com.avalon.avalonchat.testsupport.Fixture;
 
 class ImageTest {
 
+	private static ImageUploader mockImageUploadService(Image image, final String expectedPath1) {
+		ImageUploader imageUploader = mock(ImageUploader.class);
+		when(imageUploader.upload(image)).thenReturn(expectedPath1);
+		return imageUploader;
+	}
+
 	@DisplayName("Image 생성 성공")
 	@Test
 	void name() throws IOException {
@@ -62,11 +68,5 @@ class ImageTest {
 
 		//then
 		assertThat(image.getPath()).isEqualTo(expectedPath);
-	}
-
-	private static ImageUploader mockImageUploadService(Image image, final String expectedPath1) {
-		ImageUploader imageUploader = mock(ImageUploader.class);
-		when(imageUploader.upload(image)).thenReturn(expectedPath1);
-		return imageUploader;
 	}
 }
