@@ -1,6 +1,7 @@
 package com.avalon.avalonchat.domain.user.domain;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -24,13 +25,13 @@ public class User extends BaseDateTimeEntity {
 	@Column(updatable = false)
 	private Long id;
 
-	@Column(unique = true, nullable = false)
-	private String email;
+	@Embedded
+	private Email email;
 
 	@Column(nullable = false)
 	private String password;
 
-	public User(String email, String password) {
+	public User(Email email, String password) {
 		this.email = email;
 		this.password = password;
 	}
