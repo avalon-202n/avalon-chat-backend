@@ -2,8 +2,10 @@ package com.avalon.avalonchat.domain.user.service;
 
 import org.springframework.stereotype.Service;
 
+import com.avalon.avalonchat.domain.user.domain.User;
 import com.avalon.avalonchat.domain.user.dto.SignUpRequest;
 import com.avalon.avalonchat.domain.user.dto.SignUpResponse;
+import com.avalon.avalonchat.domain.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -11,8 +13,17 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
+	private final UserRepository userRepository;
+
 	@Override
 	public SignUpResponse signUp(SignUpRequest signUpRequest) {
-		return null;
+		// create user from request
+		User user = signUpRequest.toEntity();
+
+		// save user
+		User savedUser = userRepository.save(user);
+
+		// convert to response
+		return SignUpResponse.ofEntity(savedUser);
 	}
 }
