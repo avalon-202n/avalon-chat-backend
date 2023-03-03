@@ -1,6 +1,5 @@
 package com.avalon.avalonchat.domain.login.service;
 
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +19,9 @@ public class LoginServiceImpl implements LoginService {
 
 	@Override
 	public LoginResponse login(LoginRequest request) {
+		//TODO
+		// 1. check user exsits
+		// 2. verify password
 
 		return null;
 	}

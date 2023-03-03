@@ -20,6 +20,8 @@ public class UserServiceImpl implements UserService {
 		// create user from request
 		User user = signUpRequest.toEntity();
 
+		// TODO - password vo 도입 및 encoding 적용
+
 		// save user
 		User savedUser = userRepository.save(user);
 
