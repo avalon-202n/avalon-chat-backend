@@ -1,5 +1,7 @@
 package com.avalon.avalonchat.domain.user.dto;
 
+import java.util.Objects;
+
 import com.avalon.avalonchat.domain.user.domain.Email;
 import com.avalon.avalonchat.domain.user.domain.User;
 
@@ -11,7 +13,7 @@ public class SignUpRequest {
 	private final Email email;
 	private final String password;
 
-	public User toEntity(){
+	public User toEntity() {
 		return new User(
 			this.email,
 			this.password
