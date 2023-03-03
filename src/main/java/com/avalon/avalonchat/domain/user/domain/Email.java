@@ -8,9 +8,13 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EqualsAndHashCode
+@Getter
 @Embeddable
 public class Email {
 
@@ -21,12 +25,12 @@ public class Email {
 	@Column(name = "email", unique = true, nullable = false)
 	private String value;
 
-	public static Email of(String value) {
-		return new Email(value);
-	}
-
 	private Email(String value) {
 		checkPatternMatches(EMAIL_PATTERN, value);
 		this.value = value;
+	}
+
+	public static Email of(String value) {
+		return new Email(value);
 	}
 }

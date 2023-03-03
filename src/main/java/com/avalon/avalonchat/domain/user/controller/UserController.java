@@ -1,6 +1,7 @@
 package com.avalon.avalonchat.domain.user.controller;
 
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.avalon.avalonchat.domain.user.dto.SignUpRequest;
@@ -18,8 +19,9 @@ public class UserController {
 	private final UserService userService;
 
 	@PostMapping("/signup")
-	public SignUpResponse signUp(SignUpRequest request) {
-
+	public SignUpResponse signUp(
+		@RequestBody SignUpRequest request
+	) {
 		return userService.signUp(request);
 	}
 }
