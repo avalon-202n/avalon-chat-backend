@@ -12,9 +12,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
-import com.avalon.avalonchat.domain.user.domain.Email;
 import com.avalon.avalonchat.domain.user.dto.SignUpRequest;
 import com.avalon.avalonchat.domain.user.dto.SignUpResponse;
+import com.avalon.avalonchat.testsupport.DtoFixture;
 import com.avalon.avalonchat.testsupport.base.BaseControllerTest;
 
 @AutoConfigureMockMvc(addFilters = false)
@@ -28,13 +28,8 @@ class UserControllerTest extends BaseControllerTest {
 	@Test
 	void name() throws Exception {
 		//given
-		SignUpRequest request = new SignUpRequest(
-			Email.of("hello@wolrd.com"),
-			"passw0rd"
-		);
-		SignUpResponse response = new SignUpResponse(
-			Email.of("hello@wolrd.com")
-		);
+		SignUpRequest request = DtoFixture.signUpRequest("hello@wolrd.com", "passw0rd");
+		SignUpResponse response = DtoFixture.expectedResponseOf(request);
 		when(sut.signUp(request)).thenReturn(response);
 
 		//when
@@ -48,4 +43,5 @@ class UserControllerTest extends BaseControllerTest {
 			.andExpect(status().isOk())
 			.andExpectAll(jsonPath("$.email").value("hello@wolrd.com"));
 	}
+
 }
