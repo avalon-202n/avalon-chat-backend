@@ -1,4 +1,4 @@
-package com.avalon.avalonchat.global.error;
+package com.avalon.avalonchat.global.util;
 
 import java.util.Collection;
 

@@ -1,6 +1,6 @@
 package com.avalon.avalonchat.domain.profile.domain;
 
-import static com.avalon.avalonchat.global.error.Preconditions.*;
+import static com.avalon.avalonchat.global.util.Preconditions.*;
 
 import java.io.InputStream;
 import java.util.List;
