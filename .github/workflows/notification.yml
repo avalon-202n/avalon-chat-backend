@@ -5,8 +5,8 @@ on:
     branches: [ main, dev ]
   push:
     branches: [ main, dev ]
-  issue_comment:                                     
-    types: [created, edited, deleted]
+  issue_comment:
+    types: [ created, edited, deleted ]
 
 jobs:
   discord-notification:

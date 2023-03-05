@@ -1,7 +1,7 @@
 package com.avalon.avalonchat.global.error;
 
-import java.util.regex.Pattern;
 import java.util.Collection;
+import java.util.regex.Pattern;
 
 import lombok.NoArgsConstructor;
 

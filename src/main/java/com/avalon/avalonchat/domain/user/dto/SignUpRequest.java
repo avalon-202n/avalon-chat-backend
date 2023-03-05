@@ -1,7 +1,5 @@
 package com.avalon.avalonchat.domain.user.dto;
 
-import java.util.Objects;
-
 import com.avalon.avalonchat.domain.user.domain.Email;
 import com.avalon.avalonchat.domain.user.domain.User;
 
