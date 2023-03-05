@@ -17,12 +17,11 @@ public class FileSystemImageUploader implements ImageUploader {
 
 	private static String fileWrite(Image image, String fileName) {
 		String imagePath = String.join("/", IMAGE_STORE_PATH, image.getType().name().toLowerCase(), fileName);
-		try {
-			Path path = Paths.get(imagePath);
-			BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(path.toString(), false));
+		Path path = Paths.get(imagePath);
+
+		try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(path.toString(), false))) {
 			bos.write(image.getInputStream().readAllBytes());
 			bos.flush();
-			bos.close();
 		} catch (IOException e) {
 			throw new ImageUploadException("파일시스템 이미지 업로드 중 예외 발생", e);
 		}
