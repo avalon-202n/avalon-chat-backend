@@ -1,4 +1,4 @@
-package com.avalon.avalonchat.configuration;
+package com.avalon.avalonchat.global.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
