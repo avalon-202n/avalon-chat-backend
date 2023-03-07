@@ -1,6 +1,6 @@
 package com.avalon.avalonchat.domain.user.domain;
 
-import static com.avalon.avalonchat.global.error.Preconditions.*;
+import static com.avalon.avalonchat.global.util.Preconditions.*;
 
 import java.util.regex.Pattern;
 

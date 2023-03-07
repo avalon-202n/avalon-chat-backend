@@ -1,4 +1,4 @@
-package com.avalon.avalonchat.configuration;
+package com.avalon.avalonchat.global.configuration;
 
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
