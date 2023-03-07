@@ -6,7 +6,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public class WebSecurityConfiguration {
 
 	@Bean
@@ -20,7 +20,7 @@ public class WebSecurityConfiguration {
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			)
 			.authorizeRequests(authorize -> authorize
-				.antMatchers("/").permitAll()
+				.antMatchers("/signup").permitAll()
 				.anyRequest().authenticated()
 			)
 			.build();

@@ -12,7 +12,7 @@ class UserTest {
 	void test1() {
 		//given when
 		User user = new User(
-			"avalon@e.com",
+			Email.of("avalon@e.com"),
 			"passW0rd"
 		);
 
