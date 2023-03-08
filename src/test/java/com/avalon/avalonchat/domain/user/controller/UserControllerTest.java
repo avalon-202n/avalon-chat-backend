@@ -24,9 +24,8 @@ class UserControllerTest extends BaseControllerTest {
 	@MockBean
 	private UserController sut;
 
-	@DisplayName("회원가입 성공")
 	@Test
-	void name() throws Exception {
+	void 회원가입_성공() throws Exception {
 		//given
 		SignUpRequest request = DtoFixture.signUpRequest("hello@wolrd.com", "passw0rd");
 		SignUpResponse response = DtoFixture.expectedResponseOf(request);
