@@ -43,7 +43,6 @@ task checkstyle {
 
 checkstyle {
     maxWarnings = 0
-    configFile = rootProject.file("checkstyle/naver-checkstyle-rules.xml")
     toolVersion = "10.2"
 }
 
