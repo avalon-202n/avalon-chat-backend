@@ -12,15 +12,16 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
 import com.avalon.avalonchat.domain.model.BaseDateTimeEntity;
+import com.avalon.avalonchat.domain.profile.dto.ProfileBioRequest;
 import com.avalon.avalonchat.domain.user.domain.User;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 public class Profile extends BaseDateTimeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,4 +43,9 @@ public class Profile extends BaseDateTimeEntity {
 
 	@Column
 	private String phoneNumber;
+
+	public void toEditBio(User user, ProfileBioRequest request) {
+		this.user = user;
+		this.bio = request.getBio();
+	}
 }
