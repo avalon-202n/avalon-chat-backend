@@ -30,7 +30,7 @@ public class WebSecurityConfiguration {
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		 http
+		http
 			.csrf().disable()
 			.formLogin().disable()
 			.httpBasic().disable()
@@ -39,7 +39,7 @@ public class WebSecurityConfiguration {
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			)
 			.authorizeRequests(authorize -> authorize
-				.antMatchers("/signup","/login").permitAll()
+				.antMatchers("/signup", "/login").permitAll()
 				.anyRequest().authenticated()
 			)
 			.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, jwtUserDetailsService),
