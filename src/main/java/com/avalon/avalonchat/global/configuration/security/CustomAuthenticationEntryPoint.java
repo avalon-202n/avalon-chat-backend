@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 @Component
-@Slf4j
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
 	@Override
