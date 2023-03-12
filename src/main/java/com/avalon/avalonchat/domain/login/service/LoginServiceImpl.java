@@ -35,13 +35,4 @@ public class LoginServiceImpl implements LoginService {
 		final SecurityUser securityUser = jwtUserDetailsService.loadUserByUsername(email);
 		return jwtTokenProvider.doGenerateAccessToken(securityUser);
 	}
-
-		log.info("email : {}", findUser.getEmail().toString());
-		log.info("password : {}", findUser.getPassword().toString());
-		log.info("create_at : {}", findUser.getCreatedAt().toString());
-		log.info("modified_at : {}", findUser.getUpdatedAt().toString());
-
-		final UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(email);
-		return jwtTokenProvider.generateAccessToken(userDetails);
-	}
 }
