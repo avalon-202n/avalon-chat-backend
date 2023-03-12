@@ -17,9 +17,9 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
 	@Value("${jwt.access.validity}")
-	private long ACCESS_TOKEN_VALIDITY;
+	private static long ACCESS_TOKEN_VALIDITY;
 	@Value("${jwt.refresh.validity}")
-	private long REFRESH_TOKEN_VALIDITY;
+	private static long REFRESH_TOKEN_VALIDITY;
 
 	public static final String AUTHORIZATION_HEADER = "Authorization";
 
