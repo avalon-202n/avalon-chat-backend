@@ -13,14 +13,18 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration(proxyBeanMethods = false)
+@RequiredArgsConstructor
 public class WebSecurityConfiguration {
+
+	private final JwtTokenProvider jwtTokenProvider;
+	private final JwtUserDetailsService jwtUserDetailsService;
 
 	JwtAuthenticationFilter jwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider, JwtUserDetailsService jwtUserDetailsService) {
 		return new JwtAuthenticationFilter(jwtTokenProvider, jwtUserDetailsService);
 	}
 
 	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtTokenProvider jwtTokenProvider, JwtUserDetailsService jwtUserDetailsService) throws Exception {
+	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		 http
 			.csrf().disable()
 			.formLogin().disable()
