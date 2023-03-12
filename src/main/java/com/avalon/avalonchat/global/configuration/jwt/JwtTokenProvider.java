@@ -1,9 +1,6 @@
 package com.avalon.avalonchat.global.configuration.jwt;
 
-import com.avalon.avalonchat.domain.login.dto.LoginResponse;
-import com.avalon.avalonchat.domain.login.exception.ExpiredRefreshTokenException;
 import com.avalon.avalonchat.domain.user.dto.SecurityUser;
-import com.avalon.avalonchat.global.error.exception.JwtInvalidException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.Getter;
@@ -12,10 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.Date;
-import java.util.function.Function;
 
 @Slf4j
 @Getter
