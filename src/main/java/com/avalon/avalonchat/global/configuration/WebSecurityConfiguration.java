@@ -20,6 +20,7 @@ public class WebSecurityConfiguration {
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			)
 			.authorizeRequests(authorize -> authorize
+				.antMatchers("/actuator/**").permitAll()
 				.antMatchers("/signup").permitAll()
 				.anyRequest().authenticated()
 			)

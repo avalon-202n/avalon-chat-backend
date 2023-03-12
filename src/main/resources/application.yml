@@ -21,5 +21,18 @@ spring:
     resources:
       add-mappings: false # disable ResourceHttpRequestHandler
 
+management:
+  endpoints:
+    enabled-by-default: true
+    web:
+      exposure:
+        include: "health,info"
+  endpoint:
+    health:
+      show-details: always
+  info:
+    git:
+      mode: simple
+
 logging.level:
   org.hibernate.SQL: debug
