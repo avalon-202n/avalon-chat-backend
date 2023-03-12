@@ -21,10 +21,10 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
 	@Override
 	public void commence(
-				HttpServletRequest request,
-				HttpServletResponse response,
-				AuthenticationException authException
-				) throws IOException {
+		HttpServletRequest request,
+		HttpServletResponse response,
+		AuthenticationException authException
+	) throws IOException {
 		response.setStatus(HttpStatus.FORBIDDEN.value());
 		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 		try (OutputStream os = response.getOutputStream()){
