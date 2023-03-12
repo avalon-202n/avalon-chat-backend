@@ -18,7 +18,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '11'
-          distribution: 'oracle'
+          distribution: 'temurin'
           cache: 'gradle'
 
       - name: Execute check without tests
@@ -36,7 +36,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '11'
-          distribution: 'oracle'
+          distribution: 'temurin'
           cache: 'gradle'
 
       - name: Execute tests
@@ -64,7 +64,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '11'
-          distribution: 'oracle'
+          distribution: 'temurin'
           cache: 'gradle'
 
       - uses: oNaiPs/secrets-to-env-action@v1
