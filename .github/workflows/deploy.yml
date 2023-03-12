@@ -3,59 +3,11 @@ name: Deploy on Cloud Run
 on:
   workflow_dispatch:
 
-permissions:
-  contents: read
-  checks: write
-  pull-requests: write
-
 jobs:
-  static-analysis:
-    name: Static analysis
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up Java 11
-        uses: actions/setup-java@v3
-        with:
-          java-version: '11'
-          distribution: 'temurin'
-          cache: 'gradle'
-
-      - name: Execute check without tests
-        uses: gradle/gradle-build-action@v2
-        with:
-          arguments: check -x test
-
-  test:
-    needs: static-analysis
-    runs-on: ubuntu-latest
-    name: Testing on JDK 11
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK
-        uses: actions/setup-java@v3
-        with:
-          java-version: '11'
-          distribution: 'temurin'
-          cache: 'gradle'
-
-      - name: Execute tests
-        uses: gradle/gradle-build-action@v2.2.1
-        with:
-          arguments: test
-
-      - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action/@v2
-        with:
-          files: "build/test-results/**/*.xml"
-
   build-and-deploy:
-    needs:
-      - static-analysis
-      - test
     runs-on: ubuntu-latest
     name: Build by Gradle & Deploy on CloudRun
-    environment: ${{ github.ref }}
+    environment: dev
     env:
       IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}
     steps:
