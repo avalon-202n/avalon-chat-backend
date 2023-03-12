@@ -2,10 +2,12 @@ package com.avalon.avalonchat.global.configuration.jwt;
 
 import com.avalon.avalonchat.domain.login.exception.InvalidAuthorizationHeaderException;
 import com.avalon.avalonchat.domain.user.service.JwtUserDetailsService;
+
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,6 +18,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 
 @RequiredArgsConstructor
@@ -27,7 +30,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	private final JwtUserDetailsService jwtUserDetailsService;
 
 	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+	protected void doFilterInternal(
+		HttpServletRequest request,
+		HttpServletResponse response,
+		FilterChain filterChain
+	) throws ServletException, IOException {
 		String username = null;
 		String jwtToken = null;
 		String authorizationHeader = request.getHeader(AUTHORIZATION_HEADER);

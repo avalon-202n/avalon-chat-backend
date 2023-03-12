@@ -1,10 +1,14 @@
 package com.avalon.avalonchat.domain.user.service;
 
 import com.avalon.avalonchat.domain.user.domain.Email;
-import com.avalon.avalonchat.domain.user.dto.SecurityUser;
 import com.avalon.avalonchat.domain.user.domain.User;
+
+import com.avalon.avalonchat.domain.user.dto.SecurityUser;
+
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;

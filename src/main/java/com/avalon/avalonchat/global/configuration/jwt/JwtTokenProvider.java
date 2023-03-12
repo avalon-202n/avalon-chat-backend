@@ -23,10 +23,10 @@ public class JwtTokenProvider {
 
 	public static final String AUTHORIZATION_HEADER = "Authorization";
 
-	private final Key JWT_KEY;
+	private final Key jwtKey;
 
 	public JwtTokenProvider(@Value("${jwt.key}") byte[] key) {
-		this.JWT_KEY = Keys.hmacShaKeyFor(key);
+		this.jwtKey = Keys.hmacShaKeyFor(key);
 	}
 
 	public String getEmailfromAccessToken(String token) {
@@ -40,7 +40,7 @@ public class JwtTokenProvider {
 	}
 
 	private Claims getAllClaimsFromAccessToken(String token) {
-		return Jwts.parserBuilder().setSigningKey(JWT_KEY).build().parseClaimsJws(token).getBody();
+		return Jwts.parserBuilder().setSigningKey(jwtKey).build().parseClaimsJws(token).getBody();
 	}
 
 	public String doGenerateRefreshToken(UserDetails userDetails) {
@@ -50,7 +50,7 @@ public class JwtTokenProvider {
 		return Jwts.builder()
 				.setSubject("RefreshToken")
 				.setExpiration(refreshTokenExpiresIn)
-				.signWith(JWT_KEY, SignatureAlgorithm.HS512)
+				.signWith(jwtKey, SignatureAlgorithm.HS512)
 				.compact();
 	}
 
@@ -63,12 +63,12 @@ public class JwtTokenProvider {
 				.claim("userId", securityUser.getUserId())
 				.claim("email", securityUser.getUsername())
 				.setExpiration(accessTokenExpiresIn)
-				.signWith(JWT_KEY, SignatureAlgorithm.HS512)
+				.signWith(jwtKey, SignatureAlgorithm.HS512)
 				.compact();
 	}
 
 	public Boolean validateAccessToken(String token) {
-		return validateToken(token, JWT_KEY);
+		return validateToken(token, jwtKey);
 	}
 
 	private Boolean validateToken(String token, Key secret) {

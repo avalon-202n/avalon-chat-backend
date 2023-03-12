@@ -19,7 +19,10 @@ public class WebSecurityConfiguration {
 	private final JwtTokenProvider jwtTokenProvider;
 	private final JwtUserDetailsService jwtUserDetailsService;
 
-	JwtAuthenticationFilter jwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider, JwtUserDetailsService jwtUserDetailsService) {
+	JwtAuthenticationFilter jwtAuthenticationFilter(
+		JwtTokenProvider jwtTokenProvider,
+		JwtUserDetailsService jwtUserDetailsService
+	) {
 		return new JwtAuthenticationFilter(jwtTokenProvider, jwtUserDetailsService);
 	}
 

@@ -3,10 +3,11 @@ package com.avalon.avalonchat.domain.login.service;
 import com.avalon.avalonchat.domain.user.dto.SecurityUser;
 import com.avalon.avalonchat.domain.user.service.JwtUserDetailsService;
 import com.avalon.avalonchat.global.configuration.jwt.JwtTokenProvider;
+
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import com.avalon.avalonchat.domain.login.dto.LoginRequest;
 import com.avalon.avalonchat.domain.login.dto.LoginResponse;
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
