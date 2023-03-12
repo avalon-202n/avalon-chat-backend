@@ -9,9 +9,12 @@ import org.springframework.stereotype.Component;
 
 import com.avalon.avalonchat.domain.user.dto.SecurityUser;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,13 +22,11 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 @Component
 public class JwtTokenProvider {
+	public static final String AUTHORIZATION_HEADER = "Authorization";
 	@Value("${jwt.access.validity}")
 	private static long ACCESS_TOKEN_VALIDITY;
 	@Value("${jwt.refresh.validity}")
 	private static long REFRESH_TOKEN_VALIDITY;
-
-	public static final String AUTHORIZATION_HEADER = "Authorization";
-
 	private final Key jwtKey;
 
 	public JwtTokenProvider(@Value("${jwt.key}") byte[] key) {
@@ -51,10 +52,10 @@ public class JwtTokenProvider {
 		final Date refreshTokenExpiresIn = new Date(currentTime + REFRESH_TOKEN_VALIDITY);
 
 		return Jwts.builder()
-				.setSubject("RefreshToken")
-				.setExpiration(refreshTokenExpiresIn)
-				.signWith(jwtKey, SignatureAlgorithm.HS512)
-				.compact();
+			.setSubject("RefreshToken")
+			.setExpiration(refreshTokenExpiresIn)
+			.signWith(jwtKey, SignatureAlgorithm.HS512)
+			.compact();
 	}
 
 	public String doGenerateAccessToken(SecurityUser securityUser) {
@@ -62,12 +63,12 @@ public class JwtTokenProvider {
 		final Date accessTokenExpiresIn = new Date(currentTime + ACCESS_TOKEN_VALIDITY);
 
 		return Jwts.builder()
-				.setSubject("AccessToken")
-				.claim("userId", securityUser.getUserId())
-				.claim("email", securityUser.getUsername())
-				.setExpiration(accessTokenExpiresIn)
-				.signWith(jwtKey, SignatureAlgorithm.HS512)
-				.compact();
+			.setSubject("AccessToken")
+			.claim("userId", securityUser.getUserId())
+			.claim("email", securityUser.getUsername())
+			.setExpiration(accessTokenExpiresIn)
+			.signWith(jwtKey, SignatureAlgorithm.HS512)
+			.compact();
 	}
 
 	public Boolean validateAccessToken(String token) {

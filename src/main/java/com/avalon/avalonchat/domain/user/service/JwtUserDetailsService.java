@@ -16,8 +16,6 @@ import com.avalon.avalonchat.domain.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
-
-
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)

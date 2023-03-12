@@ -26,7 +26,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 	) throws IOException {
 		response.setStatus(HttpStatus.FORBIDDEN.value());
 		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-		try (OutputStream os = response.getOutputStream()){
+		try (OutputStream os = response.getOutputStream()) {
 			ObjectMapper objectMapper = new ObjectMapper();
 			objectMapper.writeValue(os, new ErrorResponse(HttpStatus.FORBIDDEN, authException));
 			os.flush();
