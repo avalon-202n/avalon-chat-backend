@@ -1,7 +1,6 @@
 package com.avalon.avalonchat.domain.login.service;
 
-import com.avalon.avalonchat.domain.user.domain.Email;
-import com.avalon.avalonchat.domain.user.domain.User;
+import com.avalon.avalonchat.domain.user.dto.SecurityUser;
 import com.avalon.avalonchat.domain.user.service.JwtUserDetailsService;
 import com.avalon.avalonchat.global.configuration.jwt.JwtTokenProvider;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +32,9 @@ public class LoginServiceImpl implements LoginService {
 	}
 
 	public String createAccessTokenByEmail(String email) {
-		final User findUser = userRepository.findByEmail(Email.of(email));
+		final SecurityUser securityUser = jwtUserDetailsService.loadUserByUsername(email);
+		return jwtTokenProvider.doGenerateAccessToken(securityUser);
+	}
 
 		log.info("email : {}", findUser.getEmail().toString());
 		log.info("password : {}", findUser.getPassword().toString());

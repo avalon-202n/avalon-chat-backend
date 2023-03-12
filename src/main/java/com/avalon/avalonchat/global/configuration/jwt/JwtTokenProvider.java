@@ -1,10 +1,10 @@
 package com.avalon.avalonchat.global.configuration.jwt;
 
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoders;
+import com.avalon.avalonchat.domain.login.dto.LoginResponse;
+import com.avalon.avalonchat.domain.login.exception.ExpiredRefreshTokenException;
+import com.avalon.avalonchat.domain.user.dto.SecurityUser;
+import com.avalon.avalonchat.global.error.exception.JwtInvalidException;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -12,10 +12,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.function.Function;
 
 @Slf4j
 @Getter
@@ -26,56 +26,54 @@ public class JwtTokenProvider {
 	@Value("${jwt.refresh.validity}")
 	private long REFRESH_TOKEN_VALIDITY;
 
-	private final Key accessKey;
-	private final Key refreshKey;
+	public static final String AUTHORIZATION_HEADER = "Authorization";
 
-	public JwtTokenProvider(@Value("${jwt.access.secret}") String accessSecret, @Value("${jwt.refresh.secret}") String refreshSecret) {
-		byte[] accessKeyBytes = Decoders.BASE64.decode(accessSecret);
-		byte[] refreshKeyBytes = Decoders.BASE64.decode(refreshSecret);
-		this.accessKey = Keys.hmacShaKeyFor(accessKeyBytes);
-		this.refreshKey = Keys.hmacShaKeyFor(refreshKeyBytes);
+	private final Key JWT_KEY;
+
+	public JwtTokenProvider(@Value("${jwt.key}") byte[] key) {
+		this.JWT_KEY = Keys.hmacShaKeyFor(key);
 	}
 
-	/**
-	 *
-	 * @param userDetails
-	 * @return
-	 */
-	public String generateAccessToken(UserDetails userDetails) {
-		Map<String, Object> claims = new HashMap<>();
-		Map<String, Object> headers = new HashMap<>();
-		headers.put("typ", "AccessToken");
-		return doGenerateToken(claims, headers, userDetails.getUsername(), ACCESS_TOKEN_VALIDITY, accessKey);
+	public String getEmailfromAccessToken(String token) {
+		return getClaimFromAccessToken(token);
 	}
 
-	public String generateRefreshToken(UserDetails userDetails) {
-		Map<String, Object> claims = new HashMap<>();
-		Map<String, Object> headers = new HashMap<>();
-		headers.put("typ", "RefreshToken");
-		return doGenerateToken(claims, headers, userDetails.getUsername(), REFRESH_TOKEN_VALIDITY, refreshKey);
+	public String getClaimFromAccessToken(String token) {
+		Claims claims = getAllClaimsFromAccessToken(token);
+		log.info("emial : {}", claims.get("email").toString());
+		return claims.get("email").toString();
 	}
 
-	public String doGenerateToken(Map<String, Object> claims, Map<String, Object> headers, String subject, long validity, Key key) {
-		String jws = Jwts.builder()
-						.setHeader(headers)
-						.setClaims(claims)
-						.setIssuedAt(new Date(System.currentTimeMillis()))
-						.setExpiration(new Date(System.currentTimeMillis() + validity))
-						.setSubject(subject)
-						.signWith(key, SignatureAlgorithm.HS256)
-						.compact();
-		log.info("jws : {}", jws);
-		return jws;
+	private Claims getAllClaimsFromAccessToken(String token) {
+		return Jwts.parserBuilder().setSigningKey(JWT_KEY).build().parseClaimsJws(token).getBody();
+	}
+
+	public String doGenerateRefreshToken(UserDetails userDetails) {
+		long currentTime = (new Date()).getTime();
+		final Date refreshTokenExpiresIn = new Date(currentTime + REFRESH_TOKEN_VALIDITY);
+
+		return Jwts.builder()
+				.setSubject("RefreshToken")
+				.setExpiration(refreshTokenExpiresIn)
+				.signWith(JWT_KEY, SignatureAlgorithm.HS512)
+				.compact();
+	}
+
+	public String doGenerateAccessToken(SecurityUser securityUser) {
+		long currentTime = (new Date()).getTime();
+		final Date accessTokenExpiresIn = new Date(currentTime + ACCESS_TOKEN_VALIDITY);
+
+		return Jwts.builder()
+				.setSubject("AccessToken")
+				.claim("userId", securityUser.getUserId())
+				.claim("email", securityUser.getUsername())
+				.setExpiration(accessTokenExpiresIn)
+				.signWith(JWT_KEY, SignatureAlgorithm.HS512)
+				.compact();
 	}
 
 	public Boolean validateAccessToken(String token) {
-		return validateToken(token, accessKey);
-	}
-
-	public void validateRefreshToken(String token) {
-		if (!validateToken(token, refreshKey)) {
-			//throw new ExpiredRefreshTokenException();
-		}
+		return validateToken(token, JWT_KEY);
 	}
 
 	private Boolean validateToken(String token, Key secret) {
@@ -88,7 +86,7 @@ public class JwtTokenProvider {
 		} catch (ExpiredJwtException e) {
 			return false;
 		} catch (JwtException e) {
-			//예외 처리
+			return false;
 		}
 		return true;
 	}

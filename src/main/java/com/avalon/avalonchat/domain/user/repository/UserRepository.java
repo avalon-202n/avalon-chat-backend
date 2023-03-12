@@ -5,6 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.avalon.avalonchat.domain.user.domain.User;
 
+import java.util.Optional;
+
 public interface UserRepository extends JpaRepository<User, Long> {
-    User findByEmail(Email email);
+    Optional<User> findByEmail(Email email);
 }

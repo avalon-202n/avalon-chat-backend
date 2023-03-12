@@ -21,9 +21,8 @@ logging.level:
   org.hibernate.SQL: debug
 
 jwt:
+  key: happilyeverafterhappilyeverafterhappilyeverafterhahappilyeverhappilyeverafterhappilyeverafterhappilyeverafterhahappilyever
   access:
-    secret: happilyeverafterhappilyeverafterhappilyeverafterhahappilyever
     validity: 1800000 # 30분
   refresh:
-    secret: happilyeverafterhappilyeverafterhappilyeverafterhahappilyever
     validity: 1209600000 # 2주
