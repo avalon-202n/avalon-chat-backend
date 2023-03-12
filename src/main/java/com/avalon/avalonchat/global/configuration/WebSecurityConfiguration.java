@@ -7,12 +7,12 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import lombok.RequiredArgsConstructor;
-
 import com.avalon.avalonchat.domain.user.service.JwtUserDetailsService;
 import com.avalon.avalonchat.global.configuration.jwt.JwtAuthenticationFilter;
 import com.avalon.avalonchat.global.configuration.jwt.JwtTokenProvider;
 import com.avalon.avalonchat.global.configuration.security.CustomAuthenticationEntryPoint;
+
+import lombok.RequiredArgsConstructor;
 
 @Configuration(proxyBeanMethods = false)
 @RequiredArgsConstructor

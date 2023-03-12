@@ -9,16 +9,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import lombok.RequiredArgsConstructor;
-
 import com.avalon.avalonchat.domain.user.domain.Email;
 import com.avalon.avalonchat.domain.user.domain.User;
-
 import com.avalon.avalonchat.domain.user.dto.SecurityUser;
-
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
 
-
+import lombok.RequiredArgsConstructor;
 
 
 
