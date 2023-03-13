@@ -2,18 +2,17 @@ package com.avalon.avalonchat.domain.profile.dto;
 
 import com.avalon.avalonchat.domain.profile.domain.Profile;
 import com.avalon.avalonchat.domain.profile.domain.ProfileImage;
-import com.avalon.avalonchat.domain.profile.dto.image.ImageResponse;
 import lombok.Getter;
 
 import java.time.LocalDate;
 
 @Getter
 public class ProfileResponse {
-	private LocalDate birthDate;
-	private String nickname;
-	private String bio;
-	private ImageResponse image;
-	private ImageResponse backgroundImage;
+	private final LocalDate birthDate;
+	private final String nickname;
+	private final String bio;
+	private final String imagePath;
+	private final String backgroundImagePath;
 
 	public ProfileResponse(
 		LocalDate birthDate,
@@ -24,8 +23,8 @@ public class ProfileResponse {
 		this.birthDate = birthDate;
 		this.nickname = nickname;
 		this.bio = bio;
-		setImage(image);
-		setBackgroundImage(backgroundImage);
+		this.imagePath = image.getFilePath();
+		this.backgroundImagePath = backgroundImage.getFilePath();
 	}
 
 	public static ProfileResponse ofEntity(Profile profile, ProfileImage image, ProfileImage backgroundImage) {
@@ -36,13 +35,5 @@ public class ProfileResponse {
 			image,
 			backgroundImage
 		);
-	}
-
-	public void setImage(ProfileImage image) {
-		this.image = ImageResponse.ofEntity(image);
-	}
-
-	public void setBackgroundImage(ProfileImage backgroundImage) {
-		this.backgroundImage = ImageResponse.ofEntity(backgroundImage);
 	}
 }
