@@ -22,7 +22,3 @@ logging.level:
 
 jwt:
   key: happilyeverafterhappilyeverafterhappilyeverafterhahappilyeverhappilyeverafterhappilyeverafterhappilyeverafterhahappilyever
-  access:
-    validity: 1800000 # 30분
-  refresh:
-    validity: 1209600000 # 2주

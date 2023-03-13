@@ -23,11 +23,10 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class JwtTokenService {
 	public static final String AUTHORIZATION_HEADER = "Authorization";
+	private static final long ACCESS_TOKEN_VALIDITY = 1800000;  //30분
+	private static final long REFRESH_TOKEN_VALIDITY = 1209600000;  //2주
+
 	private final Key secretKey;
-	@Value("${jwt.access.validity}")
-	private long ACCESS_TOKEN_VALIDITY;
-	@Value("${jwt.refresh.validity}")
-	private long REFRESH_TOKEN_VALIDITY;
 
 	public JwtTokenService(@Value("${jwt.key}") byte[] secretKey) {
 		this.secretKey = Keys.hmacShaKeyFor(secretKey);
