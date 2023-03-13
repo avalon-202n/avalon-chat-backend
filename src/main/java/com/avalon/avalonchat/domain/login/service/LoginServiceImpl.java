@@ -9,7 +9,7 @@ import com.avalon.avalonchat.domain.login.dto.LoginResponse;
 import com.avalon.avalonchat.domain.user.domain.Email;
 import com.avalon.avalonchat.domain.user.domain.User;
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
-import com.avalon.avalonchat.global.configuration.jwt.JwtTokenProvider;
+import com.avalon.avalonchat.global.configuration.jwt.JwtTokenService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 public class LoginServiceImpl implements LoginService {
 
 	private final UserRepository userRepository;
-	private final JwtTokenProvider jwtTokenProvider;
+	private final JwtTokenService jwtTokenService;
 
 	@Override
 	public LoginResponse login(LoginRequest request) {
@@ -34,6 +34,6 @@ public class LoginServiceImpl implements LoginService {
 	public String createAccessTokenByEmail(String email) {
 		final User findUser = userRepository.findByEmail(Email.of(email))
 			.orElseThrow(() -> new UsernameNotFoundException("회원 정보를 찾을 수 없었습니다."));
-		return jwtTokenProvider.doGenerateAccessToken(findUser);
+		return jwtTokenService.doGenerateAccessToken(findUser);
 	}
 }

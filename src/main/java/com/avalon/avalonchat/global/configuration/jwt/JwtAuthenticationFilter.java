@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	public static final String AUTHORIZATION_HEADER = "Authorization";
-	private final JwtTokenProvider jwtTokenProvider;
+	private final JwtTokenService jwtTokenService;
 
 	@Override
 	protected void doFilterInternal(
@@ -42,10 +42,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 			}
 			jwtToken = authorizationHeader.substring(7);
 			log.info("jwtToken : {}", jwtToken);
-			userId = jwtTokenProvider.getUserIdFromAccessToken(jwtToken);
+			userId = jwtTokenService.getUserIdFromAccessToken(jwtToken);
 			log.info("userId : {}", userId);
 			if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-				if (jwtTokenProvider.validateAccessToken(jwtToken)) {
+				if (jwtTokenService.validateToken(jwtToken)) {
 					UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
 						userId, jwtToken, null);
 					authenticationToken.setDetails(

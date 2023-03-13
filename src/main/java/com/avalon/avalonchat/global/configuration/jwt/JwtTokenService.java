@@ -4,6 +4,7 @@ import java.security.Key;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import com.avalon.avalonchat.domain.user.domain.User;
@@ -20,23 +21,19 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Getter
 @Component
-public class JwtTokenProvider {
+public class JwtTokenService {
 	public static final String AUTHORIZATION_HEADER = "Authorization";
-	@Value("${jwt.access.validity}")
-	private static long ACCESS_TOKEN_VALIDITY;
-	@Value("${jwt.refresh.validity}")
-	private static long REFRESH_TOKEN_VALIDITY;
 	private final Key secretKey;
+	@Value("${jwt.access.validity}")
+	private long ACCESS_TOKEN_VALIDITY;
+	@Value("${jwt.refresh.validity}")
+	private long REFRESH_TOKEN_VALIDITY;
 
-	public JwtTokenProvider(@Value("${jwt.key}") byte[] secretKey) {
+	public JwtTokenService(@Value("${jwt.key}") byte[] secretKey) {
 		this.secretKey = Keys.hmacShaKeyFor(secretKey);
 	}
 
 	public String getUserIdFromAccessToken(String token) {
-		return getClaimFromAccessToken(token);
-	}
-
-	public String getClaimFromAccessToken(String token) {
 		Claims claims = getAllClaimsFromAccessToken(token);
 		return claims.get("userId").toString();
 	}
@@ -45,7 +42,7 @@ public class JwtTokenProvider {
 		return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
 	}
 
-	public String doGenerateRefreshToken() {
+	public String doGenerateRefreshToken(UserDetails userDetails) {
 		long currentTime = (new Date()).getTime();
 		final Date refreshTokenExpiresIn = new Date(currentTime + REFRESH_TOKEN_VALIDITY);
 
@@ -63,13 +60,13 @@ public class JwtTokenProvider {
 		return Jwts.builder()
 			.setSubject("AccessToken")
 			.claim("userId", user.getId())
-			.claim("email", user.getEmail())
+			.claim("email", user.getEmail().getValue())
 			.setExpiration(accessTokenExpiresIn)
 			.signWith(secretKey, SignatureAlgorithm.HS512)
 			.compact();
 	}
 
-	public Boolean validateAccessToken(String token) {
+	public Boolean validateToken(String token) {
 		try {
 			Jwts.parserBuilder()
 				.setSigningKey(secretKey)
