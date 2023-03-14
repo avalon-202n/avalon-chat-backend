@@ -18,7 +18,7 @@ public class Profile extends BaseDateTimeEntity {
 	@Column(updatable = false)
 	private Long id;
 
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "users_id")
 	private User user;
 

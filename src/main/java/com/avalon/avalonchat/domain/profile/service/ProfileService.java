@@ -1,9 +1,8 @@
 package com.avalon.avalonchat.domain.profile.service;
 
-import com.avalon.avalonchat.domain.profile.dto.ProfileRequest;
-import com.avalon.avalonchat.domain.profile.dto.ProfileResponse;
-import org.springframework.http.ResponseEntity;
+import com.avalon.avalonchat.domain.profile.dto.ProfileAddRequest;
+import com.avalon.avalonchat.domain.profile.dto.ProfileAddResponse;
 
 public interface ProfileService {
-	ResponseEntity<ProfileResponse> addProfile(long id, ProfileRequest request);
+	ProfileAddResponse addProfile(long id, ProfileAddRequest request);
 }
