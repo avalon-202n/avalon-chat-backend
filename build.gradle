@@ -5,6 +5,7 @@ plugins {
     id 'checkstyle'
     id 'org.ec4j.editorconfig' version '0.0.3'
     id 'com.google.cloud.tools.jib' version '3.3.1'
+    id "com.gorylenko.gradle-git-properties" version "2.4.1"
 }
 
 group = 'com.avalon'
@@ -25,6 +26,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.apache.commons:commons-lang3'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'
