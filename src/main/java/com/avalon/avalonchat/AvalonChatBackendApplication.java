@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @EnableJpaAuditing
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.avalon.avalonchat.domain.profile.domain"})
 public class AvalonChatBackendApplication {
 
 	public static void main(String[] args) {

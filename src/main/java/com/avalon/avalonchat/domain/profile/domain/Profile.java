@@ -1,22 +1,13 @@
 package com.avalon.avalonchat.domain.profile.domain;
 
-import java.time.LocalDate;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-
 import com.avalon.avalonchat.domain.model.BaseDateTimeEntity;
 import com.avalon.avalonchat.domain.user.domain.User;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -42,4 +33,11 @@ public class Profile extends BaseDateTimeEntity {
 
 	@Column
 	private String phoneNumber;
+
+	public Profile(User user, String bio, LocalDate birthDate, String nickname) {
+		this.user = user;
+		this.bio = bio;
+		this.birthDate = birthDate;
+		this.nickname = nickname;
+	}
 }
