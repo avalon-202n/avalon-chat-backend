@@ -11,10 +11,11 @@ import lombok.NoArgsConstructor;
  * 그러한 경우에 이곳에 정의해서 설정시 사용한다.
  * e.g.) Email
  */
+@SuppressWarnings("unchecked")
 @NoArgsConstructor
 public final class CustomSchemas {
 
-	public static final Schema EMAIL_SCHEMA = new EmailSchema()
+	public static final Schema<String> EMAIL_SCHEMA = new EmailSchema()
 		.description("이메일 - validated by RFC 5322")
 		.maxLength(64)
 		.example("hello@gmail.com")

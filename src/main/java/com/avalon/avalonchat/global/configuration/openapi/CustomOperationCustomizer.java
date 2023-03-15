@@ -58,7 +58,8 @@ public class CustomOperationCustomizer implements OperationCustomizer {
 	private void addErrorResponseApi(ApiResponses apiResponses, ErrorResponseApi errorResponseApi) {
 		ErrorResponse errorResponse = errorResponseApi.value().toInstance();
 
-		Schema schema = new Schema<ErrorResponse>().$ref(errorResponseRef);
+		@SuppressWarnings("unchecked")
+		Schema<ErrorResponse> schema = new Schema<ErrorResponse>().$ref(errorResponseRef);
 		MediaType mediaTypeItem = new MediaType().schema(schema).example(errorResponse);
 		Content content = new Content().addMediaType(mediaType, mediaTypeItem);
 		ApiResponse apiResponse = new ApiResponse().content(content);
