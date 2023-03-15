@@ -1,4 +1,6 @@
-package com.avalon.avalonchat.domain.profile.domain;
+package com.avalon.avalonchat.infra.image.upload;
+
+import com.avalon.avalonchat.domain.profile.domain.image.Image;
 
 public interface ImageUploader {
 
