@@ -26,7 +26,7 @@ management:
     enabled-by-default: true
     web:
       exposure:
-        include: health,info,swaggerui
+        include: health,info, openapi, swaggerui
   endpoint:
     health:
       show-details: always

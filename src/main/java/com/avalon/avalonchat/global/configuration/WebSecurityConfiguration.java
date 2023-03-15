@@ -26,6 +26,7 @@ public class WebSecurityConfiguration {
 			.formLogin().disable()
 			.httpBasic().disable()
 			.headers().disable()
+			.cors().and()
 			.sessionManagement(session -> session
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			)
