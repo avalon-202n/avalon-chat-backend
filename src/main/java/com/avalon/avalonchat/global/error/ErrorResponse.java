@@ -4,12 +4,12 @@ import static org.apache.commons.lang3.ObjectUtils.*;
 
 import org.springframework.http.HttpStatus;
 
-import lombok.Getter;
+import lombok.Data;
 
 /**
  * 예외에 대한 응답 포맷
  */
-@Getter
+@Data
 public class ErrorResponse {
 
 	private final int code;

@@ -14,6 +14,7 @@ import com.avalon.avalonchat.global.openapi.ErrorResponseApi;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.media.Content;
 import io.swagger.v3.oas.models.media.MediaType;
+import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.responses.ApiResponses;
 
@@ -27,6 +28,7 @@ import io.swagger.v3.oas.models.responses.ApiResponses;
 public class CustomOperationCustomizer implements OperationCustomizer {
 
 	private final String mediaType;
+	private String errorResponseRef;
 
 	public CustomOperationCustomizer(SpringDocConfigProperties properties) {
 		this.mediaType = properties.getDefaultProducesMediaType();
@@ -35,6 +37,11 @@ public class CustomOperationCustomizer implements OperationCustomizer {
 	@Override
 	public Operation customize(Operation operation, HandlerMethod handlerMethod) {
 		ApiResponses apiResponses = operation.getResponses();
+		// extract reference for errorResponse schema
+		if (errorResponseRef == null) {
+			errorResponseRef = apiResponses.get("400").getContent().get(mediaType).getSchema().get$ref();
+		}
+
 		// remove default error responses
 		apiResponses.remove("400");
 		apiResponses.remove("404");
@@ -51,7 +58,8 @@ public class CustomOperationCustomizer implements OperationCustomizer {
 	private void addErrorResponseApi(ApiResponses apiResponses, ErrorResponseApi errorResponseApi) {
 		ErrorResponse errorResponse = errorResponseApi.value().toInstance();
 
-		MediaType mediaTypeItem = new MediaType().example(errorResponse);
+		Schema schema = new Schema<ErrorResponse>().$ref(errorResponseRef);
+		MediaType mediaTypeItem = new MediaType().schema(schema).example(errorResponse);
 		Content content = new Content().addMediaType(mediaType, mediaTypeItem);
 		ApiResponse apiResponse = new ApiResponse().content(content);
 

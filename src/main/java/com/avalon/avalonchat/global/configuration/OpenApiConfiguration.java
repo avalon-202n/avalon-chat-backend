@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Configuration;
 
 import com.avalon.avalonchat.domain.user.domain.Email;
 import com.avalon.avalonchat.global.configuration.openapi.CustomSchemas;
-import com.avalon.avalonchat.global.error.ErrorResponse;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -34,7 +33,6 @@ public class OpenApiConfiguration {
 	public ApplicationRunner applyCustomConfigurations() {
 		return args -> {
 			SpringDocUtils.getConfig().replaceWithSchema(Email.class, CustomSchemas.EMAIL_SCHEMA);
-			SpringDocUtils.getConfig().addResponseTypeToIgnore(ErrorResponse.class);
 		};
 	}
 }
