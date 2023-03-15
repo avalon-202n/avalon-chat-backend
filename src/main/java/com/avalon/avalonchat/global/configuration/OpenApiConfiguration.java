@@ -14,10 +14,10 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 
 @Configuration(proxyBeanMethods = false)
-public class OpenAPIConfiguration {
+public class OpenApiConfiguration {
 
 	@Bean
-	public OpenAPI openAPI() {
+	public OpenAPI openApi() {
 		Info info = new Info()
 			.title("AVALONCHAT API")
 			.version("v1.0")
