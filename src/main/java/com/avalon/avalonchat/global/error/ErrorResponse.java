@@ -17,8 +17,16 @@ public class ErrorResponse {
 	private final String message;
 
 	public ErrorResponse(HttpStatus httpStatus, Exception exception) {
-		this.code = httpStatus.value();
-		this.type = exception.getClass().getSimpleName();
-		this.message = defaultIfNull(exception.getMessage(), "");
+		this(
+			httpStatus.value(),
+			exception.getClass().getSimpleName(),
+			defaultIfNull(exception.getMessage(), "")
+		);
+	}
+
+	public ErrorResponse(int code, String type, String message) {
+		this.code = code;
+		this.type = type;
+		this.message = message;
 	}
 }
