@@ -31,6 +31,7 @@ public class WebSecurityConfiguration {
 			)
 			.authorizeRequests(authorize -> authorize
 				.antMatchers("/actuator/**").permitAll()
+				.antMatchers("/**/swagger*/**", "/**/api-docs/**").permitAll()
 				.antMatchers("/signup", "/login").permitAll()
 				.anyRequest().authenticated()
 			)

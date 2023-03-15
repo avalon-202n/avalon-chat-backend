@@ -26,7 +26,7 @@ management:
     enabled-by-default: true
     web:
       exposure:
-        include: "health,info"
+        include: health,info
   endpoint:
     health:
       show-details: always
@@ -39,3 +39,13 @@ logging.level:
 
 jwt:
   key: happilyeverafterhappilyeverafterhappilyeverafterhahappilyeverhappilyeverafterhappilyeverafterhappilyeverafterhahappilyever
+
+# springdoc
+springdoc:
+  swagger-ui:
+    tags-sorter: alpha
+    operations-sorter: alpha
+  packages-to-scan: com.avalon.avalonchat.domain
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  show-actuator: true
