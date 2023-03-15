@@ -31,7 +31,7 @@ public class OpenAPIConfig {
 	}
 
 	@Bean
-	public ApplicationRunner flattenValueObjectSchemas() {
+	public ApplicationRunner applyCustomConfigurations() {
 		return args -> {
 			SpringDocUtils.getConfig().replaceWithSchema(Email.class, CustomSchemas.EMAIL_SCHEMA);
 			SpringDocUtils.getConfig().addResponseTypeToIgnore(ErrorResponse.class);
