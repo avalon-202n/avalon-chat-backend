@@ -4,7 +4,6 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -18,11 +17,11 @@ import com.avalon.avalonchat.testsupport.DtoFixture;
 import com.avalon.avalonchat.testsupport.base.BaseControllerTest;
 
 @AutoConfigureMockMvc(addFilters = false)
-@WebMvcTest(controllers = UserController.class)
+@WebMvcTest(controllers = SignUpController.class)
 class UserControllerTest extends BaseControllerTest {
 
 	@MockBean
-	private UserController sut;
+	private SignUpController sut;
 
 	@Test
 	void 회원가입_성공() throws Exception {

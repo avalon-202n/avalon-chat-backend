@@ -2,6 +2,7 @@ package com.avalon.avalonchat.domain.user.controller;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.avalon.avalonchat.domain.user.dto.SignUpRequest;
@@ -13,12 +14,13 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
+@RequestMapping("/signup")
 @RestController
-public class UserController {
+public class SignUpController {
 
 	private final UserService userService;
 
-	@PostMapping("/signup")
+	@PostMapping
 	public SignUpResponse signUp(
 		@RequestBody SignUpRequest request
 	) {
