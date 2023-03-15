@@ -1,7 +1,7 @@
 package com.avalon.avalonchat.domain.profile.dto;
 
-import com.avalon.avalonchat.domain.profile.domain.Image;
 import com.avalon.avalonchat.domain.profile.domain.Profile;
+import com.avalon.avalonchat.domain.profile.domain.image.Image;
 import com.avalon.avalonchat.domain.user.domain.User;
 import com.avalon.avalonchat.global.error.exception.AvalonChatRuntimeException;
 import lombok.Getter;
