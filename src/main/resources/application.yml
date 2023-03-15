@@ -26,13 +26,15 @@ management:
     enabled-by-default: true
     web:
       exposure:
-        include: health,info
+        include: health,info,swaggerui
   endpoint:
     health:
       show-details: always
   info:
     git:
       mode: simple
+  server:
+    port: 9090
 
 logging.level:
   org.hibernate.SQL: debug
@@ -48,4 +50,5 @@ springdoc:
   packages-to-scan: com.avalon.avalonchat.domain
   default-consumes-media-type: application/json;charset=UTF-8
   default-produces-media-type: application/json;charset=UTF-8
-  show-actuator: true
+  use-management-port: true
+
