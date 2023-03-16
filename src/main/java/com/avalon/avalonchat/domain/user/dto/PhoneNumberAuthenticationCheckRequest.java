@@ -2,14 +2,19 @@ package com.avalon.avalonchat.domain.user.dto;
 
 import javax.validation.constraints.NotNull;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@NoArgsConstructor
 
 @Data
 public class PhoneNumberAuthenticationCheckRequest {
 
 	@NotNull
-	private final String phoneNumber;
+	private String phoneNumber;
 
 	@NotNull
-	private final String certificationCode;
+	private String certificationCode;
 }

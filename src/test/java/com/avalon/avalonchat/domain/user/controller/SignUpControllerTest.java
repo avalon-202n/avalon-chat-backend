@@ -4,7 +4,6 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -50,7 +49,6 @@ class SignUpControllerTest extends BaseControllerTest {
 	}
 
 	// TODO add service mocking scenario
-	@Disabled
 	@ValueSource(booleans = {true, false})
 	@ParameterizedTest
 	void 이메일_중복_검사_성공(boolean duplicated) throws Exception {

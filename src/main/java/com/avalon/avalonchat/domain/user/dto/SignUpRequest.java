@@ -5,16 +5,21 @@ import javax.validation.constraints.NotNull;
 import com.avalon.avalonchat.domain.user.domain.Email;
 import com.avalon.avalonchat.domain.user.domain.User;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@NoArgsConstructor
 
 @Data
 public class SignUpRequest {
 
 	@NotNull
-	private final Email email;
+	private Email email;
 
 	@NotNull
-	private final String password;
+	private String password;
 
 	public User toEntity() {
 		return new User(

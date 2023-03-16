@@ -4,11 +4,15 @@ import javax.validation.constraints.NotNull;
 
 import com.avalon.avalonchat.domain.user.domain.Email;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class EmailAuthenticationSendRequest {
 
 	@NotNull
-	private final Email email;
+	private Email email;
 }
