@@ -47,6 +47,7 @@ springdoc:
   swagger-ui:
     tags-sorter: alpha
     operations-sorter: alpha
+    default-models-expand-depth: -1
   packages-to-scan: com.avalon.avalonchat.domain
   default-consumes-media-type: application/json;charset=UTF-8
   default-produces-media-type: application/json;charset=UTF-8

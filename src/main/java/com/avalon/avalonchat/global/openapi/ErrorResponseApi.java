@@ -1,10 +1,14 @@
 package com.avalon.avalonchat.global.openapi;
 
+import static com.avalon.avalonchat.global.error.ErrorResponseWithMessages.*;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import org.springframework.core.annotation.AliasFor;
 
 import com.avalon.avalonchat.global.error.ErrorResponseWithMessages;
 
@@ -16,5 +20,11 @@ import com.avalon.avalonchat.global.error.ErrorResponseWithMessages;
 @Repeatable(ErrorResponseApis.class)
 public @interface ErrorResponseApi {
 
-	ErrorResponseWithMessages value();
+	@AliasFor("messages")
+	ErrorResponseWithMessages value() default BAD_REQUEST;
+
+	@AliasFor("value")
+	ErrorResponseWithMessages messages() default BAD_REQUEST;
+
+	String[] args() default {};
 }

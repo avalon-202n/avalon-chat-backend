@@ -1,5 +1,7 @@
 package com.avalon.avalonchat.global.error;
 
+import java.text.MessageFormat;
+
 import org.springframework.http.HttpStatus;
 
 import com.avalon.avalonchat.global.error.exception.AvalonChatRuntimeException;
@@ -15,7 +17,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ErrorResponseWithMessages {
 
-	SIGNUP_BAD_REQUEST(HttpStatus.BAD_REQUEST, "이메일 혹은 비밀번호의 형식이 올바르지 않습니다.");
+	BAD_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),
+
+	SIGNUP_BAD_REQUEST(HttpStatus.BAD_REQUEST, "이메일 혹은 비밀번호의 형식이 올바르지 않습니다."),
+	INVALID_FIELD(HttpStatus.BAD_REQUEST, "{0}의 형식이 올바르지 않습니다.");
 
 	private final HttpStatus status;
 	private final String type;
@@ -31,7 +36,8 @@ public enum ErrorResponseWithMessages {
 		this.type = clazz.getSimpleName();
 	}
 
-	public ErrorResponse toInstance() {
-		return new ErrorResponse(status.value(), type, message);
+	public ErrorResponse toInstance(Object[] args) {
+		String formattedMessage = MessageFormat.format(message, args);
+		return new ErrorResponse(status.value(), type, formattedMessage);
 	}
 }
