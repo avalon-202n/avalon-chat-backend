@@ -1,10 +1,17 @@
 package com.avalon.avalonchat.domain.login.dto;
 
+import javax.validation.constraints.NotNull;
+
+import com.avalon.avalonchat.domain.user.domain.Email;
+
 import lombok.Data;
 
 @Data
 public class LoginRequest {
 
-	private final String email;
+	@NotNull
+	private final Email email;
+
+	@NotNull
 	private final String password;
 }
