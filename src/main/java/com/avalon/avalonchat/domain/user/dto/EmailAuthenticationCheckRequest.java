@@ -11,4 +11,7 @@ public class EmailAuthenticationCheckRequest {
 
 	@NotNull
 	private final Email email;
+
+	@NotNull
+	private final String certificationCode;
 }
