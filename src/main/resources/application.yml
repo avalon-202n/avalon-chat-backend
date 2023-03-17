@@ -4,13 +4,13 @@ server:
 
 spring:
   datasource:
-    url: jdbc:h2:mem:avalondb
+    url: jdbc:h2:mem:avalon_chat
     username: sa
     password:
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
@@ -38,4 +38,6 @@ logging.level:
   org.hibernate.SQL: debug
 
 jwt:
+  access-validity: 1800000
+  refresh-validity: 1209600000
   key: happilyeverafterhappilyeverafterhappilyeverafterhahappilyeverhappilyeverafterhappilyeverafterhappilyeverafterhahappilyever

@@ -1,9 +1,9 @@
 package com.avalon.avalonchat.global.configuration.jwt;
 
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -16,11 +16,13 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Getter
 @Component
+@RequiredArgsConstructor
 public class JwtTokenService {
 	public static final String AUTHORIZATION_HEADER = "Authorization";
 	private static final long ACCESS_TOKEN_VALIDITY = 1800000;  //30분
@@ -28,8 +30,11 @@ public class JwtTokenService {
 
 	private final Key secretKey;
 
-	public JwtTokenService(@Value("${jwt.key}") byte[] secretKey) {
-		this.secretKey = Keys.hmacShaKeyFor(secretKey);
+	//private final JwtConfigProperties jwtConfigProperties;
+
+	public JwtTokenService() {
+		this.secretKey = Keys.hmacShaKeyFor(
+			"dlsfjslfjdlsfjiesldlsfmjldsfjsdofjsldfjsld".getBytes(StandardCharsets.UTF_8));
 	}
 
 	public String getUserIdFromAccessToken(String token) {
@@ -43,7 +48,7 @@ public class JwtTokenService {
 
 	public String doGenerateRefreshToken(UserDetails userDetails) {
 		long currentTime = (new Date()).getTime();
-		final Date refreshTokenExpiresIn = new Date(currentTime + REFRESH_TOKEN_VALIDITY);
+		final Date refreshTokenExpiresIn = new Date(currentTime + ACCESS_TOKEN_VALIDITY);
 
 		return Jwts.builder()
 			.setSubject("RefreshToken")
