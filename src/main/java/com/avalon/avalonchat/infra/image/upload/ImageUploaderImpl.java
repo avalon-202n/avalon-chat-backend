@@ -1,22 +1,25 @@
 package com.avalon.avalonchat.infra.image.upload;
 
-import com.avalon.avalonchat.domain.profile.domain.image.Image;
+import com.avalon.avalonchat.domain.profile.domain.Image;
+import com.avalon.avalonchat.domain.profile.domain.ImageUploader;
+import com.avalon.avalonchat.domain.profile.exception.ImageUploadException;
+import com.avalon.avalonchat.global.configuration.GcpStorageProperties;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class ImageUploaderImpl implements ImageUploader {
-
-	private static final String URL_PREFIX = "https://storage.googleapis.com";
 	private final Storage storage;
-	@Value("${spring.cloud.gcp.storage.bucket}")
-	private String BUCKET_NAME;
+	private final GcpStorageProperties gcpStorageProperties;
 
 	@Override
 	public String upload(Image image) {
@@ -25,13 +28,17 @@ public class ImageUploaderImpl implements ImageUploader {
 	}
 
 	private String fileWrite(Image image, String fileName) {
-		storage.create(
-			BlobInfo.newBuilder(BUCKET_NAME, fileName)
-				.setContentType(image.getExtension())
-				.build(),
-			image.getInputStream()
-		);
-		String imageUrl = String.join("/", URL_PREFIX, BUCKET_NAME, fileName);
-		return imageUrl;
+		Path path = new File(fileName + "." + image.getExtension()).toPath();
+		try {
+			storage.createFrom(
+				BlobInfo.newBuilder(gcpStorageProperties.getBucket(), fileName)
+					.setContentType(Files.probeContentType(path))
+					.build(),
+				image.getInputStream()
+			);
+		} catch (IOException e) {
+			throw new ImageUploadException("이미지 업로드 예외 발생", e);
+		}
+		return String.join("/", gcpStorageProperties.getUrl(), gcpStorageProperties.getBucket(), fileName);
 	}
 }

@@ -1,8 +1,8 @@
 package com.avalon.avalonchat.domain.profile.dto;
 
+import com.avalon.avalonchat.domain.profile.domain.BackgroundImage;
 import com.avalon.avalonchat.domain.profile.domain.Profile;
-import com.avalon.avalonchat.domain.profile.domain.image.BackgroundImage;
-import com.avalon.avalonchat.domain.profile.domain.image.ProfileImage;
+import com.avalon.avalonchat.domain.profile.domain.ProfileImage;
 import lombok.Getter;
 
 import java.time.LocalDate;

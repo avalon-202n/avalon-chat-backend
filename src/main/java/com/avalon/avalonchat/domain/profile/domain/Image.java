@@ -1,6 +1,5 @@
-package com.avalon.avalonchat.domain.profile.domain.image;
+package com.avalon.avalonchat.domain.profile.domain;
 
-import com.avalon.avalonchat.infra.image.upload.ImageUploader;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 

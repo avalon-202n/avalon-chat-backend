@@ -1,7 +1,7 @@
 package com.avalon.avalonchat.domain.profile.dto;
 
+import com.avalon.avalonchat.domain.profile.domain.Image;
 import com.avalon.avalonchat.domain.profile.domain.Profile;
-import com.avalon.avalonchat.domain.profile.domain.image.Image;
 import com.avalon.avalonchat.domain.user.domain.User;
 import com.avalon.avalonchat.global.error.exception.AvalonChatRuntimeException;
 import lombok.Getter;
@@ -14,9 +14,9 @@ import java.time.LocalDate;
 
 @Getter
 public class ProfileAddRequest {
-	private LocalDate birthDate;
-	private String nickname;
-	private String bio;
+	private final LocalDate birthDate;
+	private final String nickname;
+	private final String bio;
 	private Image image;
 	private Image backgroundImage;
 

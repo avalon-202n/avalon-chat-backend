@@ -1,7 +1,6 @@
-package com.avalon.avalonchat.domain.profile.domain.image;
+package com.avalon.avalonchat.domain.profile.domain;
 
 import com.avalon.avalonchat.domain.model.BaseDateTimeEntity;
-import com.avalon.avalonchat.domain.profile.domain.Profile;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +10,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BackgroundImage extends BaseDateTimeEntity {
+public class ProfileImage extends BaseDateTimeEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(updatable = false)
@@ -24,7 +23,7 @@ public class BackgroundImage extends BaseDateTimeEntity {
 	@Column
 	private String url;
 
-	public BackgroundImage(Profile profile, String url) {
+	public ProfileImage(Profile profile, String url) {
 		this.profile = profile;
 		this.url = url;
 	}

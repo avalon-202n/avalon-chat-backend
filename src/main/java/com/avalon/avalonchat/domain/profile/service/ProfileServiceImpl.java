@@ -1,17 +1,17 @@
 package com.avalon.avalonchat.domain.profile.service;
 
+import com.avalon.avalonchat.domain.profile.domain.BackgroundImage;
+import com.avalon.avalonchat.domain.profile.domain.ImageUploader;
 import com.avalon.avalonchat.domain.profile.domain.Profile;
-import com.avalon.avalonchat.domain.profile.domain.image.BackgroundImage;
-import com.avalon.avalonchat.domain.profile.domain.image.ProfileImage;
+import com.avalon.avalonchat.domain.profile.domain.ProfileImage;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddRequest;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddResponse;
+import com.avalon.avalonchat.domain.profile.repository.BackgroundImageRepository;
+import com.avalon.avalonchat.domain.profile.repository.ProfileImageRepository;
 import com.avalon.avalonchat.domain.profile.repository.ProfileRepository;
 import com.avalon.avalonchat.domain.user.domain.User;
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
 import com.avalon.avalonchat.global.error.exception.AvalonChatRuntimeException;
-import com.avalon.avalonchat.infra.image.upload.BackgroundImageRepository;
-import com.avalon.avalonchat.infra.image.upload.ImageUploader;
-import com.avalon.avalonchat.infra.image.upload.ProfileImageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
