@@ -6,7 +6,6 @@ import com.avalon.avalonchat.domain.profile.exception.ImageUploadException;
 import com.avalon.avalonchat.global.configuration.GcpStorageProperties;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -16,10 +15,16 @@ import java.nio.file.Path;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
-public class ImageUploaderImpl implements ImageUploader {
+public class S3ImageUploader implements ImageUploader {
 	private final Storage storage;
-	private final GcpStorageProperties gcpStorageProperties;
+	private final String BUCKET_NAME;
+	private final String URL;
+
+	public S3ImageUploader(Storage storage, GcpStorageProperties gcpStorageProperties) {
+		this.storage = storage;
+		this.BUCKET_NAME = gcpStorageProperties.getBucket();
+		this.URL = gcpStorageProperties.getUrl();
+	}
 
 	@Override
 	public String upload(Image image) {
@@ -31,7 +36,7 @@ public class ImageUploaderImpl implements ImageUploader {
 		Path path = new File(fileName + "." + image.getExtension()).toPath();
 		try {
 			storage.createFrom(
-				BlobInfo.newBuilder(gcpStorageProperties.getBucket(), fileName)
+				BlobInfo.newBuilder(BUCKET_NAME, fileName)
 					.setContentType(Files.probeContentType(path))
 					.build(),
 				image.getInputStream()
@@ -39,6 +44,6 @@ public class ImageUploaderImpl implements ImageUploader {
 		} catch (IOException e) {
 			throw new ImageUploadException("이미지 업로드 예외 발생", e);
 		}
-		return String.join("/", gcpStorageProperties.getUrl(), gcpStorageProperties.getBucket(), fileName);
+		return String.join("/", URL, BUCKET_NAME, fileName);
 	}
 }

@@ -14,9 +14,9 @@ import java.time.LocalDate;
 
 @Getter
 public class ProfileAddRequest {
-	private final LocalDate birthDate;
-	private final String nickname;
-	private final String bio;
+	private LocalDate birthDate;
+	private String nickname;
+	private String bio;
 	private Image image;
 	private Image backgroundImage;
 
