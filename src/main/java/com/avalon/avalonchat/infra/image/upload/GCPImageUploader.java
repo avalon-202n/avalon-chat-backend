@@ -15,12 +15,12 @@ import java.nio.file.Path;
 import java.util.UUID;
 
 @Service
-public class S3ImageUploader implements ImageUploader {
+public class GCPImageUploader implements ImageUploader {
 	private final Storage storage;
 	private final String BUCKET_NAME;
 	private final String URL;
 
-	public S3ImageUploader(Storage storage, GcpStorageProperties gcpStorageProperties) {
+	public GCPImageUploader(Storage storage, GcpStorageProperties gcpStorageProperties) {
 		this.storage = storage;
 		this.BUCKET_NAME = gcpStorageProperties.getBucket();
 		this.URL = gcpStorageProperties.getUrl();
