@@ -1,4 +1,4 @@
-[submodule "avalon-chat-privates"]
-    path = avalon-chat-privates
-    url = https://github.com/avalon-202n/avalon-chat-privates.git
-    branch = dev
+[submodule "avalon-chat-config"]
+path = avalon-chat-config
+url = https://github.com/avalon-202n/avalon-chat-config.git
+branch = dev
