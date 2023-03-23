@@ -1,12 +1,13 @@
 package com.avalon.avalonchat.domain.profile.domain;
 
-import lombok.Getter;
-import org.apache.commons.lang3.StringUtils;
+import static com.avalon.avalonchat.global.util.Preconditions.*;
 
 import java.io.InputStream;
 import java.util.List;
 
-import static com.avalon.avalonchat.global.util.Preconditions.checkContains;
+import org.apache.commons.lang3.StringUtils;
+
+import lombok.Getter;
 
 /**
  * 프로필 도메인에서 활용하는 이미지
