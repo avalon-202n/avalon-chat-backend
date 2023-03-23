@@ -26,12 +26,14 @@ public class WebSecurityConfiguration {
 			.formLogin().disable()
 			.httpBasic().disable()
 			.headers().disable()
+			.cors().and()
 			.sessionManagement(session -> session
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			)
 			.authorizeRequests(authorize -> authorize
 				.antMatchers("/actuator/**").permitAll()
-				.antMatchers("/signup", "/login").permitAll()
+				.antMatchers("/**/swagger*/**", "/**/api-docs/**").permitAll()
+				.antMatchers("/signup/**", "/login").permitAll()
 				.anyRequest().authenticated()
 			)
 			.addFilterBefore(new JwtAuthenticationFilter(jwtTokenService),

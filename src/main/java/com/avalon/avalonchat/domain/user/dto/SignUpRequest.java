@@ -1,15 +1,25 @@
 package com.avalon.avalonchat.domain.user.dto;
 
+import javax.validation.constraints.NotNull;
+
 import com.avalon.avalonchat.domain.user.domain.Email;
 import com.avalon.avalonchat.domain.user.domain.User;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@NoArgsConstructor
 
 @Data
 public class SignUpRequest {
 
-	private final Email email;
-	private final String password;
+	@NotNull
+	private Email email;
+
+	@NotNull
+	private String password;
 
 	public User toEntity() {
 		return new User(
