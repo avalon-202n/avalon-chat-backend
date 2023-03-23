@@ -1,3 +1,7 @@
+server:
+  servlet:
+    context-path: /v1
+
 spring:
   datasource:
     url: jdbc:h2:mem:avalondb
@@ -17,5 +21,35 @@ spring:
     resources:
       add-mappings: false # disable ResourceHttpRequestHandler
 
+management:
+  endpoints:
+    enabled-by-default: true
+    web:
+      exposure:
+        include: health,info, openapi, swaggerui
+  endpoint:
+    health:
+      show-details: always
+  info:
+    git:
+      mode: simple
+  server:
+    port: 9090
+
 logging.level:
   org.hibernate.SQL: debug
+
+jwt:
+  key: happilyeverafterhappilyeverafterhappilyeverafterhahappilyeverhappilyeverafterhappilyeverafterhappilyeverafterhahappilyever
+
+# springdoc
+springdoc:
+  swagger-ui:
+    tags-sorter: alpha
+    operations-sorter: alpha
+    default-models-expand-depth: -1
+  packages-to-scan: com.avalon.avalonchat.domain
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  use-management-port: true
+

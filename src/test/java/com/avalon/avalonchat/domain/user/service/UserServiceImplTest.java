@@ -25,9 +25,8 @@ class UserServiceImplTest {
 		sut = new UserServiceImpl(userRepository);
 	}
 
-	@DisplayName("회원가입 성공")
 	@Test
-	void name() {
+	void 회원가입_성공() {
 		//given
 		SignUpRequest request = DtoFixture.signUpRequest("hello@wolrd.com", "passw0rd");
 		User savedUser = Fixture.createUser("hello@wolrd.com", "passw0rd");

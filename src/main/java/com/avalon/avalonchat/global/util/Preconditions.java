@@ -23,7 +23,6 @@ public final class Preconditions {
 	public static void checkPatternMatches(Pattern pattern, String value) {
 		if (!pattern.matcher(value).find()) {
 			throw new IllegalArgumentException("Pattern " + pattern + " does not matches " + value);
-
 		}
 	}
 

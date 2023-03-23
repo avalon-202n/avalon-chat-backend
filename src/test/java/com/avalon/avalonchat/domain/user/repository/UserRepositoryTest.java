@@ -2,7 +2,6 @@ package com.avalon.avalonchat.domain.user.repository;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.*;
 
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -16,9 +15,8 @@ class UserRepositoryTest {
 	@Autowired
 	private UserRepository userRepository;
 
-	@DisplayName("user 저장 성공")
 	@Test
-	void test1() {
+	void User_저장_성공() {
 		//given
 		User user = Fixture.createUser();
 

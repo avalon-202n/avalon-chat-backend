@@ -10,7 +10,7 @@ addAssignees: author
 reviewers:
   - ndy2
   - YOONSUNGHYEON
-  - DSeung001
+  - hgene0929
 
 # A number of reviewers added to the PR
 # Set 0 to add all the reviewers (default: 0)
@@ -20,7 +20,7 @@ numberOfReviewers: 0
 assignees:
   - ndy2
   - YOONSUNGHYEON
-  - DSeung001
+  - hgene0929
 
 # A number of assignees to add to the PRs
 # Set to 0 to add all of the assignees.

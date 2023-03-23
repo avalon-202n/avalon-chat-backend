@@ -26,18 +26,18 @@ jobs:
           arguments: check -x test
 
   test:
-    runs-on: ubuntu-latest
     name: Testing on JDK 11
+    runs-on: ubuntu-latest
     permissions:
-      checks: write
       pull-requests: write
+      checks: write
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
           java-version: '11'
+          distribution: 'temurin'
           cache: 'gradle'
 
       - name: Execute tests
