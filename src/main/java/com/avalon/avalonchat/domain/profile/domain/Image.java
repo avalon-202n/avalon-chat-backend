@@ -1,13 +1,12 @@
 package com.avalon.avalonchat.domain.profile.domain;
 
-import static com.avalon.avalonchat.global.util.Preconditions.*;
+import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.InputStream;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
-
-import lombok.Getter;
+import static com.avalon.avalonchat.global.util.Preconditions.checkContains;
 
 /**
  * 프로필 도메인에서 활용하는 이미지
@@ -38,8 +37,8 @@ public class Image {
 	}
 
 	/* 도메인 서비스 ImageUploader 를 활용해 이미지 업로드 수행 */
-	public void uploadBy(ImageUploader service) {
-		service.upload(this);
+	public String uploadBy(ImageUploader service) {
+		return service.upload(this);
 	}
 
 	/* 이미지의 종류 */
