@@ -38,7 +38,7 @@ public class JwtTokenService {
 
 	public String getEmailFromAccessToken(String token) {
 		Claims claims = getAllClaimsFromAccessToken(token);
-		return claims.get("userId").toString();
+		return claims.get("email").toString();
 	}
 
 	private Claims getAllClaimsFromAccessToken(String token) {

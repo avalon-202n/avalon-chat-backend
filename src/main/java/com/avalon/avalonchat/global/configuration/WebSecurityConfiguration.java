@@ -64,9 +64,8 @@ public class WebSecurityConfiguration {
 			)
 			.addFilterBefore(tempJwtAuthenticationFilter(authenticationManager),
 				UsernamePasswordAuthenticationFilter.class)
-			.exceptionHandling(handler ->
-				handler
-					.authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+			.exceptionHandling(handler -> handler
+				.authenticationEntryPoint(new CustomAuthenticationEntryPoint())
 			);
 		return http.build();
 	}
