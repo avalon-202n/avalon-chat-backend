@@ -33,7 +33,7 @@ public class WebSecurityConfiguration {
 		return http.getSharedObject(AuthenticationManagerBuilder.class).build();
 	}
 
-	public JwtAuthenticationFilter tempJwtAuthenticationFilter(AuthenticationManager authenticationManager) throws
+	public JwtAuthenticationFilter jwtAuthenticationFilter(AuthenticationManager authenticationManager) throws
 		Exception {
 		List<String> skipPaths = new ArrayList<>();
 		skipPaths.add("/login");
@@ -62,11 +62,10 @@ public class WebSecurityConfiguration {
 				.antMatchers("/signup", "/login").permitAll()
 				.anyRequest().authenticated()
 			)
-			.addFilterBefore(tempJwtAuthenticationFilter(authenticationManager),
+			.addFilterBefore(jwtAuthenticationFilter(authenticationManager),
 				UsernamePasswordAuthenticationFilter.class)
-			.exceptionHandling(handler ->
-				handler
-					.authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+			.exceptionHandling(handler -> handler
+				.authenticationEntryPoint(new CustomAuthenticationEntryPoint())
 			);
 		return http.build();
 	}

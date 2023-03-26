@@ -16,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
+import com.avalon.avalonchat.global.configuration.jwt.exception.JwtInvalidException;
 import com.avalon.avalonchat.global.error.ErrorResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -37,7 +38,11 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 		if (token != null && token.startsWith("Bearer ")) {
 			token = token.substring(7);
 		}
+		if (null == jwtTokenService.getTokenClaims(token)) {
+			throw new JwtInvalidException("만료");
+		}
 		final JwtAuthenticationToken authentication = JwtAuthenticationToken.of(token);
+		logger.info("---------jwt filter--------");
 		return getAuthenticationManager().authenticate(authentication);
 	}
 
