@@ -1,11 +1,12 @@
 package com.avalon.avalonchat.domain.profile.dto;
 
+import java.time.LocalDate;
+
 import com.avalon.avalonchat.domain.profile.domain.BackgroundImage;
 import com.avalon.avalonchat.domain.profile.domain.Profile;
 import com.avalon.avalonchat.domain.profile.domain.ProfileImage;
-import lombok.Getter;
 
-import java.time.LocalDate;
+import lombok.Getter;
 
 @Getter
 public class ProfileAddResponse {
@@ -28,7 +29,8 @@ public class ProfileAddResponse {
 		this.backgroundImageUrl = backgroundImageUrl;
 	}
 
-	public static ProfileAddResponse ofEntity(Profile profile, ProfileImage profileImage, BackgroundImage backgroundImage) {
+	public static ProfileAddResponse ofEntity(Profile profile, ProfileImage profileImage,
+		BackgroundImage backgroundImage) {
 		return new ProfileAddResponse(
 			profile.getBirthDate(),
 			profile.getNickname(),
