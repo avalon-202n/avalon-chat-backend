@@ -1,0 +1,12 @@
+{
+    "type": "service_account",
+    "project_id": "theta-citron-380707",
+    "private_key_id": "7286b016a7382ad6c4484d7539554283db8bd2bf",
+    "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCzR4c3IHaA4C1B\niOtIYMljdmJ91xxAvU96jIpkyyPKdm9a0eKtK6SXQTa/rs9JVlAHldv7zLdmU9se\neDN+L6Z9ELjeXKBq9vme3G5hKG/NmX8QSd/7SK6dK8SxPw8/U5rnMMx9xjYGR0p2\nVq+eBkURx9B9z44JiLfNCSgYe12dfFMX8XwONaaF9Cgd11ur4UtMoy6qBbkUas0X\nMe1UA5mkneViPPDIWyX5McsYHaX94lx9hfe1wNe7JIpad95FXUuALOQ2JFHCNfQn\nmOaPGyjBNEhf2aFdH3Yl3Gm2xXczNoR9uJIT/t/7734bxB2VnmuB0iMe6tCYn0M6\nUZc6wv6RAgMBAAECggEAGxBpv681ZIgzHMkUJ8WAsXSuMqwWFknd5TSxMb0e5pIR\nhmbX7ud/Pdw47R/xJ/OROkvrvSvu5dIz6nof3+VGn2u2VM8r4mntTged3Cn0Etgg\nv+8/ElqrDYwNceqAnUE8SblqrXQONM1vVsUIVvVAWQpOlaePHC5Y/OlsdaGuBLd+\nd2QpTrYwD15Z1lh8HTFnyrPLIyP7Bkq42gm4/Qok92uVPSKFxX3iyHYOZeZ/Epk9\nUUzOlQAJKVR7fc0OijvJkQV4eYU6MOYkxPZtYqBw11xJKWJvCQh20JXFeTvasWhZ\nMXz0aU+V0EpFk5QnJE4XysEINm2J8c6kXgvf3Ld5xwKBgQDtcvWIU/0xBF33kwUB\nqrcuJU4krFelfx9QPXXFwZYmHWDoTTZ9VZrdRsVl+wtRSnresd2oKHKpPhUuQSRf\nc8QwOwurTIzfNLh0Qeogt5QiOCZ5T41yNrwhCOA8SlNh1Te50r7AMA5uX8m6XN0v\np3aIs2PVNdaCTrB2wtaCWoxIjwKBgQDBSSlR2mWeJ7+9jx8jbakIsjrlWlMODTwW\niCJqBs/8PX3XdBKGO8mNoiou2oW5Q4XsWRBzNqhxwWtnX5O8UUXK1zw5PHPw0n3i\nJN2jLh/i5ZuKrtxTfjkBBC5ckZt/zLCec2QrzRdYML+tDoPpK5deTS/awJPZjhza\nStbTZTSW3wKBgQCVYMXgbt4Q0SuATYhPxSMaL7PaVGWLIs8DPrbxotifv8mwOqr1\n7D3RyOz0PBuhl1Z29LR6Tn/bwse2YprMRdr9cJfluvHAlb0YvkLZNERHxsVFeeuF\nF7QAoEHZC/UqzeURzOfdph3eB/qzeCpaCWMDmr9KaWU6cuCGxgoG1Yn9NwKBgCck\ngdGpwNp+gj4JNe0e0BSKw5Ke8CLwWzLU7uM57fTPHyT6xKWahf7A0Hoclugl3IE4\nqDQs5X/kA7Qzjt+cNd4WKIQO0gv7FLMvdBMPzDVO+mjjcIsYDMM/7YOhmTQQZ9Qu\n2iJkrk2V0btiLSSTR1w5lW9fgJGWThGHBmpZHIVRAoGANHaFLp7E334epM475zgv\nO02t8RroOFsu7TD5zLrwWyz5qax7k3I7kSaDMCdzTa+gK+p+W5JI+2WHTQo/MM+N\nG5JnHpbha/WVs9tkcMvVEPujcQQmvq9vi3506drtEzAM6DIMroEOM1eeg2Uckbiy\nRFeBTdnwjgBRLOf8WtUkGLQ=\n-----END PRIVATE KEY-----\n",
+    "client_email": "avalon-storage-access@theta-citron-380707.iam.gserviceaccount.com",
+    "client_id": "104242910482637887340",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/avalon-storage-access%40theta-citron-380707.iam.gserviceaccount.com"
+}
