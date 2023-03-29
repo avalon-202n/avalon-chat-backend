@@ -47,10 +47,13 @@ tasks.named('test') {
 
 task copyPrivate(type: Copy) {
     copy {
-        from './avalon-chat-privates'
-        include "*.yml"
+        from './avalon-chat-sub'
         into 'src/main/resources'
     }
+}
+
+processResources {
+    dependsOn copyPrivate
 }
 
 task checkstyle {
