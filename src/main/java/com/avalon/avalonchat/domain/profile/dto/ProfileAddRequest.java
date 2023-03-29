@@ -1,22 +1,24 @@
 package com.avalon.avalonchat.domain.profile.dto;
 
-import com.avalon.avalonchat.domain.profile.domain.Image;
-import com.avalon.avalonchat.domain.profile.domain.Profile;
-import com.avalon.avalonchat.domain.user.domain.User;
-import com.avalon.avalonchat.global.error.exception.AvalonChatRuntimeException;
-import lombok.Getter;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import com.avalon.avalonchat.domain.profile.domain.Image;
+import com.avalon.avalonchat.domain.profile.domain.Profile;
+import com.avalon.avalonchat.domain.user.domain.User;
+import com.avalon.avalonchat.global.error.exception.AvalonChatRuntimeException;
+
+import lombok.Getter;
+
 @Getter
 public class ProfileAddRequest {
-	private LocalDate birthDate;
-	private String nickname;
-	private String bio;
+	private final LocalDate birthDate;
+	private final String nickname;
+	private final String bio;
 	private Image image;
 	private Image backgroundImage;
 

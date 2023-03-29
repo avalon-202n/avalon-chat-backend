@@ -45,6 +45,14 @@ tasks.named('test') {
     useJUnitPlatform()
 }
 
+task copyPrivate(type: Copy) {
+    copy {
+        from './avalon-chat-privates'
+        include "*.yml"
+        into 'src/main/resources'
+    }
+}
+
 task checkstyle {
     dependsOn tasks.withType(Checkstyle)
     dependsOn editorconfigCheck

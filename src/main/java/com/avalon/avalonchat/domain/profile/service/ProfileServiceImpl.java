@@ -1,5 +1,10 @@
 package com.avalon.avalonchat.domain.profile.service;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.stereotype.Service;
+
 import com.avalon.avalonchat.domain.profile.domain.BackgroundImage;
 import com.avalon.avalonchat.domain.profile.domain.ImageUploader;
 import com.avalon.avalonchat.domain.profile.domain.Profile;
@@ -12,21 +17,18 @@ import com.avalon.avalonchat.domain.profile.repository.ProfileRepository;
 import com.avalon.avalonchat.domain.user.domain.User;
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
 import com.avalon.avalonchat.global.error.exception.AvalonChatRuntimeException;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class ProfileServiceImpl implements ProfileService {
 
+	private static final String PROFILE_IMAGE = "profile";
+	private static final String BACKGROUND_IMAGE = "background";
 	private final ProfileRepository profileRepository;
 	private final UserRepository userRepository;
 	private final ImageUploader imageUploader;
-	private static final String PROFILE_IMAGE = "profile";
-	private static final String BACKGROUND_IMAGE = "background";
 	private final ProfileImageRepository profileImageRepository;
 	private final BackgroundImageRepository backgroundImageRepository;
 
@@ -38,8 +40,8 @@ public class ProfileServiceImpl implements ProfileService {
 		Profile profile = profileRepository.save(request.toEntity(user));
 
 		Map<String, Object> map = uploadImage(profile, request);
-		ProfileImage profileImage = (ProfileImage) map.get(PROFILE_IMAGE);
-		BackgroundImage backgroundImage = (BackgroundImage) map.get(BACKGROUND_IMAGE);
+		ProfileImage profileImage = (ProfileImage)map.get(PROFILE_IMAGE);
+		BackgroundImage backgroundImage = (BackgroundImage)map.get(BACKGROUND_IMAGE);
 
 		return ProfileAddResponse.ofEntity(profile, profileImage, backgroundImage);
 	}
