@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 public class JwtTokenService {
+
 	public static final String AUTHORIZATION_HEADER = "Authorization";
 
 	private Key secretKey;
@@ -28,7 +29,7 @@ public class JwtTokenService {
 	@Autowired
 	public JwtTokenService(JwtConfigProperties jwtConfigProperties) {
 		this.jwtConfigProperties = jwtConfigProperties;
-		this.secretKey = Keys.hmacShaKeyFor(jwtConfigProperties.getKey().getBytes());
+		this.secretKey = Keys.hmacShaKeyFor(jwtConfigProperties.getSecretKey().getBytes());
 	}
 
 	public String getUserIdFromAccessToken(String token) {

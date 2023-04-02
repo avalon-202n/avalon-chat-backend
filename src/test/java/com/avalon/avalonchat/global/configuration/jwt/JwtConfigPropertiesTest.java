@@ -16,6 +16,6 @@ class JwtConfigPropertiesTest {
 	void jwt_프로퍼티_조회_성공() {
 		assertThat(jwtConfigProperties.getAccessValidity()).isNotEqualTo(0);
 		assertThat(jwtConfigProperties.getRefreshValidity()).isNotEqualTo(0);
-		assertThat(jwtConfigProperties.getKey()).isNotNull();
+		assertThat(jwtConfigProperties.getSecretKey()).isNotNull();
 	}
 }

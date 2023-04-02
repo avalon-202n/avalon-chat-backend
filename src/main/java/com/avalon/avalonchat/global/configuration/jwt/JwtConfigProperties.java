@@ -11,7 +11,12 @@ import lombok.Setter;
 @ConfigurationProperties(prefix = "jwt")
 @Configuration
 public class JwtConfigProperties {
+
+	// access token validity in millis
 	private int accessValidity;
+
+	// refresh token validity in millis
 	private int refreshValidity;
-	private String key;
+
+	private String secretKey;
 }
