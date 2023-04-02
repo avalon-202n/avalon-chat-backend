@@ -5,13 +5,10 @@ import java.time.LocalDate;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
-import com.avalon.avalonchat.domain.model.BaseDateTimeEntity;
+import com.avalon.avalonchat.domain.model.BaseAuditingEntity;
 import com.avalon.avalonchat.domain.user.domain.User;
 
 import lombok.AccessLevel;
@@ -21,11 +18,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Profile extends BaseDateTimeEntity {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(updatable = false)
-	private Long id;
+public class Profile extends BaseAuditingEntity {
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "users_id")
