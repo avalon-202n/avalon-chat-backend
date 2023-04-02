@@ -12,11 +12,7 @@ jobs:
     name: Static analysis
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout to github with submodule
-        uses: actions/checkout@v3
-        with: 
-          token: ${{ secrets.REPO_ACCESS }}
-          submodules: recursive
+      - uses: actions/checkout@v3
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
@@ -36,7 +32,11 @@ jobs:
       pull-requests: write
       checks: write
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout to github with submodule
+        uses: actions/checkout@v3
+        with: 
+          token: ${{ secrets.REPO_ACCESS }}
+          submodules: recursive
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
