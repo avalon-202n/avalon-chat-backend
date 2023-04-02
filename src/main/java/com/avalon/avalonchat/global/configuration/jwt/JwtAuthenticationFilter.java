@@ -1,67 +1,62 @@
 package com.avalon.avalonchat.global.configuration.jwt;
 
 import java.io.IOException;
+import java.io.OutputStream;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
-import com.avalon.avalonchat.domain.login.exception.InvalidAuthorizationHeaderException;
+import com.avalon.avalonchat.global.error.ErrorResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@RequiredArgsConstructor
 @Slf4j
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
+	private JwtTokenService jwtTokenService;
 
-	public static final String AUTHORIZATION_HEADER = "Authorization";
-	private final JwtTokenService jwtTokenService;
+	public JwtAuthenticationFilter(JwtTokenService jwtTokenService, RequestMatcher matcher) {
+		super(matcher);
+		this.jwtTokenService = jwtTokenService;
+	}
 
 	@Override
-	protected void doFilterInternal(
-		HttpServletRequest request,
-		HttpServletResponse response,
-		FilterChain filterChain
-	) throws ServletException, IOException {
-		String userId = null;
-		String jwtToken = null;
-		String authorizationHeader = request.getHeader(AUTHORIZATION_HEADER);
-		log.info("authorizationHeader : {}", authorizationHeader);
-		try {
-			if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-				throw new InvalidAuthorizationHeaderException();
-			}
-			jwtToken = authorizationHeader.substring(7);
-			log.info("jwtToken : {}", jwtToken);
-			userId = jwtTokenService.getUserIdFromAccessToken(jwtToken);
-			log.info("userId : {}", userId);
-			if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-				if (jwtTokenService.validateToken(jwtToken)) {
-					UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-						userId, jwtToken, null);
-					authenticationToken.setDetails(
-						new WebAuthenticationDetailsSource().buildDetails(request));
-					SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-				}
-			}
-		} catch (InvalidAuthorizationHeaderException e) {
-			request.setAttribute("errorCode", "InvalidAuthorizationHeaderException");
-		} catch (ExpiredJwtException e) {
-			log.warn("JWT Access Token has expired");
-			request.setAttribute("errorCode", "ExpiredJwtException");
-		} catch (JwtException e) {
-			log.warn("Unable to get JWT Token");
-			request.setAttribute("errorCode", "JwtException");
+	public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse res) throws
+		AuthenticationException {
+		String token = req.getHeader("Authorization");
+		if (token != null && token.startsWith("Bearer ")) {
+			token = token.substring(7);
 		}
-		filterChain.doFilter(request, response);
+		final JwtAuthenticationToken authentication = JwtAuthenticationToken.of(token);
+		return getAuthenticationManager().authenticate(authentication);
+	}
+
+	@Override
+	protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse res, FilterChain chain,
+		Authentication auth) throws IOException, ServletException {
+		SecurityContextHolder.getContext().setAuthentication(auth);
+		chain.doFilter(req, res);
+	}
+
+	@Override
+	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+		AuthenticationException failed) throws IOException, ServletException {
+		response.setStatus(HttpStatus.FORBIDDEN.value());
+		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+		try (OutputStream os = response.getOutputStream()) {
+			ObjectMapper objectMapper = new ObjectMapper();
+			objectMapper.writeValue(os, new ErrorResponse(HttpStatus.FORBIDDEN, failed));
+			os.flush();
+		}
 	}
 }

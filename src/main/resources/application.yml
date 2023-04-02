@@ -40,6 +40,8 @@ logging.level:
   org.hibernate.SQL: debug
 
 jwt:
+  access-validity: 1800000
+  refresh-validity: 1209600000
   key: happilyeverafterhappilyeverafterhappilyeverafterhahappilyeverhappilyeverafterhappilyeverafterhappilyeverafterhahappilyever
 
 # springdoc
