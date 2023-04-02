@@ -18,5 +18,5 @@ public class JwtConfigProperties {
 	// refresh token validity in millis
 	private int refreshValidity;
 
-	private String secretKey;
+	private String secret;
 }
