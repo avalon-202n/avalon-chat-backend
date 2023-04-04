@@ -4,7 +4,6 @@ import static org.assertj.core.api.AssertionsForInterfaceTypes.*;
 import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.avalon.avalonchat.domain.user.domain.User;
