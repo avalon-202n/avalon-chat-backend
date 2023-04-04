@@ -3,12 +3,9 @@ package com.avalon.avalonchat.domain.user.domain;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.avalon.avalonchat.domain.model.BaseDateTimeEntity;
+import com.avalon.avalonchat.domain.model.BaseAuditingEntity;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -18,12 +15,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "users")
-public class User extends BaseDateTimeEntity {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(updatable = false)
-	private Long id;
+public class User extends BaseAuditingEntity {
 
 	@Embedded
 	private Email email;
