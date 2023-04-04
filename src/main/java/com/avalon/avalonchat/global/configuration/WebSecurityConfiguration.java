@@ -33,23 +33,12 @@ public class WebSecurityConfiguration {
 		return http.getSharedObject(AuthenticationManagerBuilder.class).build();
 	}
 
-	public JwtAuthenticationFilter tempJwtAuthenticationFilter(AuthenticationManager authenticationManager) throws
-		Exception {
-		List<String> skipPaths = new ArrayList<>();
-		skipPaths.add("/login");
-		skipPaths.add("/signup");
-
-		final RequestMatcher matcher = new CustomRequestMatcher(skipPaths);
-		final JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtTokenService, matcher);
-		filter.setAuthenticationManager(authenticationManager);
-		return filter;
-	}
-
 	@Bean
-	public SecurityFilterChain securityFilterChain(HttpSecurity http,
-		AuthenticationManager authenticationManager) throws
-		Exception {
-		http
+	public SecurityFilterChain securityFilterChain(
+		HttpSecurity http,
+		AuthenticationManager authenticationManager
+	) throws Exception {
+		return http
 			.csrf().disable()
 			.formLogin().disable()
 			.httpBasic().disable()
@@ -66,9 +55,19 @@ public class WebSecurityConfiguration {
 			)
 			.addFilterBefore(tempJwtAuthenticationFilter(authenticationManager),
 				UsernamePasswordAuthenticationFilter.class)
-			.exceptionHandling(handler -> handler
+			.exceptionHandling(ex -> ex
 				.authenticationEntryPoint(new CustomAuthenticationEntryPoint())
-			);
-		return http.build();
+			).build();
+	}
+
+	private JwtAuthenticationFilter tempJwtAuthenticationFilter(AuthenticationManager authenticationManager) {
+		List<String> skipPaths = new ArrayList<>();
+		skipPaths.add("/login");
+		skipPaths.add("/signup");
+
+		final RequestMatcher matcher = new CustomRequestMatcher(skipPaths);
+		final JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtTokenService, matcher);
+		filter.setAuthenticationManager(authenticationManager);
+		return filter;
 	}
 }

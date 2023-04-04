@@ -1,9 +1,12 @@
 package com.avalon.avalonchat.domain.profile.controller;
 
-import org.springframework.http.HttpStatus;
+import static com.avalon.avalonchat.global.util.ResponseEntityUtil.*;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddRequest;
@@ -18,24 +21,27 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+@RequestMapping("/profiles")
 public class ProfileController {
 
 	private final ProfileService profileService;
 
-	@PostMapping("/profiles")
+	@PostMapping
 	public ResponseEntity<ProfileAddResponse> addProfile(
-		ProfileAddRequest request
-	) {
 		//TODO: @AuthenticationPrincipal 활용 -> SecurityUser 타입 Authentication 객체에서 userId 가져올 것
-		long id = 1L;
+		@RequestBody ProfileAddRequest request
+	) {
+		// setup
+		long userId = 1L;
 
-		ProfileAddResponse profileAddResponse = profileService.addProfile(id, request);
-		return ResponseEntity
-			.status(HttpStatus.CREATED)
-			.body(profileAddResponse);
+		// action
+		ProfileAddResponse response = profileService.addProfile(userId, request);
+
+		// response
+		return created(response);
 	}
 
-	@GetMapping("/profiles/find")
+	@GetMapping("/find")
 	public ProfileFindResponse findProfile(
 		ProfileFindRequest request
 	) {

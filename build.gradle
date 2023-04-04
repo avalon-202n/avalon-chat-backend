@@ -44,10 +44,11 @@ tasks.named('test') {
 }
 
 task copyPrivate(type: Copy) {
-    copy {
+    def result = copy {
         from './avalon-chat-sub'
-        into 'src/main/resources'
+        into './src/main/resources'
     }
+    println("result.didWork" + result.didWork)
 }
 
 processResources {

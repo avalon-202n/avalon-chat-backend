@@ -6,7 +6,8 @@ import com.avalon.avalonchat.domain.profile.dto.ProfileFindRequest;
 import com.avalon.avalonchat.domain.profile.dto.ProfileFindResponse;
 
 public interface ProfileService {
-	ProfileAddResponse addProfile(long id, ProfileAddRequest request);
+
+	ProfileAddResponse addProfile(long userId, ProfileAddRequest request);
 
 	ProfileFindResponse findProfile(ProfileFindRequest request);
 }
