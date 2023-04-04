@@ -3,6 +3,7 @@ package com.avalon.avalonchat.domain.profile.controller;
 import static com.avalon.avalonchat.global.util.ResponseEntityUtil.*;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddRequest;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddResponse;
+import com.avalon.avalonchat.domain.profile.dto.ProfileFindRequest;
+import com.avalon.avalonchat.domain.profile.dto.ProfileFindResponse;
 import com.avalon.avalonchat.domain.profile.service.ProfileService;
 
 import lombok.RequiredArgsConstructor;
@@ -36,5 +39,12 @@ public class ProfileController {
 
 		// response
 		return created(response);
+	}
+
+	@GetMapping("/find")
+	public ProfileFindResponse findProfile(
+		ProfileFindRequest request
+	) {
+		return profileService.findProfile(request);
 	}
 }
