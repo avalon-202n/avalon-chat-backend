@@ -7,6 +7,8 @@ import com.avalon.avalonchat.domain.profile.domain.Profile;
 import com.avalon.avalonchat.domain.profile.domain.ProfileImage;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddRequest;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddResponse;
+import com.avalon.avalonchat.domain.profile.dto.ProfileFindRequest;
+import com.avalon.avalonchat.domain.profile.dto.ProfileFindResponse;
 import com.avalon.avalonchat.domain.profile.repository.BackgroundImageRepository;
 import com.avalon.avalonchat.domain.profile.repository.ProfileImageRepository;
 import com.avalon.avalonchat.domain.profile.repository.ProfileRepository;
@@ -36,5 +38,19 @@ public class ProfileServiceImpl implements ProfileService {
 			request.getBackgroundImage().toEntity(profile));
 
 		return ProfileAddResponse.ofEntity(profile, profileImage, backgroundImage);
+	}
+
+	@Override
+	public ProfileFindResponse findProfile(ProfileFindRequest request) {
+		Profile profile = profileRepository.findByPhoneNumber(request.getPhoneNumber())
+			.orElseThrow(() -> new AvalonChatRuntimeException("Profile Not Found"));
+
+		ProfileImage profileImage = profileImageRepository.findByProfile(profile)
+			.orElseThrow(() -> new AvalonChatRuntimeException("ProfileImage Not Found"));
+
+		BackgroundImage backgroundImage = backgroundImageRepository.findByProfile(profile)
+			.orElseThrow(() -> new AvalonChatRuntimeException("BackgroundImage Not Found"));
+
+		return ProfileFindResponse.ofEntity(profile, profileImage, backgroundImage);
 	}
 }
