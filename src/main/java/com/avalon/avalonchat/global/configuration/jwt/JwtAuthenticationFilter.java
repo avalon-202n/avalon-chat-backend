@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,8 +26,13 @@ import lombok.extern.slf4j.Slf4j;
 public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 	private JwtTokenService jwtTokenService;
 
-	public JwtAuthenticationFilter(JwtTokenService jwtTokenService, RequestMatcher matcher) {
+	public JwtAuthenticationFilter(
+		JwtTokenService jwtTokenService,
+		RequestMatcher matcher,
+		AuthenticationManager authenticationManager
+	) {
 		super(matcher);
+		super.setAuthenticationManager(authenticationManager);
 		this.jwtTokenService = jwtTokenService;
 	}
 
