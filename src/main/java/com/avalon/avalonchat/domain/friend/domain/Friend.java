@@ -36,7 +36,7 @@ public class Friend {
 	@JoinColumn(name = "profile_id")
 	private Profile friendProfile;
 
-	@Enumerated(EnumType.ORDINAL)
+	@Enumerated(EnumType.STRING)
 	private FriendStatus friendStatus;
 
 	public Friend(Profile myProfile, Profile friendProfile, FriendStatus friendStatus) {
