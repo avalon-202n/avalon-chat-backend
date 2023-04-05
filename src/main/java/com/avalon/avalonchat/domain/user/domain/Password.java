@@ -1,14 +1,15 @@
 package com.avalon.avalonchat.domain.user.domain;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import static com.avalon.avalonchat.global.util.Preconditions.*;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
-import static com.avalon.avalonchat.global.util.Preconditions.checkLength;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter

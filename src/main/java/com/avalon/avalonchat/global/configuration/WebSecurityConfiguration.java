@@ -1,11 +1,8 @@
 package com.avalon.avalonchat.global.configuration;
 
-import com.avalon.avalonchat.global.configuration.jwt.JwtAuthenticationFilter;
-import com.avalon.avalonchat.global.configuration.jwt.JwtTokenService;
-import com.avalon.avalonchat.global.configuration.security.CustomAuthenticationEntryPoint;
-import com.avalon.avalonchat.global.configuration.security.CustomRequestMatcher;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,8 +14,13 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.avalon.avalonchat.global.configuration.jwt.JwtAuthenticationFilter;
+import com.avalon.avalonchat.global.configuration.jwt.JwtTokenService;
+import com.avalon.avalonchat.global.configuration.security.CustomAuthenticationEntryPoint;
+import com.avalon.avalonchat.global.configuration.security.CustomRequestMatcher;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Configuration(proxyBeanMethods = false)
 @RequiredArgsConstructor

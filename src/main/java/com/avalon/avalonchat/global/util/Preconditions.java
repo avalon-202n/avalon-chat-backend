@@ -1,9 +1,9 @@
 package com.avalon.avalonchat.global.util;
 
-import lombok.NoArgsConstructor;
-
 import java.util.Collection;
 import java.util.regex.Pattern;
+
+import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 public final class Preconditions {

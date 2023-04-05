@@ -1,14 +1,14 @@
 package com.avalon.avalonchat.domain.user.domain;
 
-import com.avalon.avalonchat.domain.model.BaseAuditingEntity;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+
+import com.avalon.avalonchat.domain.model.BaseAuditingEntity;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter

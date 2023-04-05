@@ -1,19 +1,20 @@
 package com.avalon.avalonchat.domain.profile.repository;
 
+import static org.assertj.core.api.AssertionsForClassTypes.*;
+
+import java.time.LocalDate;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+
 import com.avalon.avalonchat.domain.profile.domain.BackgroundImage;
 import com.avalon.avalonchat.domain.profile.domain.Profile;
 import com.avalon.avalonchat.domain.user.domain.Email;
 import com.avalon.avalonchat.domain.user.domain.Password;
 import com.avalon.avalonchat.domain.user.domain.User;
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-
-import java.time.LocalDate;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @DataJpaTest
 class BackgroundImageRepositoryTest {

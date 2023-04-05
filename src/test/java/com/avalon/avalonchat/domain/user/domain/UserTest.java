@@ -1,8 +1,8 @@
 package com.avalon.avalonchat.domain.user.domain;
 
-import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.AssertionsForInterfaceTypes.*;
 
-import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import org.junit.jupiter.api.Test;
 
 class UserTest {
 
