@@ -1,8 +1,8 @@
 package com.avalon.avalonchat.domain.user.domain;
 
-import static org.assertj.core.api.AssertionsForInterfaceTypes.*;
-
 import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 
 class UserTest {
 
@@ -11,7 +11,7 @@ class UserTest {
 		//given when
 		User user = new User(
 			Email.of("avalon@e.com"),
-			"passW0rd"
+			Password.of("passW0rd")
 		);
 
 		//then

@@ -1,25 +1,24 @@
 package com.avalon.avalonchat.global.configuration;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.avalon.avalonchat.global.configuration.jwt.JwtAuthenticationFilter;
+import com.avalon.avalonchat.global.configuration.jwt.JwtTokenService;
+import com.avalon.avalonchat.global.configuration.security.CustomAuthenticationEntryPoint;
+import com.avalon.avalonchat.global.configuration.security.CustomRequestMatcher;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
-import com.avalon.avalonchat.global.configuration.jwt.JwtAuthenticationFilter;
-import com.avalon.avalonchat.global.configuration.jwt.JwtTokenService;
-import com.avalon.avalonchat.global.configuration.security.CustomAuthenticationEntryPoint;
-import com.avalon.avalonchat.global.configuration.security.CustomRequestMatcher;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration(proxyBeanMethods = false)
 @RequiredArgsConstructor
@@ -27,6 +26,11 @@ import lombok.extern.slf4j.Slf4j;
 public class WebSecurityConfiguration {
 
 	private final JwtTokenService jwtTokenService;
+
+	@Bean
+	public BCryptPasswordEncoder bCryptPasswordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 
 	@Bean
 	public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {

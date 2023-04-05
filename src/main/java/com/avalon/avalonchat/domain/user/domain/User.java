@@ -1,15 +1,14 @@
 package com.avalon.avalonchat.domain.user.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
 import com.avalon.avalonchat.domain.model.BaseAuditingEntity;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 @Entity
 @Getter
@@ -20,10 +19,10 @@ public class User extends BaseAuditingEntity {
 	@Embedded
 	private Email email;
 
-	@Column(nullable = false)
-	private String password;
+	@Embedded
+	private Password password;
 
-	public User(Email email, String password) {
+	public User(Email email, Password password) {
 		this.email = email;
 		this.password = password;
 	}
