@@ -48,6 +48,6 @@ public class FriendServiceImpl implements FriendService {
 		List<Friend> savedFriends = friendRepository.saveAll(friends);
 
 		// 4. return
-		return FriendAddResponse.ofEntity(savedFriends);
+		return new FriendAddResponse(savedFriends);
 	}
 }

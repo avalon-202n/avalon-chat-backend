@@ -1,63 +1,48 @@
-package com.avalon.avalonchat.domain.profile.repository;
+package com.avalon.avalonchat.domain.friend.service;
 
 import static org.assertj.core.api.AssertionsForClassTypes.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
-import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.avalon.avalonchat.domain.friend.dto.FriendAddRequest;
+import com.avalon.avalonchat.domain.friend.dto.FriendAddResponse;
+import com.avalon.avalonchat.domain.friend.repository.FriendRepository;
 import com.avalon.avalonchat.domain.profile.domain.Profile;
+import com.avalon.avalonchat.domain.profile.repository.ProfileRepository;
 import com.avalon.avalonchat.domain.user.domain.User;
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
+import com.avalon.avalonchat.testsupport.DtoFixture;
 import com.avalon.avalonchat.testsupport.Fixture;
 
 @DataJpaTest
-class ProfileRepositoryTest {
-
+class FriendServiceImplTest {
+	private FriendServiceImpl friendService;
+	@Autowired
+	private FriendRepository friendRepository;
 	@Autowired
 	private ProfileRepository profileRepository;
 	@Autowired
 	private UserRepository userRepository;
 
-	@DisplayName("profile 저장 성공")
-	@Test
-	void save() {
-		//given
-		User user = Fixture.createUser();
-		userRepository.save(user);
-
-		String bio = "bio";
-		LocalDate birthDate = LocalDate.now();
-		String nickname = "nickname";
-
-		Profile profile = new Profile(user, bio, birthDate, nickname);
-
-		//when
-		profileRepository.save(profile);
-
-		//then
-		Profile foundProfile = profileRepository.findAll().get(0);
-		assertThat(foundProfile.getId()).isNotNull();
-		assertThat(foundProfile.getBio()).isEqualTo(profile.getBio());
-		assertThat(foundProfile.getBirthDate()).isEqualTo(profile.getBirthDate());
-		assertThat(foundProfile.getNickname()).isEqualTo(profile.getNickname());
-		assertThat(foundProfile.getCreatedAt()).isNotNull();
-		assertThat(foundProfile.getUpdatedAt()).isNotNull();
+	@BeforeEach
+	void setUp() {
+		friendService = new FriendServiceImpl(friendRepository, profileRepository);
 	}
 
 	@Test
 	@Transactional
-	void findAllByPhoneNumber() {
+	void 친구추가_성공() {
 		// given
 		String phoneNumber1 = "010-1234-5678";
 		String phoneNumber2 = "010-8765-4321";
 		String[] phoneNumbers = {phoneNumber1, phoneNumber2};
+		FriendAddRequest request = DtoFixture.friendAddRequest(phoneNumbers);
 
 		User myUser = Fixture.createUser("myUser1@gmail.com", "myUser1");
 		User friendUser1 = Fixture.createUser("friendUser1@gmail.com", "friendUser1");
@@ -71,17 +56,14 @@ class ProfileRepositoryTest {
 		Profile friendProfile2 = new Profile(savedFriendUser2, "bio2", LocalDate.now(), "nickname2");
 		friendProfile1.setPhoneNumber(phoneNumber1);
 		friendProfile2.setPhoneNumber(phoneNumber2);
-		profileRepository.save(myProfile);
+		Profile savedMyProfile = profileRepository.save(myProfile);
 		profileRepository.save(friendProfile1);
 		profileRepository.save(friendProfile2);
-		List<Profile> profiles = new ArrayList<>();
-		profiles.add(friendProfile1);
-		profiles.add(friendProfile2);
 
 		// when
-		List<Profile> savedProfiles = profileRepository.findAllByPhoneNumber(phoneNumbers);
+		FriendAddResponse response = friendService.addFriend(savedMyProfile.getId(), request);
 
 		// then
-		assertThat(savedProfiles.containsAll(profiles)).isTrue();
+		assertThat(response.getFriendIds().size()).isEqualTo(2);
 	}
 }

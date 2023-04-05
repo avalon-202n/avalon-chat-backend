@@ -16,8 +16,4 @@ public class FriendAddResponse {
 			this.friendIds.add(friend.getId());
 		}
 	}
-
-	public static FriendAddResponse ofEntity(List<Friend> friends) {
-		return new FriendAddResponse(friends);
-	}
 }

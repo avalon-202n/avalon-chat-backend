@@ -14,6 +14,7 @@ import com.avalon.avalonchat.domain.user.domain.User;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -34,6 +35,7 @@ public class Profile extends BaseAuditingEntity {
 	private String nickname;
 
 	@Column
+	@Setter
 	private String phoneNumber;
 
 	public Profile(User user, String bio, LocalDate birthDate, String nickname) {
