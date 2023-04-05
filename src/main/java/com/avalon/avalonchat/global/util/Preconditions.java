@@ -23,8 +23,12 @@ public final class Preconditions {
 	public static void checkPatternMatches(Pattern pattern, String value) {
 		if (!pattern.matcher(value).find()) {
 			throw new IllegalArgumentException("Pattern " + pattern + " does not matches " + value);
-
 		}
 	}
 
+	public static void checkLength(int max, int min, String value, String message) {
+		if(value.length() < min || value.length() > max) {
+			throw new IllegalArgumentException(message);
+		}
+	}
 }

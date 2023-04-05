@@ -28,10 +28,10 @@ public class User extends BaseDateTimeEntity {
 	@Embedded
 	private Email email;
 
-	@Column(nullable = false)
-	private String password;
+	@Embedded
+	private Password password;
 
-	public User(Email email, String password) {
+	public User(Email email, Password password) {
 		this.email = email;
 		this.password = password;
 	}

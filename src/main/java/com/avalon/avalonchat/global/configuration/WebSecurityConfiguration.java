@@ -9,6 +9,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.RequestMatcher;
@@ -29,11 +31,16 @@ public class WebSecurityConfiguration {
 	private final JwtTokenService jwtTokenService;
 
 	@Bean
+	public BCryptPasswordEncoder bCryptPasswordEncoder(){
+		return new BCryptPasswordEncoder();
+	}
+
+	@Bean
 	public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
 		return http.getSharedObject(AuthenticationManagerBuilder.class).build();
 	}
 
-	public JwtAuthenticationFilter tempJwtAuthenticationFilter(AuthenticationManager authenticationManager) throws
+	public JwtAuthenticationFilter jwtAuthenticationFilter(AuthenticationManager authenticationManager) throws
 		Exception {
 		List<String> skipPaths = new ArrayList<>();
 		skipPaths.add("/login");
@@ -62,7 +69,7 @@ public class WebSecurityConfiguration {
 				.antMatchers("/signup", "/login").permitAll()
 				.anyRequest().authenticated()
 			)
-			.addFilterBefore(tempJwtAuthenticationFilter(authenticationManager),
+			.addFilterBefore(jwtAuthenticationFilter(authenticationManager),
 				UsernamePasswordAuthenticationFilter.class)
 			.exceptionHandling(handler -> handler
 				.authenticationEntryPoint(new CustomAuthenticationEntryPoint())

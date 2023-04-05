@@ -3,6 +3,7 @@ package com.avalon.avalonchat.global.configuration.jwt;
 import java.security.Key;
 import java.util.Date;
 
+import com.avalon.avalonchat.global.properties.JwtConfigProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;

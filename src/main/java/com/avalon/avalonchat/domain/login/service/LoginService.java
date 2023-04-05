@@ -5,6 +5,12 @@ import com.avalon.avalonchat.domain.login.dto.LoginResponse;
 
 public interface LoginService {
 
+	/**
+	 * 로그인
+	 *
+	 * @param request
+	 * @return LoginResponse
+	 */
 	LoginResponse login(LoginRequest request);
 
 	/**
