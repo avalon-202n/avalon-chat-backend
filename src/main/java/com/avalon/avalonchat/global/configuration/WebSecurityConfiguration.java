@@ -30,7 +30,7 @@ public class WebSecurityConfiguration {
 	private final JwtTokenService jwtTokenService;
 
 	@Bean
-	public BCryptPasswordEncoder bCryptPasswordEncoder() {
+	public BCryptPasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 

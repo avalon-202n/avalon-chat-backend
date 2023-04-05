@@ -31,8 +31,9 @@ public class LoginServiceImpl implements LoginService {
 			.orElseThrow(() -> new LoginInvalidInputException("일치하는 이메일이 존재하지 않습니다."));
 
 		// 2. verify password
-		if (!bCryptPasswordEncoder.matches(request.getPassword(), findUser.getPassword().getValue()))
+		if (!bCryptPasswordEncoder.matches(request.getPassword(), findUser.getPassword().getValue())) {
 			throw new LoginInvalidInputException("비밀번호가 일치하지 않습니다.");
+		}
 
 		// 3. jwt token create
 		final String accessToken = jwtTokenService.createAccessToken(findUser);
