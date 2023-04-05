@@ -1,11 +1,10 @@
 package com.avalon.avalonchat.domain.profile.domain;
 
-import static org.assertj.core.api.AssertionsForClassTypes.*;
-
+import com.avalon.avalonchat.testsupport.Fixture;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import com.avalon.avalonchat.testsupport.Fixture;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class BackgroundImageTest {
 

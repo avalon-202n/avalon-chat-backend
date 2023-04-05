@@ -1,16 +1,8 @@
 package com.avalon.avalonchat.testsupport;
 
 import com.avalon.avalonchat.domain.user.domain.Email;
-import com.avalon.avalonchat.domain.user.dto.EmailAuthenticationCheckRequest;
-import com.avalon.avalonchat.domain.user.dto.EmailAuthenticationCheckResponse;
-import com.avalon.avalonchat.domain.user.dto.EmailAuthenticationSendRequest;
-import com.avalon.avalonchat.domain.user.dto.EmailDuplicatedCheckRequest;
-import com.avalon.avalonchat.domain.user.dto.EmailDuplicatedCheckResponse;
-import com.avalon.avalonchat.domain.user.dto.PhoneNumberAuthenticationCheckRequest;
-import com.avalon.avalonchat.domain.user.dto.PhoneNumberAuthenticationCheckResponse;
-import com.avalon.avalonchat.domain.user.dto.PhoneNumberAuthenticationSendRequest;
-import com.avalon.avalonchat.domain.user.dto.SignUpRequest;
-import com.avalon.avalonchat.domain.user.dto.SignUpResponse;
+import com.avalon.avalonchat.domain.user.domain.Password;
+import com.avalon.avalonchat.domain.user.dto.*;
 
 public final class DtoFixture {
 
@@ -18,7 +10,7 @@ public final class DtoFixture {
 	public static SignUpRequest signUpRequest(String email, String password) {
 		return new SignUpRequest(
 			Email.of(email),
-			password
+			Password.of(password)
 		);
 	}
 
