@@ -1,10 +1,19 @@
 package com.avalon.avalonchat.domain.user.service;
 
-import com.avalon.avalonchat.domain.user.domain.Email;
-import com.avalon.avalonchat.domain.user.dto.*;
 import org.springframework.stereotype.Service;
 
+import com.avalon.avalonchat.domain.user.domain.Email;
 import com.avalon.avalonchat.domain.user.domain.User;
+import com.avalon.avalonchat.domain.user.dto.EmailAuthenticationCheckRequest;
+import com.avalon.avalonchat.domain.user.dto.EmailAuthenticationCheckResponse;
+import com.avalon.avalonchat.domain.user.dto.EmailAuthenticationSendRequest;
+import com.avalon.avalonchat.domain.user.dto.EmailDuplicatedCheckRequest;
+import com.avalon.avalonchat.domain.user.dto.EmailDuplicatedCheckResponse;
+import com.avalon.avalonchat.domain.user.dto.PhoneNumberAuthenticationCheckRequest;
+import com.avalon.avalonchat.domain.user.dto.PhoneNumberAuthenticationCheckResponse;
+import com.avalon.avalonchat.domain.user.dto.PhoneNumberAuthenticationSendRequest;
+import com.avalon.avalonchat.domain.user.dto.SignUpRequest;
+import com.avalon.avalonchat.domain.user.dto.SignUpResponse;
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -52,7 +61,8 @@ public class UserServiceImpl implements UserService {
 		String certificationCode = request.getCertificationCode();
 
 		// check exists
-		// boolean exists = redisTemplate/emailAuthRepository.existsBy(signUpId, email. certificationCode); ??
+		// boolean exists
+		//  	= redisTemplate/emailAuthRepository.existsBy(signUpId, email. certificationCode); ??
 		boolean exist = false;
 
 		return new EmailAuthenticationCheckResponse(exist);
@@ -67,12 +77,14 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public PhoneNumberAuthenticationCheckResponse checkPhoneNumberAuthentication(PhoneNumberAuthenticationCheckRequest request) {
+	public PhoneNumberAuthenticationCheckResponse checkPhoneNumberAuthentication(
+		PhoneNumberAuthenticationCheckRequest request) {
 		String phoneNumber = request.getPhoneNumber();
 		String certificationCode = request.getCertificationCode();
 
 		// check
-		// boolean exists = redisTemplate/phoneNumberAuthRepository.existsBy(signUpId, phoneNumber, certificationCode); ??
+		// boolean exists
+		// 		= redisTemplate/phoneNumberAuthRepository.existsBy(signUpId, phoneNumber, certificationCode); ??
 		boolean exist = false;
 
 		return new PhoneNumberAuthenticationCheckResponse(exist);

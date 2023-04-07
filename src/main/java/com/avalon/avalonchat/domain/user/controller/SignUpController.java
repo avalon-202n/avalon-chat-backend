@@ -3,13 +3,22 @@ package com.avalon.avalonchat.domain.user.controller;
 import static com.avalon.avalonchat.global.error.ErrorResponseWithMessages.*;
 import static com.avalon.avalonchat.global.util.ResponseEntityUtil.*;
 
-import com.avalon.avalonchat.domain.user.dto.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.avalon.avalonchat.domain.user.dto.EmailAuthenticationCheckRequest;
+import com.avalon.avalonchat.domain.user.dto.EmailAuthenticationCheckResponse;
+import com.avalon.avalonchat.domain.user.dto.EmailAuthenticationSendRequest;
+import com.avalon.avalonchat.domain.user.dto.EmailDuplicatedCheckRequest;
+import com.avalon.avalonchat.domain.user.dto.EmailDuplicatedCheckResponse;
+import com.avalon.avalonchat.domain.user.dto.PhoneNumberAuthenticationCheckRequest;
+import com.avalon.avalonchat.domain.user.dto.PhoneNumberAuthenticationCheckResponse;
+import com.avalon.avalonchat.domain.user.dto.PhoneNumberAuthenticationSendRequest;
+import com.avalon.avalonchat.domain.user.dto.SignUpRequest;
+import com.avalon.avalonchat.domain.user.dto.SignUpResponse;
 import com.avalon.avalonchat.domain.user.service.UserService;
 import com.avalon.avalonchat.global.openapi.ErrorResponseApi;
 
