@@ -1,6 +1,5 @@
 package com.avalon.avalonchat.testsupport;
 
-import com.avalon.avalonchat.domain.friend.dto.FriendAddRequest;
 import com.avalon.avalonchat.domain.user.domain.Email;
 import com.avalon.avalonchat.domain.user.dto.EmailAuthenticationCheckRequest;
 import com.avalon.avalonchat.domain.user.dto.EmailAuthenticationCheckResponse;
@@ -65,8 +64,4 @@ public final class DtoFixture {
 		return new PhoneNumberAuthenticationCheckResponse(authenticated);
 	}
 	/* User Package DTO End */
-
-	public static FriendAddRequest friendAddRequest(String[] phoneNumbers) {
-		return new FriendAddRequest(phoneNumbers);
-	}
 }

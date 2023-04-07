@@ -1,8 +1,5 @@
 package com.avalon.avalonchat.testsupport;
 
-import java.time.LocalDate;
-
-import com.avalon.avalonchat.domain.profile.domain.Profile;
 import com.avalon.avalonchat.domain.user.domain.Email;
 import com.avalon.avalonchat.domain.user.domain.User;
 
@@ -16,20 +13,6 @@ public final class Fixture {
 		return new User(
 			Email.of(email),
 			password
-		);
-	}
-
-	public static Profile createProfile() {
-		User user = Fixture.createUser();
-		return createProfile(user, "bio", LocalDate.now(), "nickname");
-	}
-
-	private static Profile createProfile(User user, String bio, LocalDate birthDate, String nickname) {
-		return new Profile(
-			user,
-			bio,
-			birthDate,
-			nickname
 		);
 	}
 }

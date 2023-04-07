@@ -38,7 +38,7 @@ class FriendRepositoryTest {
 		Profile myProfile = new Profile(myUser, "bio1", LocalDate.now(), "nickname1");
 		Profile friendProfile = new Profile(friendUser, "bio2", LocalDate.now(), "nickname2");
 
-		Friend friend = new Friend(myProfile, friendProfile, Friend.FriendStatus.NORMAL);
+		Friend friend = new Friend(myProfile, friendProfile);
 
 		// when
 		Friend savedFriend = friendRepository.save(friend);
@@ -59,8 +59,8 @@ class FriendRepositoryTest {
 		User friendUser2 = new User(Email.of("email3@gmail.com"), "password3");
 		Profile friendProfile2 = new Profile(friendUser2, "bio4", LocalDate.now(), "nickname4");
 
-		Friend friend1 = new Friend(myProfile, friendProfile1, Friend.FriendStatus.NORMAL);
-		Friend friend2 = new Friend(myProfile, friendProfile2, Friend.FriendStatus.NORMAL);
+		Friend friend1 = new Friend(myProfile, friendProfile1);
+		Friend friend2 = new Friend(myProfile, friendProfile2);
 
 		userRepository.save(myUser);
 		userRepository.save(friendUser1);
@@ -95,7 +95,7 @@ class FriendRepositoryTest {
 		for (int i = 0; i < 10; i++) {
 			User friendUser = new User(Email.of("email@gmail" + i + ".com"), "password" + i);
 			Profile friendProfile = new Profile(friendUser, "bio", LocalDate.now(), "nickname");
-			Friend friend = new Friend(myProfile, friendProfile, Friend.FriendStatus.NORMAL);
+			Friend friend = new Friend(myProfile, friendProfile);
 
 			userRepository.save(friendUser);
 			profileRepository.save(friendProfile);
@@ -109,11 +109,5 @@ class FriendRepositoryTest {
 
 		// then
 		assertThat(findFriends.size()).isEqualTo(10);
-	}
-
-	@Test
-		//TODO
-	void Friend_transactionChunk_벌크_저장_성공() {
-
 	}
 }

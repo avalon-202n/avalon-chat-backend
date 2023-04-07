@@ -8,8 +8,6 @@ import com.avalon.avalonchat.domain.profile.domain.Profile;
 import com.avalon.avalonchat.domain.profile.domain.ProfileImage;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddRequest;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddResponse;
-import com.avalon.avalonchat.domain.profile.repository.BackgroundImageRepository;
-import com.avalon.avalonchat.domain.profile.repository.ProfileImageRepository;
 import com.avalon.avalonchat.domain.profile.repository.ProfileRepository;
 import com.avalon.avalonchat.domain.user.domain.User;
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
@@ -24,8 +22,6 @@ public class ProfileServiceImpl implements ProfileService {
 
 	private final ProfileRepository profileRepository;
 	private final UserRepository userRepository;
-	private final ProfileImageRepository profileImageRepository;
-	private final BackgroundImageRepository backgroundImageRepository;
 
 	@Transactional
 	@Override
@@ -42,18 +38,23 @@ public class ProfileServiceImpl implements ProfileService {
 			request.getNickname()
 		);
 
-		// 3. save it
-		Profile savedProfile = profileRepository.save(profile);
+		// 3. create images & add to profile
+		saveImages(profile, request);
 
-		// 4. create images
-		ProfileImage profileImage = new ProfileImage(savedProfile, request.getProfileImage());
-		BackgroundImage backgroundImage = new BackgroundImage(savedProfile, request.getBackgroundImage());
+		// 4. save it
+		profileRepository.save(profile);
 
-		// 5. save them - TODO jpa cascade persists?
-		profileImageRepository.save(profileImage);
-		backgroundImageRepository.save(backgroundImage);
+		// 5. return
+		return ProfileAddResponse.ofEntity(profile);
+	}
 
-		// 6. return
-		return ProfileAddResponse.ofEntity(profile, profileImage, backgroundImage);
+	private void saveImages(Profile profile, ProfileAddRequest request) {
+		// 1. create images
+		ProfileImage profileImage = new ProfileImage(profile, request.getProfileImage());
+		BackgroundImage backgroundImage = new BackgroundImage(profile, request.getBackgroundImage());
+
+		// 2. add to profile
+		profile.addProfileImage(profileImage);
+		profile.addBackgroundImage(backgroundImage);
 	}
 }

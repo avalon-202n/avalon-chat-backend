@@ -13,30 +13,33 @@ public class ProfileAddResponse {
 	private final LocalDate birthDate;
 	private final String nickname;
 	private final String bio;
-	private final String profileImageUrl;
-	private final String backgroundImageUrl;
+	private final String[] profileImages;
+	private final String[] backgroundImages;
 
 	public ProfileAddResponse(
 		LocalDate birthDate,
 		String nickname,
 		String bio,
-		String profileImageUrl,
-		String backgroundImageUrl) {
+		String[] profileImages,
+		String[] backgroundImages) {
 		this.birthDate = birthDate;
 		this.nickname = nickname;
 		this.bio = bio;
-		this.profileImageUrl = profileImageUrl;
-		this.backgroundImageUrl = backgroundImageUrl;
+		this.profileImages = profileImages;
+		this.backgroundImages = backgroundImages;
 	}
 
-	public static ProfileAddResponse ofEntity(Profile profile, ProfileImage profileImage,
-		BackgroundImage backgroundImage) {
+	public static ProfileAddResponse ofEntity(Profile profile) {
 		return new ProfileAddResponse(
 			profile.getBirthDate(),
 			profile.getNickname(),
 			profile.getBio(),
-			profileImage.getUrl(),
-			backgroundImage.getUrl()
+			profile.getProfileImages().stream()
+				.map(ProfileImage::getUrl)
+				.toArray(String[]::new),
+			profile.getBackgroundImages().stream()
+				.map(BackgroundImage::getUrl)
+				.toArray(String[]::new)
 		);
 	}
 }

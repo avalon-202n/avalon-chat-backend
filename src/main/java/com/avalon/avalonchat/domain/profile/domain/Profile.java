@@ -1,11 +1,15 @@
 package com.avalon.avalonchat.domain.profile.domain;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.avalon.avalonchat.domain.model.BaseAuditingEntity;
@@ -38,10 +42,26 @@ public class Profile extends BaseAuditingEntity {
 	@Setter
 	private String phoneNumber;
 
+	@OneToMany(mappedBy = "profile", cascade = CascadeType.PERSIST, orphanRemoval = true)
+	private List<ProfileImage> profileImages = new ArrayList<>();
+
+	@OneToMany(mappedBy = "profile", cascade = CascadeType.PERSIST, orphanRemoval = true)
+	private List<BackgroundImage> backgroundImages = new ArrayList<>();
+
 	public Profile(User user, String bio, LocalDate birthDate, String nickname) {
 		this.user = user;
 		this.bio = bio;
 		this.birthDate = birthDate;
 		this.nickname = nickname;
+	}
+
+	public void addProfileImage(ProfileImage profileImage) {
+		profileImages.add(profileImage);
+		profileImage.setProfile(this);
+	}
+
+	public void addBackgroundImage(BackgroundImage backgroundImage) {
+		backgroundImages.add(backgroundImage);
+		backgroundImage.setProfile(this);
 	}
 }

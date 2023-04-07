@@ -1,7 +1,7 @@
 package com.avalon.avalonchat.domain.friend.service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,28 +26,18 @@ public class FriendServiceImpl implements FriendService {
 
 	@Transactional
 	@Override
-	public FriendAddResponse addFriend(long userId, FriendAddRequest request) {
-		// 1. find profile
-		List<Profile> friendProfiles = profileRepository.findAllByPhoneNumber(request.getPhoneNumbers());
-		Profile myProfile = profileRepository.findById(userId)
+	public List<FriendAddResponse> addFriend(long profileId, FriendAddRequest request) {
+		// 1. find profile & create friends
+		Profile myProfile = profileRepository.findById(profileId)
 			.orElseThrow(() -> new AvalonChatRuntimeException("Profile Not Found"));
 
-		// 2. create friends
-		List<Friend> friends = new ArrayList<>();
-		for (Profile friendProfile : friendProfiles) {
-			Friend friend = new Friend(
-				myProfile,
-				friendProfile,
-				Friend.FriendStatus.NORMAL
-			);
-			friends.add(friend);
-		}
+		List<Friend> friends = profileRepository.findAllByPhoneNumberIn(request.getPhoneNumbers()).stream()
+			.map(friendprofile -> new Friend(myProfile, friendprofile))
+			.collect(Collectors.toList());
 
-		// 3. save them
-		// TODO: 벌크 연산에 transactionChunk 반영 -> 10,000건 단위인데, 전화번호 동기화를 한번에 이 이상 할 일이 있을까..?
-		List<Friend> savedFriends = friendRepository.saveAll(friends);
-
-		// 4. return
-		return new FriendAddResponse(savedFriends);
+		// 2. save them & return
+		return friendRepository.saveAll(friends).stream()
+			.map(savedFriend -> FriendAddResponse.ofEntity(savedFriend))
+			.collect(Collectors.toList());
 	}
 }

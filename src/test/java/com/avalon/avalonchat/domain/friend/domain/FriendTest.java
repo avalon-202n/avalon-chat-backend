@@ -22,11 +22,12 @@ class FriendTest {
 		Profile friendProfile = new Profile(friendUser, "bio2", LocalDate.now(), "nickname2");
 
 		//when
-		Friend friend = new Friend(myProfile, friendProfile, Friend.FriendStatus.NORMAL);
+		Friend friend = new Friend(myProfile, friendProfile);
 
 		//then
 		assertThat(friend.getMyProfile()).isEqualTo(myProfile);
 		assertThat(friend.getFriendProfile()).isEqualTo(friendProfile);
+		assertThat(friend.getFriendStatus()).isEqualTo(Friend.FriendStatus.NORMAL);
 	}
 
 }

@@ -2,6 +2,9 @@ package com.avalon.avalonchat.domain.friend.controller;
 
 import static com.avalon.avalonchat.global.util.ResponseEntityUtil.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,17 +25,19 @@ public class FriendController {
 	private final FriendService friendService;
 
 	@PostMapping
-	public ResponseEntity<FriendAddResponse> addFriend(
+	public ResponseEntity<List<FriendAddResponse>> addFriend(
 		//TODO: @AuthenticationPrincipal 활용 -> SecurityUser 타입 Authentication 객체에서 userId 가져올 것
 		FriendAddRequest request
 	) {
 		// setup
-		long userId = 1L;
+		long profileId = 1L;
 
 		// action
-		FriendAddResponse response = friendService.addFriend(userId, request);
+		List<FriendAddResponse> responses = friendService.addFriend(profileId, request)
+			.stream()
+			.collect(Collectors.toList());
 
 		// response
-		return created(response);
+		return created(responses);
 	}
 }

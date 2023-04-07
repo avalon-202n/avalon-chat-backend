@@ -6,62 +6,77 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.jupiter.api.DisplayName;
+import javax.persistence.EntityManager;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.avalon.avalonchat.domain.profile.domain.BackgroundImage;
 import com.avalon.avalonchat.domain.profile.domain.Profile;
+import com.avalon.avalonchat.domain.profile.domain.ProfileImage;
+import com.avalon.avalonchat.domain.user.domain.Email;
 import com.avalon.avalonchat.domain.user.domain.User;
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
-import com.avalon.avalonchat.testsupport.Fixture;
 
 @DataJpaTest
+@Transactional
 class ProfileRepositoryTest {
-
+	@Autowired
+	private EntityManager em;
 	@Autowired
 	private ProfileRepository profileRepository;
 	@Autowired
 	private UserRepository userRepository;
 
-	@DisplayName("profile 저장 성공")
 	@Test
-	void save() {
+	void profile_영속성_저장성공() {
 		//given
-		User user = Fixture.createUser();
+		User user = new User(Email.of("email@gmail.com"), "password");
 		userRepository.save(user);
 
 		String bio = "bio";
 		LocalDate birthDate = LocalDate.now();
 		String nickname = "nickname";
 
+		String profileUrl = "storage/url/profile_image.png";
+		String backgroundUrl = "storage/url/background_image.png";
+
 		Profile profile = new Profile(user, bio, birthDate, nickname);
 
-		//when
-		profileRepository.save(profile);
+		ProfileImage profileImage = new ProfileImage(profile, profileUrl);
+		BackgroundImage backgroundImage = new BackgroundImage(profile, backgroundUrl);
 
-		//then
-		Profile foundProfile = profileRepository.findAll().get(0);
-		assertThat(foundProfile.getId()).isNotNull();
-		assertThat(foundProfile.getBio()).isEqualTo(profile.getBio());
-		assertThat(foundProfile.getBirthDate()).isEqualTo(profile.getBirthDate());
-		assertThat(foundProfile.getNickname()).isEqualTo(profile.getNickname());
-		assertThat(foundProfile.getCreatedAt()).isNotNull();
-		assertThat(foundProfile.getUpdatedAt()).isNotNull();
+		//when & then
+		profile.addProfileImage(profileImage);
+		profile.addBackgroundImage(backgroundImage);
+
+		em.persist(profile);
+
+		assertThat(em.contains(profile)).isTrue();
+		assertThat(em.contains(profileImage)).isTrue();
+		assertThat(em.contains(backgroundImage)).isTrue();
+
+		em.flush();
+		em.clear();
+		ProfileImage savedProfileImage = em.find(ProfileImage.class, profileImage.getId());
+		BackgroundImage savedBackgroundImage = em.find(BackgroundImage.class, backgroundImage.getId());
+
+		assertThat(savedProfileImage.getUrl()).isEqualTo(profile.getProfileImages().get(0).getUrl());
+		assertThat(savedBackgroundImage.getUrl()).isEqualTo(profile.getBackgroundImages().get(0).getUrl());
 	}
 
 	@Test
-	@Transactional
-	void findAllByPhoneNumber() {
+	void findAllByPhoneNumber_조회성공() {
 		// given
 		String phoneNumber1 = "010-1234-5678";
 		String phoneNumber2 = "010-8765-4321";
 		String[] phoneNumbers = {phoneNumber1, phoneNumber2};
 
-		User myUser = Fixture.createUser("myUser1@gmail.com", "myUser1");
-		User friendUser1 = Fixture.createUser("friendUser1@gmail.com", "friendUser1");
-		User friendUser2 = Fixture.createUser("friendUser2@gmail.com", "friendUser2");
+		User myUser = new User(Email.of("email@gmail.com"), "password");
+		User friendUser1 = new User(Email.of("email@gmail1.com"), "password1");
+		User friendUser2 = new User(Email.of("email@gmail2.com"), "password2");
 		User savedMyUser = userRepository.save(myUser);
 		User savedFriendUser1 = userRepository.save(friendUser1);
 		User savedFriendUser2 = userRepository.save(friendUser2);
@@ -79,7 +94,7 @@ class ProfileRepositoryTest {
 		profiles.add(friendProfile2);
 
 		// when
-		List<Profile> savedProfiles = profileRepository.findAllByPhoneNumber(phoneNumbers);
+		List<Profile> savedProfiles = profileRepository.findAllByPhoneNumberIn(phoneNumbers);
 
 		// then
 		assertThat(savedProfiles.containsAll(profiles)).isTrue();
