@@ -3,7 +3,6 @@ package com.avalon.avalonchat.domain.friend.controller;
 import static com.avalon.avalonchat.global.util.ResponseEntityUtil.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,9 +32,7 @@ public class FriendController {
 		long profileId = 1L;
 
 		// action
-		List<FriendAddResponse> responses = friendService.addFriend(profileId, request)
-			.stream()
-			.collect(Collectors.toList());
+		List<FriendAddResponse> responses = friendService.addFriend(profileId, request);
 
 		// response
 		return created(responses);
