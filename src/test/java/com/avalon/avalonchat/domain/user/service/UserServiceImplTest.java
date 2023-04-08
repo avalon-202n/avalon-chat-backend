@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.avalon.avalonchat.domain.user.domain.User;
 import com.avalon.avalonchat.domain.user.dto.SignUpRequest;
@@ -17,11 +18,12 @@ class UserServiceImplTest {
 
 	private UserServiceImpl sut;
 	private UserRepository userRepository;
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	@BeforeEach
 	void setUp() {
 		userRepository = mock(UserRepository.class);
-		sut = new UserServiceImpl(userRepository);
+		sut = new UserServiceImpl(userRepository, bCryptPasswordEncoder);
 	}
 
 	@Test
