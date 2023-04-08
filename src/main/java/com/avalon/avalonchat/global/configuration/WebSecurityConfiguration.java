@@ -1,7 +1,8 @@
 package com.avalon.avalonchat.global.configuration;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,14 +11,16 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
+import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import com.avalon.avalonchat.global.configuration.jwt.JwtAuthenticationFilter;
 import com.avalon.avalonchat.global.configuration.jwt.JwtTokenService;
-import com.avalon.avalonchat.global.configuration.security.CustomAuthenticationEntryPoint;
-import com.avalon.avalonchat.global.configuration.security.CustomRequestMatcher;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +45,8 @@ public class WebSecurityConfiguration {
 	@Bean
 	public SecurityFilterChain securityFilterChain(
 		HttpSecurity http,
-		AuthenticationManager authenticationManager
+		JwtAuthenticationFilter jwtFilter,
+		AuthenticationEntryPoint authenticationEntryPoint
 	) throws Exception {
 		return http
 			.csrf().disable()
@@ -53,27 +57,36 @@ public class WebSecurityConfiguration {
 			.sessionManagement(session -> session
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			)
+			.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
 			.authorizeRequests(authorize -> authorize
 				.antMatchers("/actuator/**").permitAll()
 				.antMatchers("/**/swagger*/**", "/**/api-docs/**").permitAll()
 				.antMatchers("/signup/**", "/login").permitAll()
 				.anyRequest().authenticated()
 			)
-			.addFilterBefore(tempJwtAuthenticationFilter(authenticationManager),
-				UsernamePasswordAuthenticationFilter.class)
-			.exceptionHandling(ex -> ex
-				.authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+			.exceptionHandling(ex -> ex.authenticationEntryPoint(authenticationEntryPoint)
 			).build();
 	}
 
-	private JwtAuthenticationFilter tempJwtAuthenticationFilter(AuthenticationManager authenticationManager) {
-		List<String> skipPaths = new ArrayList<>();
-		skipPaths.add("/login");
-		skipPaths.add("/signup");
+	@Bean
+	public JwtAuthenticationFilter tempJwtAuthenticationFilter(AuthenticationManager authenticationManager) {
+		RequestMatcher matcher = jwtFilterMatcher(
+			"/actuator/**",
+			"/**/swagger*/**", "/**/api-docs/**",
+			"/signup/**", "/login"
+		);
 
-		final RequestMatcher matcher = new CustomRequestMatcher(skipPaths);
-		final JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtTokenService, matcher);
-		filter.setAuthenticationManager(authenticationManager);
-		return filter;
+		return new JwtAuthenticationFilter(jwtTokenService, matcher, authenticationManager);
+	}
+
+	private RequestMatcher jwtFilterMatcher(String... permitAllAntPatterns) {
+		List<RequestMatcher> permitAllMatchers = Arrays.stream(permitAllAntPatterns)
+			.map(AntPathRequestMatcher::new)
+			.collect(Collectors.toList());
+
+		RequestMatcher permitAllMatcher = new OrRequestMatcher(permitAllMatchers);
+
+		// if not matches permitAll -> require authentication
+		return new NegatedRequestMatcher(permitAllMatcher);
 	}
 }

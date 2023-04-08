@@ -15,6 +15,7 @@ import com.avalon.avalonchat.domain.profile.dto.ProfileFindRequest;
 import com.avalon.avalonchat.domain.profile.dto.ProfileFindResponse;
 import com.avalon.avalonchat.domain.profile.service.ProfileService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,6 +27,7 @@ public class ProfileController {
 
 	private final ProfileService profileService;
 
+	@Operation(summary = "프로필 추가")
 	@PostMapping
 	public ResponseEntity<ProfileAddResponse> addProfile(
 		//TODO: @AuthenticationPrincipal 활용 -> SecurityUser 타입 Authentication 객체에서 userId 가져올 것
@@ -41,6 +43,7 @@ public class ProfileController {
 		return created(response);
 	}
 
+	@Operation(summary = "프로필 찾기")
 	@GetMapping("/find")
 	public ProfileFindResponse findProfile(
 		ProfileFindRequest request

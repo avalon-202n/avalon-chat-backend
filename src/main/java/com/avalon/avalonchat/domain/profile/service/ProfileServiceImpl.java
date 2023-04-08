@@ -48,8 +48,8 @@ public class ProfileServiceImpl implements ProfileService {
 		Profile savedProfile = profileRepository.save(profile);
 
 		// 4. create images
-		ProfileImage profileImage = new ProfileImage(savedProfile, request.getProfileImage());
-		BackgroundImage backgroundImage = new BackgroundImage(savedProfile, request.getBackgroundImage());
+		ProfileImage profileImage = new ProfileImage(savedProfile, request.getProfileImageUrl());
+		BackgroundImage backgroundImage = new BackgroundImage(savedProfile, request.getBackgroundImageUrl());
 
 		// 5. save them - TODO jpa cascade persists?
 		profileImageRepository.save(profileImage);
