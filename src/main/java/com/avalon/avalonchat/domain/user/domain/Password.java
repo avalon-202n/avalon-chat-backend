@@ -1,11 +1,10 @@
 package com.avalon.avalonchat.domain.user.domain;
 
+import static com.avalon.avalonchat.global.error.ErrorResponseWithMessages.*;
 import static com.avalon.avalonchat.global.util.Preconditions.*;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -22,17 +21,16 @@ public class Password {
 	private String value;
 
 	private Password(String value) {
-		String message = "비밀번호의 길이는 " + MINIMUM_LENGTH + "이상 " + MAXIMUM_LENGTH + "이하 입니다.";
-		checkLength(MAXIMUM_LENGTH, MINIMUM_LENGTH, value, message);
-		setEncryptedPassword(value);
+		checkLength(MAXIMUM_LENGTH, MINIMUM_LENGTH, value,
+			INVALID_LENGTH.getMessage(new Object[] {"패스워드", MAXIMUM_LENGTH, MINIMUM_LENGTH}));
+		this.value = value;
 	}
 
 	public static Password of(String value) {
 		return new Password(value);
 	}
 
-	public void setEncryptedPassword(String password) {
-		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-		this.value = bCryptPasswordEncoder.encode(password);
+	public void setEncryptedPassword(String encryptedPassword) {
+		this.value = encryptedPassword;
 	}
 }
