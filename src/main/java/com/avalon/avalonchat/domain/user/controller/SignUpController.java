@@ -14,6 +14,7 @@ import com.avalon.avalonchat.domain.user.dto.EmailAuthenticationCheckResponse;
 import com.avalon.avalonchat.domain.user.dto.EmailAuthenticationSendRequest;
 import com.avalon.avalonchat.domain.user.dto.EmailDuplicatedCheckRequest;
 import com.avalon.avalonchat.domain.user.dto.EmailDuplicatedCheckResponse;
+import com.avalon.avalonchat.domain.user.dto.PhoneNumberAuthenticationCheckRequest;
 import com.avalon.avalonchat.domain.user.dto.PhoneNumberAuthenticationCheckResponse;
 import com.avalon.avalonchat.domain.user.dto.PhoneNumberAuthenticationSendRequest;
 import com.avalon.avalonchat.domain.user.dto.SignUpRequest;
@@ -53,7 +54,7 @@ public class SignUpController {
 	public EmailDuplicatedCheckResponse emailDuplicatedCheck(
 		@RequestBody EmailDuplicatedCheckRequest request
 	) {
-		return new EmailDuplicatedCheckResponse(false);
+		return userService.checkEmailDuplicated(request);
 	}
 
 	@Operation(summary = "이메일 인증번호 발송")
@@ -62,6 +63,7 @@ public class SignUpController {
 	public ResponseEntity<Void> emailAuthenticationSend(
 		@RequestBody EmailAuthenticationSendRequest request
 	) {
+		userService.sendEmailAuthentication(request);
 		return noContent();
 	}
 
@@ -71,7 +73,7 @@ public class SignUpController {
 	public EmailAuthenticationCheckResponse emailAuthenticationCheck(
 		@RequestBody EmailAuthenticationCheckRequest request
 	) {
-		return new EmailAuthenticationCheckResponse(true);
+		return userService.checkEmailAuthentication(request);
 	}
 
 	@Operation(summary = "핸드폰 인증번호 발송")
@@ -80,6 +82,7 @@ public class SignUpController {
 	public ResponseEntity<Void> phoneNumberAuthenticationSend(
 		@RequestBody PhoneNumberAuthenticationSendRequest request
 	) {
+		userService.sendPhoneNumberAuthentication(request);
 		return noContent();
 	}
 
@@ -87,8 +90,8 @@ public class SignUpController {
 	@ErrorResponseApi(messages = INVALID_FIELD, args = {"PhoneNumber 인증 번호"})
 	@PostMapping("/phonenumber/authenticate/check")
 	public PhoneNumberAuthenticationCheckResponse phoneNumberAuthenticationCheck(
-		@RequestBody PhoneNumberAuthenticationSendRequest request
+		@RequestBody PhoneNumberAuthenticationCheckRequest request
 	) {
-		return new PhoneNumberAuthenticationCheckResponse(true);
+		return userService.checkPhoneNumberAuthentication(request);
 	}
 }

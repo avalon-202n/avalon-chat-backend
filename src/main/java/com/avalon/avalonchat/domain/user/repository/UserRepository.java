@@ -9,4 +9,6 @@ import com.avalon.avalonchat.domain.user.domain.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 	Optional<User> findByEmail(Email email);
+
+	boolean existsByEmail(Email email);
 }
