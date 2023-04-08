@@ -26,4 +26,8 @@ public class User extends BaseAuditingEntity {
 		this.email = email;
 		this.password = password;
 	}
+
+	public void setEncryptedPassword(String encryptedPassword) {
+		this.password.setEncryptedPassword(encryptedPassword);
+	}
 }
