@@ -23,6 +23,7 @@ class UserServiceImplTest {
 	@BeforeEach
 	void setUp() {
 		userRepository = mock(UserRepository.class);
+		bCryptPasswordEncoder = mock(BCryptPasswordEncoder.class);
 		sut = new UserServiceImpl(userRepository, bCryptPasswordEncoder);
 	}
 
