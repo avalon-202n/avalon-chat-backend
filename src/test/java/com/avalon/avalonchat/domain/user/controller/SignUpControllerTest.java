@@ -46,7 +46,6 @@ class SignUpControllerTest extends BaseControllerTest {
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(toJson(request))
 		);
-
 		//then
 		perform
 			.andExpect(status().isOk())
