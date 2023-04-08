@@ -1,5 +1,6 @@
 package com.avalon.avalonchat.testsupport;
 
+import com.avalon.avalonchat.domain.login.dto.LoginRequest;
 import com.avalon.avalonchat.domain.user.domain.Email;
 import com.avalon.avalonchat.domain.user.domain.Password;
 import com.avalon.avalonchat.domain.user.dto.EmailAuthenticationCheckRequest;
@@ -65,4 +66,12 @@ public final class DtoFixture {
 		return new PhoneNumberAuthenticationCheckResponse(authenticated);
 	}
 	/* User Package DTO End */
+
+	public static LoginRequest loginRequest(String email, String password) {
+		return new LoginRequest(
+			Email.of(email),
+			password
+		);
+	}
+	/* Login Package DTO End */
 }
