@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import com.avalon.avalonchat.global.error.ErrorResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+// TODO - try on https://www.baeldung.com/spring-security-exceptionhandler#with-exceptionhandler
 @Component
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
 

@@ -34,7 +34,7 @@ jobs:
     steps:
       - name: Checkout to github with submodule
         uses: actions/checkout@v3
-        with: 
+        with:
           token: ${{ secrets.REPO_ACCESS }}
           submodules: recursive
       - name: Set up JDK
