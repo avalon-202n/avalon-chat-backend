@@ -4,6 +4,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.*;
 
 import java.time.LocalDateTime;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -39,5 +40,10 @@ class ChatMessageRepositoryTest {
 		assertThat(savedChatMessage2.getCreatedAt()).isBefore(LocalDateTime.now());
 
 		assertThat(foundChatMessages).asList().containsExactlyInAnyOrder(chatMessage1, chatMessage2);
+	}
+
+	@AfterEach
+	void tearDown() {
+		sut.deleteAll();
 	}
 }
