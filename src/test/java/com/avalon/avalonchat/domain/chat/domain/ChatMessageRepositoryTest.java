@@ -9,12 +9,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import com.avalon.avalonchat.testsupport.extension.RedisExtension;
 
 @ExtendWith(RedisExtension.class)
-@Testcontainers(disabledWithoutDocker = true)
 @SpringBootTest
 class ChatMessageRepositoryTest {
 
