@@ -5,22 +5,46 @@ import static org.assertj.core.api.AssertionsForClassTypes.*;
 import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.testcontainers.utility.DockerImageName;
 
-import com.avalon.avalonchat.testsupport.extension.RedisExtension;
+import com.avalon.avalonchat.global.error.exception.AvalonChatRuntimeException;
+import com.redis.testcontainers.RedisContainer;
 
-@ExtendWith(RedisExtension.class)
+// @ExtendWith(RedisExtension.class)
 @SpringBootTest
 class ChatMessageRepositoryTest {
 
 	@Autowired
 	private ChatMessageRepository sut;
 
+	@Autowired
+	private RedisProperties redisProperties;
+
+	@BeforeAll
+	static void beforeAll() {
+		DockerImageName redisImageName = DockerImageName.parse("redis:6-alpine");
+		RedisContainer redisContainer = new RedisContainer(redisImageName)
+			.withExposedPorts(6379)
+			.withReuse(true);
+		redisContainer.start();
+
+		System.setProperty("spring.redis.host", redisContainer.getHost());
+		System.setProperty("spring.redis.port", redisContainer.getMappedPort(6379).toString());
+	}
+
 	@Test
 	void 채팅_메시지에대한_Create_Read_테스트() {
+		//log
+		int port = redisProperties.getPort();
+		if (port == 6379) {
+			throw new AvalonChatRuntimeException("system.setProperty not working");
+		}
+
 		// given
 		ChatMessage chatMessage1 = new ChatMessage("안녕하세요 ㅎ.ㅎ", 1L, "고독한 인사방");
 		ChatMessage chatMessage2 = new ChatMessage("네 안녕하세요 1L 님", 2L, "고독한 인사방");
