@@ -1,11 +1,11 @@
 package com.avalon.avalonchat.domain.profile.repository;
 
-import java.util.Optional;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.avalon.avalonchat.domain.profile.domain.Profile;
 
 public interface ProfileRepository extends JpaRepository<Profile, Long> {
-	Optional<Profile> findByPhoneNumber(String phoneNumber);
+	List<Profile> findAllByPhoneNumberIn(String[] phoneNumbers);
 }

@@ -4,30 +4,41 @@ import static org.assertj.core.api.AssertionsForClassTypes.*;
 
 import java.time.LocalDate;
 
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import com.avalon.avalonchat.domain.user.domain.Email;
+import com.avalon.avalonchat.domain.user.domain.Password;
 import com.avalon.avalonchat.domain.user.domain.User;
-import com.avalon.avalonchat.testsupport.Fixture;
 
 class ProfileTest {
-
-	@DisplayName("profile 생성 성공")
 	@Test
-	void profile() {
+	void profile_생성성공() {
 		//given
-		User user = Fixture.createUser();
+		User user = new User(Email.of("email@gmail.com"), Password.of("password"));
+
 		String bio = "This is my bio";
 		LocalDate birthDate = LocalDate.now();
 		String nickname = "nickname";
 
+		String profileUrl = "storage/url/profile_image.png";
+		String backgroundUrl = "storage/url/background_image.png";
+
 		// when
-		Profile profile = new Profile(
-			user, bio, birthDate, nickname
-		);
+		Profile profile = new Profile(user, bio, birthDate, nickname);
+
+		ProfileImage profileImage = new ProfileImage(profile, profileUrl);
+		BackgroundImage backgroundImage = new BackgroundImage(profile, backgroundUrl);
+
+		profile.addProfileImage(profileImage);
+		profile.addBackgroundImage(backgroundImage);
 
 		//then
-		assertThat(profile).isNotNull();
+		assertThat(profile.getUser()).isEqualTo(user);
+		assertThat(profile.getBio()).isEqualTo(bio);
+		assertThat(profile.getBirthDate()).isEqualTo(birthDate);
+		assertThat(profile.getNickname()).isEqualTo(nickname);
+		assertThat(profile.getProfileImages().get(0).getUrl()).isEqualTo(profileUrl);
+		assertThat(profile.getBackgroundImages().get(0).getUrl()).isEqualTo(backgroundUrl);
 	}
 
 }

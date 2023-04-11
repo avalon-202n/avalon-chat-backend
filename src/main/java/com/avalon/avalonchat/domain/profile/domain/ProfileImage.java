@@ -11,6 +11,7 @@ import com.avalon.avalonchat.domain.model.BaseAuditingEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -19,6 +20,7 @@ public class ProfileImage extends BaseAuditingEntity {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "profile_id")
+	@Setter
 	private Profile profile;
 
 	@Column
