@@ -37,8 +37,10 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 	}
 
 	@Override
-	public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse res) throws
-		AuthenticationException {
+	public Authentication attemptAuthentication(
+		HttpServletRequest req,
+		HttpServletResponse res
+	) {
 		String token = req.getHeader("Authorization");
 		if (token != null && token.startsWith("Bearer ")) {
 			token = token.substring(7);
@@ -47,16 +49,25 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 		return getAuthenticationManager().authenticate(authentication);
 	}
 
+	// TODO - can be removed?
 	@Override
-	protected void successfulAuthentication(HttpServletRequest req, HttpServletResponse res, FilterChain chain,
-		Authentication auth) throws IOException, ServletException {
+	protected void successfulAuthentication(
+		HttpServletRequest req,
+		HttpServletResponse res,
+		FilterChain chain,
+		Authentication auth
+	) throws IOException, ServletException {
 		SecurityContextHolder.getContext().setAuthentication(auth);
 		chain.doFilter(req, res);
 	}
 
+	// TODO - introduce authenticationFailureHandler and apply @Here and CustomAuthenticationEntryPoint?
 	@Override
-	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-		AuthenticationException failed) throws IOException, ServletException {
+	protected void unsuccessfulAuthentication(
+		HttpServletRequest request,
+		HttpServletResponse response,
+		AuthenticationException failed
+	) throws IOException {
 		response.setStatus(HttpStatus.FORBIDDEN.value());
 		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 		try (OutputStream os = response.getOutputStream()) {

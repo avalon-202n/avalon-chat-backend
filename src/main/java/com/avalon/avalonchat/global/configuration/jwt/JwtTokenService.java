@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 import com.avalon.avalonchat.domain.user.domain.Email;
 import com.avalon.avalonchat.domain.user.domain.User;
 
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -27,26 +27,30 @@ public class JwtTokenService {
 	private long accessValidity;
 	private long refreshValidity;
 	private Key secretKey;
+	private final JwtParser jwtParser;
 
 	@Autowired
 	public JwtTokenService(JwtConfigProperties properties) {
 		this.accessValidity = properties.getAccessValidity();
 		this.refreshValidity = properties.getRefreshValidity();
 		this.secretKey = Keys.hmacShaKeyFor(properties.getSecret().getBytes());
+		this.jwtParser = Jwts.parserBuilder().setSigningKey(secretKey).build();
 	}
 
-	public Long getUserIdFromAccessToken(String token) {
-		Claims claims = getAllClaimsFromAccessToken(token);
-		return Long.parseLong(claims.get("userId").toString());
+	public long getUserIdFromAccessToken(String token) {
+		return jwtParser
+			.parseClaimsJws(token)
+			.getBody()
+			.get("userId", Long.class);
 	}
 
 	public Email getEmailFromAccessToken(String token) {
-		Claims claims = getAllClaimsFromAccessToken(token);
-		return Email.of(claims.get("email").toString());
-	}
+		String email = jwtParser
+			.parseClaimsJws(token)
+			.getBody()
+			.get("email", String.class);
 
-	private Claims getAllClaimsFromAccessToken(String token) {
-		return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
+		return Email.of(email);
 	}
 
 	public String createAccessToken(User user, long profileId) {
