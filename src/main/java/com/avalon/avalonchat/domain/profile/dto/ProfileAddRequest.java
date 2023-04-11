@@ -18,15 +18,12 @@ public class ProfileAddRequest {
 	@Schema(description = "닉네임", example = "nickName")
 	private final String nickname;
 
-	@NotNull
 	@Schema(description = "상태 메시지", example = "hi there")
 	private final String bio;
 
-	@NotNull
 	@Schema(description = "프로필 이미지 주소", example = "http://profile/image/url")
 	private final String profileImageUrl;
 
-	@NotNull
 	@Schema(description = "배경 이미지 주소", example = "http://background/image/url")
 	private final String backgroundImageUrl;
 
