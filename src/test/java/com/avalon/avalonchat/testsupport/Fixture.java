@@ -20,12 +20,13 @@ public final class Fixture {
 		);
 	}
 
+	// FIXME - this method leads to invalid Profile where userId is null
 	public static Profile createProfile() {
 		User user = Fixture.createUser();
 		return createProfile(user, "bio", LocalDate.now(), "nickname");
 	}
 
-	private static Profile createProfile(User user, String bio, LocalDate birthDate, String nickname) {
+	public static Profile createProfile(User user, String bio, LocalDate birthDate, String nickname) {
 		return new Profile(
 			user,
 			bio,

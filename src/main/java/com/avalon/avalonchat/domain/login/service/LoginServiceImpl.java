@@ -27,7 +27,7 @@ public class LoginServiceImpl implements LoginService {
 
 	@Override
 	public LoginResponse login(LoginRequest request) {
-		// 1. check user exsits
+		// 1. check user exists
 		final User findUser = userRepository.findByEmail(request.getEmail())
 			.orElseThrow(() -> new LoginInvalidInputException("일치하는 이메일이 존재하지 않습니다."));
 
