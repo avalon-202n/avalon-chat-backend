@@ -50,8 +50,8 @@ public class ProfileServiceImpl implements ProfileService {
 
 	private void saveImages(Profile profile, ProfileAddRequest request) {
 		// 1. create images
-		ProfileImage profileImage = new ProfileImage(profile, request.getProfileImage());
-		BackgroundImage backgroundImage = new BackgroundImage(profile, request.getBackgroundImage());
+		ProfileImage profileImage = new ProfileImage(profile, request.getProfileImageUrl());
+		BackgroundImage backgroundImage = new BackgroundImage(profile, request.getBackgroundImageUrl());
 
 		// 2. add to profile
 		profile.addProfileImage(profileImage);

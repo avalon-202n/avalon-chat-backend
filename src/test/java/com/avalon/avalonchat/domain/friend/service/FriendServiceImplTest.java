@@ -19,6 +19,7 @@ import com.avalon.avalonchat.domain.profile.domain.Profile;
 import com.avalon.avalonchat.domain.profile.domain.ProfileImage;
 import com.avalon.avalonchat.domain.profile.repository.ProfileRepository;
 import com.avalon.avalonchat.domain.user.domain.Email;
+import com.avalon.avalonchat.domain.user.domain.Password;
 import com.avalon.avalonchat.domain.user.domain.User;
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
 
@@ -42,9 +43,9 @@ class FriendServiceImplTest {
 		String[] phoneNumbers = {phoneNumber1, phoneNumber2};
 		FriendAddRequest request = new FriendAddRequest(phoneNumbers);
 
-		User myUser = new User(Email.of("myuser@gmail.com"), "password");
-		User friendUser1 = new User(Email.of("frienduser1@gmail.com"), "password1");
-		User friendUser2 = new User(Email.of("frienduser2@gmail.com"), "password2");
+		User myUser = new User(Email.of("myuser@gmail.com"), Password.of("password"));
+		User friendUser1 = new User(Email.of("frienduser1@gmail.com"), Password.of("password1"));
+		User friendUser2 = new User(Email.of("frienduser2@gmail.com"), Password.of("password2"));
 
 		User savedMyUser = userRepository.save(myUser);
 		User savedFriendUser1 = userRepository.save(friendUser1);

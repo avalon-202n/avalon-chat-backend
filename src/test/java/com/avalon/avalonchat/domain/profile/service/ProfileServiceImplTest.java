@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddRequest;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddResponse;
 import com.avalon.avalonchat.domain.user.domain.Email;
+import com.avalon.avalonchat.domain.user.domain.Password;
 import com.avalon.avalonchat.domain.user.domain.User;
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
 
@@ -25,7 +26,7 @@ class ProfileServiceImplTest {
 	@Test
 	void addProfile_성공() {
 		// given
-		User user = new User(Email.of("email@gmail.com"), "password");
+		User user = new User(Email.of("email@gmail.com"), Password.of("password"));
 		User savedUser = userRepository.save(user);
 
 		LocalDate birthDate = LocalDate.now();

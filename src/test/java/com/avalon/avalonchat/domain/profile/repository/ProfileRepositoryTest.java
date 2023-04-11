@@ -17,6 +17,7 @@ import com.avalon.avalonchat.domain.profile.domain.BackgroundImage;
 import com.avalon.avalonchat.domain.profile.domain.Profile;
 import com.avalon.avalonchat.domain.profile.domain.ProfileImage;
 import com.avalon.avalonchat.domain.user.domain.Email;
+import com.avalon.avalonchat.domain.user.domain.Password;
 import com.avalon.avalonchat.domain.user.domain.User;
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
 
@@ -33,7 +34,7 @@ class ProfileRepositoryTest {
 	@Test
 	void profile_영속성_저장성공() {
 		//given
-		User user = new User(Email.of("email@gmail.com"), "password");
+		User user = new User(Email.of("email@gmail.com"), Password.of("password"));
 		userRepository.save(user);
 
 		String bio = "bio";
@@ -74,9 +75,9 @@ class ProfileRepositoryTest {
 		String phoneNumber2 = "010-8765-4321";
 		String[] phoneNumbers = {phoneNumber1, phoneNumber2};
 
-		User myUser = new User(Email.of("email@gmail.com"), "password");
-		User friendUser1 = new User(Email.of("email@gmail1.com"), "password1");
-		User friendUser2 = new User(Email.of("email@gmail2.com"), "password2");
+		User myUser = new User(Email.of("email@gmail.com"), Password.of("password"));
+		User friendUser1 = new User(Email.of("email@gmail1.com"), Password.of("password1"));
+		User friendUser2 = new User(Email.of("email@gmail2.com"), Password.of("password2"));
 		User savedMyUser = userRepository.save(myUser);
 		User savedFriendUser1 = userRepository.save(friendUser1);
 		User savedFriendUser2 = userRepository.save(friendUser2);

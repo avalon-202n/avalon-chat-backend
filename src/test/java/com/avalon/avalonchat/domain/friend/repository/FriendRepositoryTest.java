@@ -15,6 +15,7 @@ import com.avalon.avalonchat.domain.friend.domain.Friend;
 import com.avalon.avalonchat.domain.profile.domain.Profile;
 import com.avalon.avalonchat.domain.profile.repository.ProfileRepository;
 import com.avalon.avalonchat.domain.user.domain.Email;
+import com.avalon.avalonchat.domain.user.domain.Password;
 import com.avalon.avalonchat.domain.user.domain.User;
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
 
@@ -32,8 +33,8 @@ class FriendRepositoryTest {
 	@Test
 	void Friend_테이블_중복매핑_엔티티_저장_성공() {
 		// given
-		User myUser = new User(Email.of("email1@gmail.com"), "password1");
-		User friendUser = new User(Email.of("email2@gmail.com"), "password2");
+		User myUser = new User(Email.of("email1@gmail.com"), Password.of("password1"));
+		User friendUser = new User(Email.of("email2@gmail.com"), Password.of("password2"));
 
 		Profile myProfile = new Profile(myUser, "bio1", LocalDate.now(), "nickname1");
 		Profile friendProfile = new Profile(friendUser, "bio2", LocalDate.now(), "nickname2");
@@ -51,12 +52,12 @@ class FriendRepositoryTest {
 	@Test
 	void Friend_Profile_다대일_매핑_성공() {
 		// given
-		User myUser = new User(Email.of("email1@gmail.com"), "password1");
+		User myUser = new User(Email.of("email1@gmail.com"), Password.of("password1"));
 		Profile myProfile = new Profile(myUser, "bio1", LocalDate.now(), "nickname1");
 
-		User friendUser1 = new User(Email.of("email2@gmail.com"), "password2");
+		User friendUser1 = new User(Email.of("email2@gmail.com"), Password.of("password2"));
 		Profile friendProfile1 = new Profile(friendUser1, "bio2", LocalDate.now(), "nickname2");
-		User friendUser2 = new User(Email.of("email3@gmail.com"), "password3");
+		User friendUser2 = new User(Email.of("email3@gmail.com"), Password.of("password3"));
 		Profile friendProfile2 = new Profile(friendUser2, "bio4", LocalDate.now(), "nickname4");
 
 		Friend friend1 = new Friend(myProfile, friendProfile1);
@@ -84,7 +85,7 @@ class FriendRepositoryTest {
 	@Test
 	void Friend_벌크_저장_성공() {
 		// given
-		User myUser = new User(Email.of("email@gmail.com"), "password");
+		User myUser = new User(Email.of("email@gmail.com"), Password.of("password"));
 		Profile myProfile = new Profile(myUser, "bio", LocalDate.now(), "nickname");
 
 		userRepository.save(myUser);
@@ -93,7 +94,7 @@ class FriendRepositoryTest {
 		List<Friend> friends = new ArrayList<>();
 
 		for (int i = 0; i < 10; i++) {
-			User friendUser = new User(Email.of("email@gmail" + i + ".com"), "password" + i);
+			User friendUser = new User(Email.of("email@gmail" + i + ".com"), Password.of("password" + i));
 			Profile friendProfile = new Profile(friendUser, "bio", LocalDate.now(), "nickname");
 			Friend friend = new Friend(myProfile, friendProfile);
 
