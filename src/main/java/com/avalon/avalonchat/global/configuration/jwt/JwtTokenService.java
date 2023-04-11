@@ -49,13 +49,14 @@ public class JwtTokenService {
 		return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody();
 	}
 
-	public String createAccessToken(User user) {
+	public String createAccessToken(User user, long profileId) {
 		long currentTime = (new Date()).getTime();
 		final Date accessTokenExpiresIn = new Date(currentTime + accessValidity);
 
 		return Jwts.builder()
 			.setSubject("AccessToken")
 			.claim("userId", user.getId())
+			.claim("profileId", profileId)
 			.claim("email", user.getEmail().getValue())
 			.setExpiration(accessTokenExpiresIn)
 			.signWith(secretKey, SignatureAlgorithm.HS512)

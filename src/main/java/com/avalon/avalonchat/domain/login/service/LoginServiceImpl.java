@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 public class LoginServiceImpl implements LoginService {
 
 	private final UserRepository userRepository;
+	private final GetProfileIdService getProfileIdService;
 	private final JwtTokenService jwtTokenService;
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
@@ -35,8 +36,10 @@ public class LoginServiceImpl implements LoginService {
 			throw new LoginInvalidInputException("비밀번호가 일치하지 않습니다.");
 		}
 
+		long profileId = getProfileIdService.getProfileIdByUserId(findUser.getId());
+
 		// 3. jwt token create
-		final String accessToken = jwtTokenService.createAccessToken(findUser);
+		final String accessToken = jwtTokenService.createAccessToken(findUser, profileId);
 		return new LoginResponse(findUser.getEmail(), accessToken);
 	}
 }
