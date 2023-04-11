@@ -26,4 +26,10 @@ public final class Preconditions {
 		}
 	}
 
+	public static void checkLength(int max, int min, String value, String message) {
+		if (value.length() < min || value.length() > max) {
+			throw new IllegalArgumentException(message);
+		}
+	}
+
 }

@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import com.avalon.avalonchat.domain.profile.domain.BackgroundImage;
 import com.avalon.avalonchat.domain.profile.domain.Profile;
 import com.avalon.avalonchat.domain.user.domain.Email;
+import com.avalon.avalonchat.domain.user.domain.Password;
 import com.avalon.avalonchat.domain.user.domain.User;
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
 
@@ -29,7 +30,7 @@ class BackgroundImageRepositoryTest {
 	@Test
 	void save() {
 		//given
-		User user = new User(Email.of("email@gmail.com"), "password");
+		User user = new User(Email.of("email@gmail.com"), Password.of("password"));
 		userRepository.save(user);
 		Profile profile = new Profile(user, "bio", LocalDate.now(), "nickname");
 		profileRepository.save(profile);

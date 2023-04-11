@@ -1,6 +1,5 @@
 package com.avalon.avalonchat.domain.user.domain;
 
-import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -20,11 +19,15 @@ public class User extends BaseAuditingEntity {
 	@Embedded
 	private Email email;
 
-	@Column(nullable = false)
-	private String password;
+	@Embedded
+	private Password password;
 
-	public User(Email email, String password) {
+	public User(Email email, Password password) {
 		this.email = email;
 		this.password = password;
+	}
+
+	public void setEncryptedPassword(String encryptedPassword) {
+		this.password.setEncryptedPassword(encryptedPassword);
 	}
 }

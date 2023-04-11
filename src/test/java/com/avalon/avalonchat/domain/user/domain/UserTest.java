@@ -11,7 +11,7 @@ class UserTest {
 		//given when
 		User user = new User(
 			Email.of("avalon@e.com"),
-			"passW0rd"
+			Password.of("passW0rd")
 		);
 
 		//then
