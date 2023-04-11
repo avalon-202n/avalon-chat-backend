@@ -29,11 +29,16 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public SignUpResponse signUp(SignUpRequest signUpRequest) {
 		// create user from request
-		User user = signUpRequest.toEntity();
+		User user = new User(
+			signUpRequest.getEmail(),
+			signUpRequest.getPassword()
+		);
 
 		//password encode
 		String encryptedPassword = bCryptPasswordEncoder.encode(signUpRequest.getPassword().getValue());
 		user.setEncryptedPassword(encryptedPassword);
+
+		// TODO - check email authenticated via redis
 
 		// save user
 		User savedUser = userRepository.save(user);
