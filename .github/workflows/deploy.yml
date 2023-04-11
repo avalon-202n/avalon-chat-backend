@@ -11,7 +11,11 @@ jobs:
     env:
       IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout to github with submodule
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.REPO_ACCESS }}
+          submodules: recursive
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:

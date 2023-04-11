@@ -3,6 +3,7 @@ package com.avalon.avalonchat.domain.user.dto;
 import javax.validation.constraints.NotNull;
 
 import com.avalon.avalonchat.domain.user.domain.Email;
+import com.avalon.avalonchat.domain.user.domain.Password;
 import com.avalon.avalonchat.domain.user.domain.User;
 
 import lombok.AllArgsConstructor;
@@ -11,7 +12,6 @@ import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
-
 @Data
 public class SignUpRequest {
 
@@ -19,7 +19,7 @@ public class SignUpRequest {
 	private Email email;
 
 	@NotNull
-	private String password;
+	private Password password;
 
 	public User toEntity() {
 		return new User(
