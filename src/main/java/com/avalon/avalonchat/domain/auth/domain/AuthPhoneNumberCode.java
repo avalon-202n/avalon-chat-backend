@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = "phoneNumber")
 @RedisHash(value = "auth_phone_number", timeToLive = 1800)
 public class AuthPhoneNumberCode {
 	@Id
