@@ -1,10 +1,12 @@
 package com.avalon.avalonchat.domain.auth.service;
 
-import com.avalon.avalonchat.domain.auth.dto.AuthPhoneNumberRequest;
-import com.avalon.avalonchat.domain.auth.dto.AuthPhoneNumberResponse;
+import com.avalon.avalonchat.domain.auth.dto.AuthPhoneNumberCheckRequest;
+import com.avalon.avalonchat.domain.auth.dto.AuthPhoneNumberCheckResponse;
+import com.avalon.avalonchat.domain.auth.dto.AuthPhoneNumberSendRequest;
+import com.avalon.avalonchat.domain.auth.dto.AuthPhoneNumberSendResponse;
 
 public interface AuthService {
-	AuthPhoneNumberResponse.Get getCode(AuthPhoneNumberRequest.Get request);
+	AuthPhoneNumberSendResponse getCode(AuthPhoneNumberSendRequest request);
 
-	AuthPhoneNumberResponse.Compare compareCode(AuthPhoneNumberRequest.Compare request);
+	AuthPhoneNumberCheckResponse compareCode(AuthPhoneNumberCheckRequest request);
 }

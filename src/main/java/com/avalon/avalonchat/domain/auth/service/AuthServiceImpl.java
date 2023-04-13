@@ -1,14 +1,16 @@
 package com.avalon.avalonchat.domain.auth.service;
 
-import java.util.Random;
-
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 
-import com.avalon.avalonchat.domain.auth.domain.AuthPhoneNumber;
-import com.avalon.avalonchat.domain.auth.dto.AuthPhoneNumberRequest;
-import com.avalon.avalonchat.domain.auth.dto.AuthPhoneNumberResponse;
+import com.avalon.avalonchat.domain.auth.domain.AuthPhoneNumberCode;
+import com.avalon.avalonchat.domain.auth.dto.AuthPhoneNumberCheckRequest;
+import com.avalon.avalonchat.domain.auth.dto.AuthPhoneNumberCheckResponse;
+import com.avalon.avalonchat.domain.auth.dto.AuthPhoneNumberSendRequest;
+import com.avalon.avalonchat.domain.auth.dto.AuthPhoneNumberSendResponse;
 import com.avalon.avalonchat.domain.auth.repository.AuthPhoneNumberRepository;
 import com.avalon.avalonchat.global.error.exception.AvalonChatRuntimeException;
+import com.avalon.avalonchat.infra.message.MessageService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,37 +23,30 @@ public class AuthServiceImpl implements AuthService {
 	private final AuthPhoneNumberRepository authPhoneNumberRepository;
 
 	@Override
-	public AuthPhoneNumberResponse.Get getCode(AuthPhoneNumberRequest.Get request) {
+	public AuthPhoneNumberSendResponse getCode(AuthPhoneNumberSendRequest request) {
 		String code = getCode();
 		messageService.sendMessage(request.getPhoneNumber(), code);
 
-		AuthPhoneNumber authPhoneNumber = new AuthPhoneNumber(request.getPhoneNumber(), code);
-		AuthPhoneNumber savedAuthPhoneNumber = authPhoneNumberRepository.save(authPhoneNumber);
+		AuthPhoneNumberCode authPhoneNumberCode = new AuthPhoneNumberCode(request.getPhoneNumber(), code);
+		AuthPhoneNumberCode savedAuthPhoneNumberCode = authPhoneNumberRepository.save(authPhoneNumberCode);
 
-		return AuthPhoneNumberResponse.Get.ofEntity(savedAuthPhoneNumber);
+		return AuthPhoneNumberSendResponse.ofEntity(savedAuthPhoneNumberCode);
 	}
 
 	@Override
-	public AuthPhoneNumberResponse.Compare compareCode(AuthPhoneNumberRequest.Compare request) {
-		AuthPhoneNumber authPhoneNumber = authPhoneNumberRepository.findById(request.getPhoneNumber())
+	public AuthPhoneNumberCheckResponse compareCode(AuthPhoneNumberCheckRequest request) {
+		AuthPhoneNumberCode authPhoneNumberCode = authPhoneNumberRepository.findById(request.getPhoneNumber())
 			.orElseThrow(() -> new AvalonChatRuntimeException("PhoneNumber Not found"));
 
-		if (authPhoneNumber.getCode().equals(request.getCode())) {
-			authPhoneNumber.validate();
-			authPhoneNumberRepository.save(authPhoneNumber);
-			return AuthPhoneNumberResponse.Compare.ofEntity(true);
+		if (authPhoneNumberCode.getCode().equals(request.getCode())) {
+			authPhoneNumberCode.authenticate();
+			authPhoneNumberRepository.save(authPhoneNumberCode);
+			return AuthPhoneNumberCheckResponse.ofEntity(authPhoneNumberCode);
 		}
-		return AuthPhoneNumberResponse.Compare.ofEntity(false);
+		return AuthPhoneNumberCheckResponse.ofEntity(authPhoneNumberCode);
 	}
 
 	private String getCode() {
-		StringBuffer code = new StringBuffer();
-		Random random = new Random();
-
-		for (int i = 0; i < 6; i++) {
-			code.append((random.nextInt(10)));
-		}
-
-		return code.toString();
+		return RandomStringUtils.randomNumeric(6);
 	}
 }

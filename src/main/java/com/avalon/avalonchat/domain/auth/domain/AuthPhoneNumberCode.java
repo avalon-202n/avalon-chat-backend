@@ -1,5 +1,7 @@
 package com.avalon.avalonchat.domain.auth.domain;
 
+import static com.avalon.avalonchat.global.util.Preconditions.*;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceCreator;
 import org.springframework.data.redis.core.RedisHash;
@@ -10,23 +12,26 @@ import lombok.Getter;
 @Getter
 @EqualsAndHashCode(of = "id")
 @RedisHash(value = "auth_phone_number", timeToLive = 1800)
-public class AuthPhoneNumber {
+public class AuthPhoneNumberCode {
 	@Id
 	private String phoneNumber;
 	private String code;
-	private boolean isValidated;
+	private boolean authenticated;
 
-	public AuthPhoneNumber(String phoneNumber, String code) {
+	public AuthPhoneNumberCode(String phoneNumber, String code) {
+		checkNotNull(phoneNumber, "AuthPhoneNumberCode.phoneNumber cannot be null");
+		checkNotNull(code, "AuthPhoneNumberCode.code cannot be null");
+
 		this.phoneNumber = phoneNumber;
 		this.code = code;
-		this.isValidated = false;
+		this.authenticated = false;
 	}
 
 	@PersistenceCreator
-	public AuthPhoneNumber() {
+	public AuthPhoneNumberCode() {
 	}
 
-	public void validate() {
-		this.isValidated = true;
+	public void authenticate() {
+		this.authenticated = true;
 	}
 }
