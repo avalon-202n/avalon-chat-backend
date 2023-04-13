@@ -9,10 +9,6 @@ import com.avalon.avalonchat.domain.profile.domain.Profile;
 import com.avalon.avalonchat.domain.profile.domain.ProfileImage;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddRequest;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddResponse;
-import com.avalon.avalonchat.domain.profile.dto.ProfileFindRequest;
-import com.avalon.avalonchat.domain.profile.dto.ProfileFindResponse;
-import com.avalon.avalonchat.domain.profile.repository.BackgroundImageRepository;
-import com.avalon.avalonchat.domain.profile.repository.ProfileImageRepository;
 import com.avalon.avalonchat.domain.profile.repository.ProfileRepository;
 import com.avalon.avalonchat.domain.user.domain.User;
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
@@ -28,8 +24,6 @@ public class ProfileServiceImpl
 
 	private final ProfileRepository profileRepository;
 	private final UserRepository userRepository;
-	private final ProfileImageRepository profileImageRepository;
-	private final BackgroundImageRepository backgroundImageRepository;
 
 	@Transactional
 	@Override
@@ -46,33 +40,24 @@ public class ProfileServiceImpl
 			request.getNickname()
 		);
 
-		// 3. save it
-		Profile savedProfile = profileRepository.save(profile);
+		// 3. create images & add to profile
+		saveImages(profile, request);
 
-		// 4. create images
-		ProfileImage profileImage = new ProfileImage(savedProfile, request.getProfileImageUrl());
-		BackgroundImage backgroundImage = new BackgroundImage(savedProfile, request.getBackgroundImageUrl());
+		// 4. save it
+		profileRepository.save(profile);
 
-		// 5. save them - TODO jpa cascade persists?
-		profileImageRepository.save(profileImage);
-		backgroundImageRepository.save(backgroundImage);
-
-		// 6. return
-		return ProfileAddResponse.ofEntity(profile, profileImage, backgroundImage);
+		// 5. return
+		return ProfileAddResponse.ofEntity(profile);
 	}
 
-	@Override
-	public ProfileFindResponse findProfile(ProfileFindRequest request) {
-		Profile profile = profileRepository.findByPhoneNumber(request.getPhoneNumber())
-			.orElseThrow(() -> new AvalonChatRuntimeException("Profile Not Found"));
+	private void saveImages(Profile profile, ProfileAddRequest request) {
+		// 1. create images
+		ProfileImage profileImage = new ProfileImage(profile, request.getProfileImageUrl());
+		BackgroundImage backgroundImage = new BackgroundImage(profile, request.getBackgroundImageUrl());
 
-		ProfileImage profileImage = profileImageRepository.findByProfile(profile)
-			.orElseThrow(() -> new AvalonChatRuntimeException("ProfileImage Not Found"));
-
-		BackgroundImage backgroundImage = backgroundImageRepository.findByProfile(profile)
-			.orElseThrow(() -> new AvalonChatRuntimeException("BackgroundImage Not Found"));
-
-		return ProfileFindResponse.ofEntity(profile, profileImage, backgroundImage);
+		// 2. add to profile
+		profile.addProfileImage(profileImage);
+		profile.addBackgroundImage(backgroundImage);
 	}
 
 	@Override

@@ -1,16 +1,14 @@
 package com.avalon.avalonchat.domain.friend.domain;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
+import com.avalon.avalonchat.domain.model.BaseAuditingEntity;
 import com.avalon.avalonchat.domain.profile.domain.Profile;
 
 import lombok.AccessLevel;
@@ -20,21 +18,26 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Friend {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(updatable = false)
-	private Long id;
-
+public class Friend extends BaseAuditingEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "profile_id")
-	private Profile profile;
+	@JoinColumn(name = "myProfileId")
+	private Profile myProfile;
 
-	@Enumerated(EnumType.ORDINAL)
-	private FriendStatus friendStatus;
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "friendProfileId")
+	private Profile friendProfile;
+
+	@Enumerated(EnumType.STRING)
+	private FriendStatus friendStatus = FriendStatus.NORMAL;
+
+	public Friend(Profile myProfile, Profile friendProfile) {
+		this.myProfile = myProfile;
+		this.friendProfile = friendProfile;
+	}
 
 	/* 친구상태 종류 */
 	public enum FriendStatus {
+		NORMAL,
 		FAVORITES,
 		BLOCKED,
 		HIDDEN

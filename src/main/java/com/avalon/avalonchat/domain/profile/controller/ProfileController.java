@@ -3,7 +3,6 @@ package com.avalon.avalonchat.domain.profile.controller;
 import static com.avalon.avalonchat.global.util.ResponseEntityUtil.*;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,11 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddRequest;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddResponse;
-import com.avalon.avalonchat.domain.profile.dto.ProfileFindRequest;
-import com.avalon.avalonchat.domain.profile.dto.ProfileFindResponse;
 import com.avalon.avalonchat.domain.profile.service.ProfileService;
 
-import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,7 +23,6 @@ public class ProfileController {
 
 	private final ProfileService profileService;
 
-	@Operation(summary = "프로필 추가")
 	@PostMapping
 	public ResponseEntity<ProfileAddResponse> addProfile(
 		//TODO: @AuthenticationPrincipal 활용 -> SecurityUser 타입 Authentication 객체에서 userId 가져올 것
@@ -41,13 +36,5 @@ public class ProfileController {
 
 		// response
 		return created(response);
-	}
-
-	@Operation(summary = "프로필 찾기")
-	@GetMapping("/find")
-	public ProfileFindResponse findProfile(
-		ProfileFindRequest request
-	) {
-		return profileService.findProfile(request);
 	}
 }
