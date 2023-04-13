@@ -3,6 +3,7 @@ package com.avalon.avalonchat.domain.profile.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.avalon.avalonchat.domain.login.service.GetProfileIdService;
 import com.avalon.avalonchat.domain.profile.domain.BackgroundImage;
 import com.avalon.avalonchat.domain.profile.domain.Profile;
 import com.avalon.avalonchat.domain.profile.domain.ProfileImage;
@@ -18,7 +19,8 @@ import lombok.RequiredArgsConstructor;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class ProfileServiceImpl implements ProfileService {
+public class ProfileServiceImpl
+	implements ProfileService, GetProfileIdService {
 
 	private final ProfileRepository profileRepository;
 	private final UserRepository userRepository;
@@ -56,5 +58,11 @@ public class ProfileServiceImpl implements ProfileService {
 		// 2. add to profile
 		profile.addProfileImage(profileImage);
 		profile.addBackgroundImage(backgroundImage);
+	}
+
+	@Override
+	public long getProfileIdByUserId(long userId) {
+		return profileRepository.findProfileIdByUserId(userId)
+			.orElseThrow(() -> new IllegalStateException("profile not found for userId :" + userId));
 	}
 }
