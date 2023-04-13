@@ -1,6 +1,6 @@
 package com.avalon.avalonchat.domain.user.service;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.avalon.avalonchat.domain.user.domain.Email;
