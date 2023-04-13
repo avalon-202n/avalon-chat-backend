@@ -22,7 +22,7 @@ public class CoolSmsMessageService implements MessageService {
 	private final CoolSmsProperties properties;
 
 	@Override
-	public void sendMessage(String toNumber, String code) {
+	public void sendAuthenticationCode(String toNumber, String code) {
 		Message message = new Message();
 		message.setFrom(properties.getFromNumber());
 		message.setTo(toNumber);

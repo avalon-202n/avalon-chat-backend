@@ -19,6 +19,6 @@ class CoolSmsMessageServiceTest {
 		String toNumber = "01055110625";
 
 		// when & then
-		messageService.sendMessage(toNumber, code);
+		messageService.sendAuthenticationCode(toNumber, code);
 	}
 }
