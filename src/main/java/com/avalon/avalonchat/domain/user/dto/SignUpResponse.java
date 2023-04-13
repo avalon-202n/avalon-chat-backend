@@ -14,6 +14,8 @@ import lombok.NoArgsConstructor;
 @Data
 public class SignUpResponse {
 
+	// TODO add response field - userId
+
 	@NotNull
 	private Email email;
 
