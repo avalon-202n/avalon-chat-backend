@@ -42,7 +42,7 @@ public enum ErrorResponseWithMessages {
 		return new ErrorResponse(status.value(), type, formattedMessage);
 	}
 
-	public String getMessage(Object[] args) {
+	public String getMessage(Object... args) {
 		return MessageFormat.format(message, args);
 	}
 }

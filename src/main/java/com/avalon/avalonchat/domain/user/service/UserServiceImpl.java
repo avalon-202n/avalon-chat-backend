@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 public class UserServiceImpl implements UserService {
 
 	private final UserRepository userRepository;
-	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+	private final PasswordEncoder passwordEncoder;
 
 	@Override
 	public SignUpResponse signUp(SignUpRequest signUpRequest) {
@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
 		User user = signUpRequest.toEntity();
 
 		//password encode
-		String encryptedPassword = bCryptPasswordEncoder.encode(signUpRequest.getPassword().getValue());
+		String encryptedPassword = passwordEncoder.encode(signUpRequest.getPassword().getValue());
 		user.setEncryptedPassword(encryptedPassword);
 
 		// save user

@@ -2,7 +2,6 @@ package com.avalon.avalonchat.domain.login.service;
 
 import static org.assertj.core.api.AssertionsForClassTypes.*;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -40,8 +39,8 @@ public class LoginServiceTest {
 
 		LoginRequest loginRequest = DtoFixture.loginRequest("test@e.com", "wrongPassword");
 
-		Assertions.assertThrows(LoginInvalidInputException.class, () -> {
-			LoginResponse loginResponse = sut.login(loginRequest);
-		});
+		// when then
+		assertThatExceptionOfType(LoginInvalidInputException.class)
+			.isThrownBy(() -> sut.login(loginRequest));
 	}
 }

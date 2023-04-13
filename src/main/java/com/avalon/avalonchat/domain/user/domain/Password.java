@@ -24,7 +24,7 @@ public class Password {
 
 	private Password(String value) {
 		checkLength(MAXIMUM_LENGTH, MINIMUM_LENGTH, value,
-			INVALID_LENGTH.getMessage(new Object[] {"패스워드", MAXIMUM_LENGTH, MINIMUM_LENGTH}));
+			INVALID_LENGTH.getMessage("패스워드", MAXIMUM_LENGTH, MINIMUM_LENGTH));
 		this.value = value;
 	}
 
