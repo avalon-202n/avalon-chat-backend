@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 public class PhoneNumberAuthenticationCheckRequest {
 
 	@NotNull
+	@Schema(description = "핸드폰 번호", example = "010-1234-5678")
 	private String phoneNumber;
 
 	@NotNull
