@@ -44,7 +44,9 @@ class ProfileRepositoryTest {
 		String profileUrl = "storage/url/profile_image.png";
 		String backgroundUrl = "storage/url/background_image.png";
 
-		Profile profile = new Profile(user, bio, birthDate, nickname);
+		String phoneNumber = "01055110625";
+
+		Profile profile = new Profile(user, bio, birthDate, nickname, phoneNumber);
 
 		ProfileImage profileImage = new ProfileImage(profile, profileUrl);
 		BackgroundImage backgroundImage = new BackgroundImage(profile, backgroundUrl);
@@ -74,6 +76,7 @@ class ProfileRepositoryTest {
 		String phoneNumber1 = "010-1234-5678";
 		String phoneNumber2 = "010-8765-4321";
 		String[] phoneNumbers = {phoneNumber1, phoneNumber2};
+		String phoneNumber = "01055110625";
 
 		User myUser = new User(Email.of("email@gmail.com"), Password.of("password"));
 		User friendUser1 = new User(Email.of("email@gmail1.com"), Password.of("password1"));
@@ -82,9 +85,9 @@ class ProfileRepositoryTest {
 		User savedFriendUser1 = userRepository.save(friendUser1);
 		User savedFriendUser2 = userRepository.save(friendUser2);
 
-		Profile myProfile = new Profile(savedMyUser, "bio", LocalDate.now(), "nickname");
-		Profile friendProfile1 = new Profile(savedFriendUser1, "bio1", LocalDate.now(), "nickname1");
-		Profile friendProfile2 = new Profile(savedFriendUser2, "bio2", LocalDate.now(), "nickname2");
+		Profile myProfile = new Profile(savedMyUser, "bio", LocalDate.now(), "nickname", phoneNumber);
+		Profile friendProfile1 = new Profile(savedFriendUser1, "bio1", LocalDate.now(), "nickname1", phoneNumber);
+		Profile friendProfile2 = new Profile(savedFriendUser2, "bio2", LocalDate.now(), "nickname2", phoneNumber);
 		friendProfile1.setPhoneNumber(phoneNumber1);
 		friendProfile2.setPhoneNumber(phoneNumber2);
 		profileRepository.save(myProfile);

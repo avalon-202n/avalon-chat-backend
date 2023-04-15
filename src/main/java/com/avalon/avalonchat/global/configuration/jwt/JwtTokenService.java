@@ -24,10 +24,10 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class JwtTokenService {
 
+	private final JwtParser jwtParser;
 	private long accessValidity;
 	private long refreshValidity;
 	private Key secretKey;
-	private final JwtParser jwtParser;
 
 	@Autowired
 	public JwtTokenService(JwtConfigProperties properties) {
