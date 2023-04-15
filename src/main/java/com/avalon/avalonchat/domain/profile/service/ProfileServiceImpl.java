@@ -9,6 +9,7 @@ import com.avalon.avalonchat.domain.profile.domain.Profile;
 import com.avalon.avalonchat.domain.profile.domain.ProfileImage;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddRequest;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddResponse;
+import com.avalon.avalonchat.domain.profile.exception.UnAuthenticatedPhoneNumberException;
 import com.avalon.avalonchat.domain.profile.repository.ProfileRepository;
 import com.avalon.avalonchat.domain.user.domain.PhoneNumberAuthenticationCode;
 import com.avalon.avalonchat.domain.user.domain.User;
@@ -33,14 +34,16 @@ public class ProfileServiceImpl
 	public ProfileAddResponse addProfile(long userId, ProfileAddRequest request) {
 		// 1. find user
 		User user = userRepository.findById(userId)
-			.orElseThrow(() -> new AvalonChatRuntimeException("User Not Found"));
+			.orElseThrow(() -> new AvalonChatRuntimeException("user not found for userId: " + userId));
 
 		// 2. check
 		String phoneNumber = request.getPhoneNumber();
 		PhoneNumberAuthenticationCode phoneNumberAuthenticationCode = phoneNumberAuthenticationRepository.findById(
-			phoneNumber).orElseThrow(() -> new AvalonChatRuntimeException("인증번호를 받지 않은 사용자입니다."));
+				phoneNumber)
+			.orElseThrow(
+				() -> new AvalonChatRuntimeException("certificationCode not found for phoneNumber: " + phoneNumber));
 		if (!phoneNumberAuthenticationCode.isAuthenticated()) {
-			throw new AvalonChatRuntimeException("인증되지 않은 휴대전화번호 입니다.");
+			throw new UnAuthenticatedPhoneNumberException("unAuthenticated phoneNumber: " + phoneNumber);
 		}
 
 		// 3. create profile

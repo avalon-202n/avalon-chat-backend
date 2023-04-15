@@ -6,6 +6,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.*;
 import java.time.LocalDate;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.avalon.avalonchat.domain.profile.domain.Profile;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddRequest;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddResponse;
+import com.avalon.avalonchat.domain.profile.exception.UnAuthenticatedPhoneNumberException;
 import com.avalon.avalonchat.domain.profile.repository.ProfileRepository;
 import com.avalon.avalonchat.domain.user.domain.Email;
 import com.avalon.avalonchat.domain.user.domain.Password;
@@ -89,6 +91,34 @@ class ProfileServiceImplTest extends BaseTestContainerTest {
 	}
 
 	@Test
+	void addProfile_핸드폰인증되지않은사용자_예외던지기_성공() {
+		// given - send user certificationCode with no checking
+		String certificationCode = RandomStringUtils.randomNumeric(6);
+		String toPhoneNumber = "01055110625";
+
+		messageService.sendAuthenticationCode(toPhoneNumber, certificationCode);
+
+		PhoneNumberAuthenticationCode entity = new PhoneNumberAuthenticationCode(toPhoneNumber, certificationCode);
+		phoneNumberAuthenticationRepository.save(entity);
+
+		// given - ready for the request
+		User user = new User(Email.of("email@gmail.com"), Password.of("password"));
+		User savedUser = userRepository.save(user);
+
+		LocalDate birthDate = LocalDate.now();
+		String nickname = "nickname";
+		String bio = "bio";
+		String profileImageUrl = "profileImageUrl";
+		String backgroundImageUrl = "backgroundImageUrl";
+		ProfileAddRequest request = new ProfileAddRequest(birthDate, nickname, bio, profileImageUrl,
+			backgroundImageUrl, toPhoneNumber);
+
+		// when & then
+		assertThatExceptionOfType(UnAuthenticatedPhoneNumberException.class)
+			.isThrownBy(() -> sut.addProfile(savedUser.getId(), request));
+	}
+
+	@Test
 	void userId_로_profileId_조회_성공() {
 		//given
 		User user = createUser("hello@world.com", "password");
@@ -102,6 +132,11 @@ class ProfileServiceImplTest extends BaseTestContainerTest {
 
 		//then
 		assertThat(foundProfileId).isEqualTo(savedProfile.getId());
+	}
+
+	@AfterEach
+	void tearDown() {
+		phoneNumberAuthenticationRepository.deleteAll();
 	}
 }
 
