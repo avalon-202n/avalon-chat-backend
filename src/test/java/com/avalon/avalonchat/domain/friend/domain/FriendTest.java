@@ -19,8 +19,9 @@ class FriendTest {
 		User myUser = new User(Email.of("email1@gmail.com"), Password.of("password1"));
 		User friendUser = new User(Email.of("email2@gmail.com"), Password.of("password2"));
 
-		Profile myProfile = new Profile(myUser, "bio1", LocalDate.now(), "nickname1");
-		Profile friendProfile = new Profile(friendUser, "bio2", LocalDate.now(), "nickname2");
+		String phoneNumber = "01055110625";
+		Profile myProfile = new Profile(myUser, "bio1", LocalDate.now(), "nickname1", phoneNumber);
+		Profile friendProfile = new Profile(friendUser, "bio2", LocalDate.now(), "nickname2", phoneNumber);
 
 		//when
 		Friend friend = new Friend(myProfile, friendProfile);

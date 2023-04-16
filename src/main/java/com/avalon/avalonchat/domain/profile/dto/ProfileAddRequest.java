@@ -27,17 +27,22 @@ public class ProfileAddRequest {
 	@Schema(description = "배경 이미지 주소", example = "http://background/image/url")
 	private final String backgroundImageUrl;
 
+	@Schema(description = "핸드폰 번호", example = "010-1234-5678")
+	private final String phoneNumber;
+
 	public ProfileAddRequest(
 		LocalDate birthDate,
 		String nickname,
 		String bio,
 		String profileImageUrl,
-		String backgroundImageUrl
+		String backgroundImageUrl,
+		String phoneNumber
 	) {
 		this.birthDate = birthDate;
 		this.nickname = nickname;
 		this.bio = bio;
 		this.profileImageUrl = profileImageUrl;
 		this.backgroundImageUrl = backgroundImageUrl;
+		this.phoneNumber = phoneNumber;
 	}
 }

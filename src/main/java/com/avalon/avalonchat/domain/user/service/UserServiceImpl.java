@@ -112,7 +112,9 @@ public class UserServiceImpl implements UserService {
 
 		// 2. check: if equals authenticate and return true, if not return false
 		PhoneNumberAuthenticationCode phoneNumberAuthenticationCode = phoneNumberAuthenticationRepository.findById(
-			phoneNumber).orElseThrow(() -> new AvalonChatRuntimeException("인증번호를 받지 않은 사용자입니다."));
+				phoneNumber)
+			.orElseThrow(
+				() -> new AvalonChatRuntimeException("certificationCode not found for phoneNumber:" + phoneNumber));
 
 		if (phoneNumberAuthenticationCode.getCertificationCode().equals(certificationCode)) {
 			phoneNumberAuthenticationCode.authenticate();

@@ -1,6 +1,8 @@
 package com.avalon.avalonchat.domain.profile.dto;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import com.avalon.avalonchat.domain.profile.domain.BackgroundImage;
 import com.avalon.avalonchat.domain.profile.domain.Profile;
@@ -13,20 +15,23 @@ public class ProfileAddResponse {
 	private final LocalDate birthDate;
 	private final String nickname;
 	private final String bio;
-	private final String[] profileImages;
-	private final String[] backgroundImages;
+	private final List<String> profileImages;
+	private final List<String> backgroundImages;
+	private final String phoneNumber;
 
 	public ProfileAddResponse(
 		LocalDate birthDate,
 		String nickname,
 		String bio,
-		String[] profileImages,
-		String[] backgroundImages) {
+		List<String> profileImages,
+		List<String> backgroundImages,
+		String phoneNumber) {
 		this.birthDate = birthDate;
 		this.nickname = nickname;
 		this.bio = bio;
 		this.profileImages = profileImages;
 		this.backgroundImages = backgroundImages;
+		this.phoneNumber = phoneNumber;
 	}
 
 	public static ProfileAddResponse ofEntity(Profile profile) {
@@ -36,10 +41,11 @@ public class ProfileAddResponse {
 			profile.getBio(),
 			profile.getProfileImages().stream()
 				.map(ProfileImage::getUrl)
-				.toArray(String[]::new),
+				.collect(Collectors.toList()),
 			profile.getBackgroundImages().stream()
 				.map(BackgroundImage::getUrl)
-				.toArray(String[]::new)
+				.collect(Collectors.toList()),
+			profile.getPhoneNumber()
 		);
 	}
 }
