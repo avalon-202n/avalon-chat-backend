@@ -1,6 +1,5 @@
 package com.avalon.avalonchat.domain.user.domain;
 
-import static com.avalon.avalonchat.global.error.ErrorResponseWithMessages.*;
 import static com.avalon.avalonchat.global.util.Preconditions.*;
 
 import javax.persistence.Column;
@@ -23,8 +22,7 @@ public class Password {
 	private String value;
 
 	private Password(String value) {
-		checkLength(MAXIMUM_LENGTH, MINIMUM_LENGTH, value,
-			INVALID_LENGTH.getMessage(new Object[] {"패스워드", MAXIMUM_LENGTH, MINIMUM_LENGTH}));
+		checkLength(MAXIMUM_LENGTH, MINIMUM_LENGTH, value, "password.length");
 		this.value = value;
 	}
 

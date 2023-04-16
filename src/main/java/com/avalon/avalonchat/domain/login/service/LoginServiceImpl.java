@@ -1,6 +1,6 @@
 package com.avalon.avalonchat.domain.login.service;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +23,7 @@ public class LoginServiceImpl implements LoginService {
 	private final UserRepository userRepository;
 	private final GetProfileIdService getProfileIdService;
 	private final JwtTokenService jwtTokenService;
-	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+	private final PasswordEncoder passwordEncoder;
 
 	@Override
 	public LoginResponse login(LoginRequest request) {
@@ -32,7 +32,7 @@ public class LoginServiceImpl implements LoginService {
 			.orElseThrow(() -> new LoginInvalidInputException("일치하는 이메일이 존재하지 않습니다."));
 
 		// 2. verify password
-		if (!bCryptPasswordEncoder.matches(request.getPassword(), findUser.getPassword().getValue())) {
+		if (!passwordEncoder.matches(request.getPassword(), findUser.getPassword().getValue())) {
 			throw new LoginInvalidInputException("비밀번호가 일치하지 않습니다.");
 		}
 

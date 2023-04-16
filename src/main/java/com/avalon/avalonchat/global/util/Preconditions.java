@@ -1,5 +1,7 @@
 package com.avalon.avalonchat.global.util;
 
+import static com.avalon.avalonchat.global.error.ErrorResponseWithMessages.*;
+
 import java.util.Collection;
 import java.util.regex.Pattern;
 
@@ -26,9 +28,10 @@ public final class Preconditions {
 		}
 	}
 
-	public static void checkLength(int max, int min, String value, String message) {
+	public static void checkLength(int max, int min, String value, String messageType) {
 		if (value.length() < min || value.length() > max) {
-			throw new IllegalArgumentException(message);
+			if ("password.length".equals(messageType))
+				throw new IllegalArgumentException(INVALID_LENGTH.getMessage("Password", max, min));
 		}
 	}
 
