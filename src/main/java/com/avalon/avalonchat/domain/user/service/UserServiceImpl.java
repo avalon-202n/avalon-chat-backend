@@ -1,9 +1,11 @@
 package com.avalon.avalonchat.domain.user.service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 
 import com.avalon.avalonchat.domain.user.domain.Email;
+import com.avalon.avalonchat.domain.user.domain.PhoneNumberAuthenticationCode;
 import com.avalon.avalonchat.domain.user.domain.User;
 import com.avalon.avalonchat.domain.user.dto.EmailAuthenticationCheckRequest;
 import com.avalon.avalonchat.domain.user.dto.EmailAuthenticationCheckResponse;
@@ -15,7 +17,10 @@ import com.avalon.avalonchat.domain.user.dto.PhoneNumberAuthenticationCheckRespo
 import com.avalon.avalonchat.domain.user.dto.PhoneNumberAuthenticationSendRequest;
 import com.avalon.avalonchat.domain.user.dto.SignUpRequest;
 import com.avalon.avalonchat.domain.user.dto.SignUpResponse;
+import com.avalon.avalonchat.domain.user.repository.PhoneNumberAuthenticationRepository;
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
+import com.avalon.avalonchat.global.error.exception.AvalonChatRuntimeException;
+import com.avalon.avalonchat.infra.message.MessageService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,6 +30,8 @@ public class UserServiceImpl implements UserService {
 
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
+	private final MessageService messageService;
+	private final PhoneNumberAuthenticationRepository phoneNumberAuthenticationRepository;
 
 	@Override
 	public SignUpResponse signUp(SignUpRequest signUpRequest) {
@@ -79,23 +86,43 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void sendPhoneNumberAuthentication(PhoneNumberAuthenticationSendRequest request) {
+		// 1. get phone number and certification code
 		String phoneNumber = request.getPhoneNumber();
+		String certificationCode = getCertificationCode();
 
-		// send
-		// phoneMessageService.sendAuthCode(signUpId, phoneNumber); ??
+		// 2. send certification code
+		messageService.sendAuthenticationCode(phoneNumber, certificationCode);
+
+		// 3. create phoneNumberAuthenticationCode
+		PhoneNumberAuthenticationCode phoneNumberAuthenticationCode = new PhoneNumberAuthenticationCode(
+			phoneNumber,
+			certificationCode
+		);
+
+		// 4. save it
+		phoneNumberAuthenticationRepository.save(phoneNumberAuthenticationCode);
 	}
 
 	@Override
 	public PhoneNumberAuthenticationCheckResponse checkPhoneNumberAuthentication(
 		PhoneNumberAuthenticationCheckRequest request) {
+		// 1. get phone number, certificationCode and phoneNumberAuthenticationCode
 		String phoneNumber = request.getPhoneNumber();
 		String certificationCode = request.getCertificationCode();
 
-		// check
-		// boolean exists
-		// 		= redisTemplate/phoneNumberAuthRepository.existsBy(signUpId, phoneNumber, certificationCode); ??
-		boolean exist = false;
+		// 2. check: if equals authenticate and return true, if not return false
+		PhoneNumberAuthenticationCode phoneNumberAuthenticationCode = phoneNumberAuthenticationRepository.findById(
+			phoneNumber).orElseThrow(() -> new AvalonChatRuntimeException("인증번호를 받지 않은 사용자입니다."));
 
-		return new PhoneNumberAuthenticationCheckResponse(exist);
+		if (phoneNumberAuthenticationCode.getCertificationCode().equals(certificationCode)) {
+			phoneNumberAuthenticationCode.authenticate();
+			phoneNumberAuthenticationRepository.save(phoneNumberAuthenticationCode);
+			return new PhoneNumberAuthenticationCheckResponse(true);
+		}
+		return new PhoneNumberAuthenticationCheckResponse(false);
+	}
+
+	private String getCertificationCode() {
+		return RandomStringUtils.randomNumeric(6);
 	}
 }
