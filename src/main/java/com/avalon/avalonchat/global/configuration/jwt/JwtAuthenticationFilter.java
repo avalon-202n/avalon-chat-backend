@@ -68,7 +68,6 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
 		HttpServletResponse response,
 		AuthenticationException failed
 	) throws IOException {
-		response.setStatus(HttpStatus.FORBIDDEN.value());
 		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 		try (OutputStream os = response.getOutputStream()) {
 			ObjectMapper objectMapper = new ObjectMapper();

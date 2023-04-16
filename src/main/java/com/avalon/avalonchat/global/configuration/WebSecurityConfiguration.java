@@ -62,7 +62,7 @@ public class WebSecurityConfiguration {
 			.authorizeRequests(authorize -> authorize
 				.antMatchers("/actuator/**").permitAll()
 				.antMatchers("/**/swagger*/**", "/**/api-docs/**").permitAll()
-				.antMatchers("/signup/**", "/login").permitAll()
+				.antMatchers("/signup/**", "/login/**").permitAll()
 				.anyRequest().authenticated()
 			)
 			.exceptionHandling(ex -> ex.authenticationEntryPoint(authenticationEntryPoint)
@@ -74,7 +74,7 @@ public class WebSecurityConfiguration {
 		RequestMatcher matcher = jwtFilterMatcher(
 			"/actuator/**",
 			"/**/swagger*/**", "/**/api-docs/**",
-			"/signup/**", "/login"
+			"/signup/**", "/login/**"
 		);
 
 		return new JwtAuthenticationFilter(jwtTokenService, matcher, authenticationManager);

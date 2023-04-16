@@ -1,5 +1,9 @@
 package com.avalon.avalonchat.domain.login.service;
 
+import com.avalon.avalonchat.domain.login.dto.EmailFindRequest;
+import com.avalon.avalonchat.domain.login.dto.EmailFindResponse;
+import com.avalon.avalonchat.domain.profile.domain.Profile;
+import com.avalon.avalonchat.domain.profile.repository.ProfileRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +25,8 @@ import lombok.extern.slf4j.Slf4j;
 public class LoginServiceImpl implements LoginService {
 
 	private final UserRepository userRepository;
+
+	private final ProfileRepository profileRepository;
 	private final GetProfileIdService getProfileIdService;
 	private final JwtTokenService jwtTokenService;
 	private final PasswordEncoder passwordEncoder;
@@ -41,5 +47,13 @@ public class LoginServiceImpl implements LoginService {
 		// 3. jwt token create
 		final String accessToken = jwtTokenService.createAccessToken(findUser, profileId);
 		return new LoginResponse(findUser.getEmail(), accessToken);
+	}
+
+	@Override
+	public EmailFindResponse findEmailByPhoneNumber(EmailFindRequest request) {
+		final Profile findProfile = profileRepository.findByPhoneNumber(request.getPhoneNumber())
+			.orElseThrow(() -> new RuntimeException("일치하는 계정이 없습니다."));
+		log.info("findProfile : {}", findProfile.toString());
+		return new EmailFindResponse(findProfile.getUser().getEmail());
 	}
 }

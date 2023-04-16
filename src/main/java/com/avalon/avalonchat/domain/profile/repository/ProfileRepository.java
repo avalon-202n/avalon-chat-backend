@@ -12,6 +12,8 @@ import com.avalon.avalonchat.domain.profile.domain.Profile;
 public interface ProfileRepository extends JpaRepository<Profile, Long> {
 	List<Profile> findAllByPhoneNumberIn(String[] phoneNumbers);
 
+	Optional<Profile> findByPhoneNumber(String phoneNumbers);
+
 	@Query("SELECT p.id "
 		+ "FROM Profile p "
 		+ "WHERE p.user.id = :userId")
