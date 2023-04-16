@@ -51,9 +51,11 @@ class FriendServiceImplTest {
 		User savedFriendUser1 = userRepository.save(friendUser1);
 		User savedFriendUser2 = userRepository.save(friendUser2);
 
-		Profile myProfile = new Profile(savedMyUser, "bio", LocalDate.now(), "nickname");
-		Profile friendProfile1 = new Profile(savedFriendUser1, "bio1", LocalDate.now(), "nickname1");
-		Profile friendProfile2 = new Profile(savedFriendUser2, "bio2", LocalDate.now(), "nickname2");
+		String phoneNumber = "01055110625";
+
+		Profile myProfile = new Profile(savedMyUser, "bio", LocalDate.now(), "nickname", phoneNumber);
+		Profile friendProfile1 = new Profile(savedFriendUser1, "bio1", LocalDate.now(), "nickname1", phoneNumber);
+		Profile friendProfile2 = new Profile(savedFriendUser2, "bio2", LocalDate.now(), "nickname2", phoneNumber);
 		friendProfile1.setPhoneNumber(phoneNumber1);
 		friendProfile2.setPhoneNumber(phoneNumber2);
 

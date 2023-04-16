@@ -48,11 +48,12 @@ public class Profile extends BaseAuditingEntity {
 	@OneToMany(mappedBy = "profile", cascade = CascadeType.PERSIST, orphanRemoval = true)
 	private List<BackgroundImage> backgroundImages = new ArrayList<>();
 
-	public Profile(User user, String bio, LocalDate birthDate, String nickname) {
+	public Profile(User user, String bio, LocalDate birthDate, String nickname, String phoneNumber) {
 		this.user = user;
 		this.bio = bio;
 		this.birthDate = birthDate;
 		this.nickname = nickname;
+		this.phoneNumber = phoneNumber;
 	}
 
 	public void addProfileImage(ProfileImage profileImage) {

@@ -5,6 +5,7 @@ import static com.avalon.avalonchat.global.util.ResponseEntityUtil.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,6 +13,7 @@ import com.avalon.avalonchat.domain.profile.dto.ProfileAddRequest;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddResponse;
 import com.avalon.avalonchat.domain.profile.service.ProfileService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,14 +25,15 @@ public class ProfileController {
 
 	private final ProfileService profileService;
 
+	@Operation(
+		summary = "프로필 생성",
+		description = "헤더의 user_id를 통해 회원과 매핑"
+	)
 	@PostMapping
 	public ResponseEntity<ProfileAddResponse> addProfile(
-		//TODO: @AuthenticationPrincipal 활용 -> SecurityUser 타입 Authentication 객체에서 userId 가져올 것
+		@RequestHeader("user-id") Long userId,
 		@RequestBody ProfileAddRequest request
 	) {
-		// setup
-		long userId = 1L;
-
 		// action
 		ProfileAddResponse response = profileService.addProfile(userId, request);
 

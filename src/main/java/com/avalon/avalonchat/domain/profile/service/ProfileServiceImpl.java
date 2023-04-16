@@ -9,8 +9,11 @@ import com.avalon.avalonchat.domain.profile.domain.Profile;
 import com.avalon.avalonchat.domain.profile.domain.ProfileImage;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddRequest;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddResponse;
+import com.avalon.avalonchat.domain.profile.exception.UnAuthenticatedPhoneNumberException;
 import com.avalon.avalonchat.domain.profile.repository.ProfileRepository;
+import com.avalon.avalonchat.domain.user.domain.PhoneNumberAuthenticationCode;
 import com.avalon.avalonchat.domain.user.domain.User;
+import com.avalon.avalonchat.domain.user.repository.PhoneNumberAuthenticationRepository;
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
 import com.avalon.avalonchat.global.error.exception.AvalonChatRuntimeException;
 
@@ -24,29 +27,41 @@ public class ProfileServiceImpl
 
 	private final ProfileRepository profileRepository;
 	private final UserRepository userRepository;
+	private final PhoneNumberAuthenticationRepository phoneNumberAuthenticationRepository;
 
 	@Transactional
 	@Override
 	public ProfileAddResponse addProfile(long userId, ProfileAddRequest request) {
 		// 1. find user
 		User user = userRepository.findById(userId)
-			.orElseThrow(() -> new AvalonChatRuntimeException("User Not Found"));
+			.orElseThrow(() -> new AvalonChatRuntimeException("user not found for userId: " + userId));
 
-		// 2. create profile
+		// 2. check
+		String phoneNumber = request.getPhoneNumber();
+		PhoneNumberAuthenticationCode phoneNumberAuthenticationCode = phoneNumberAuthenticationRepository.findById(
+				phoneNumber)
+			.orElseThrow(
+				() -> new AvalonChatRuntimeException("certificationCode not found for phoneNumber: " + phoneNumber));
+		if (!phoneNumberAuthenticationCode.isAuthenticated()) {
+			throw new UnAuthenticatedPhoneNumberException("unAuthenticated phoneNumber: " + phoneNumber);
+		}
+
+		// 3. create profile
 		Profile profile = new Profile(
 			user,
 			request.getBio(),
 			request.getBirthDate(),
-			request.getNickname()
+			request.getNickname(),
+			phoneNumber
 		);
 
-		// 3. create images & add to profile
+		// 4. create images & add to profile
 		saveImages(profile, request);
 
-		// 4. save it
+		// 5. save it
 		profileRepository.save(profile);
 
-		// 5. return
+		// 6. return
 		return ProfileAddResponse.ofEntity(profile);
 	}
 

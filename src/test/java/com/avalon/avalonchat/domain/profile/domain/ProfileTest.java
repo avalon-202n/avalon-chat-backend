@@ -23,8 +23,10 @@ class ProfileTest {
 		String profileUrl = "storage/url/profile_image.png";
 		String backgroundUrl = "storage/url/background_image.png";
 
+		String phoneNumber = "01055110625";
+
 		// when
-		Profile profile = new Profile(user, bio, birthDate, nickname);
+		Profile profile = new Profile(user, bio, birthDate, nickname, phoneNumber);
 
 		ProfileImage profileImage = new ProfileImage(profile, profileUrl);
 		BackgroundImage backgroundImage = new BackgroundImage(profile, backgroundUrl);
