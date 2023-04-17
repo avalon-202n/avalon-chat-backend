@@ -21,10 +21,10 @@ public final class Preconditions {
 		}
 	}
 
-	public static void checkLength(int max, int min, String value, String messageType) {
-		if (value.length() < min || value.length() > max) {
+	public static void checkLength(int minLength, int maxLength, String value, String messageType) {
+		if (value.length() < minLength || value.length() > maxLength) {
 			if ("password.length".equals(messageType)) {
-				throw new IllegalArgumentException(INVALID_LENGTH.getMessage("Password", max, min));
+				throw new IllegalArgumentException(INVALID_LENGTH.getMessage("Password", minLength, maxLength));
 			}
 		}
 	}
