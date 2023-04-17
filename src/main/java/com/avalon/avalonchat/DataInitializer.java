@@ -44,15 +44,15 @@ public class DataInitializer implements ApplicationRunner {
 		// 잘못된 사용방식이지만 사용함 FIXME!
 		Password password1 = Password.of("fixme fixme");
 		password1.setEncryptedPassword(passwordEncoder.encode("password1"));
-		User user1 = userRepository.save(new User(Email.of("user1@gmail.com"), password1));
+		User user1 = userRepository.save(new User(Email.of("user111@gmail.com"), password1));
 
 		Password password2 = Password.of("fixme fixme");
 		password2.setEncryptedPassword(passwordEncoder.encode("password2"));
-		User user2 = userRepository.save(new User(Email.of("user2@gmail.com"), password2));
+		User user2 = userRepository.save(new User(Email.of("user222@gmail.com"), password2));
 
 		Password password3 = Password.of("fixme fixme");
 		password3.setEncryptedPassword(passwordEncoder.encode("password3"));
-		User user3 = userRepository.save(new User(Email.of("user3@gmail.com"), password3));
+		User user3 = userRepository.save(new User(Email.of("user333@gmail.com"), password3));
 
 		Profile profile1 = profileRepository.save(new Profile(user1, "bio1", now(), "user1", "010-1111-1111"));
 		Profile profile2 = profileRepository.save(new Profile(user2, "bio2", now(), "user2", "010-2222-2222"));

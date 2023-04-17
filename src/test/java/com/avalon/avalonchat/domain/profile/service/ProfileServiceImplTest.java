@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.avalon.avalonchat.domain.profile.domain.Profile;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddRequest;
@@ -29,6 +30,7 @@ import com.avalon.avalonchat.domain.user.service.UserService;
 import com.avalon.avalonchat.infra.message.MessageService;
 import com.avalon.avalonchat.testsupport.base.BaseTestContainerTest;
 
+@Transactional
 @SpringBootTest
 class ProfileServiceImplTest extends BaseTestContainerTest {
 
