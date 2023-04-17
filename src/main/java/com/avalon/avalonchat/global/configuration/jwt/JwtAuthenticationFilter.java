@@ -34,7 +34,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		if (token != null && token.startsWith("Bearer ")) {
 			token = token.substring(7);
 
-			Jwt unauthenticatedJwt = Jwt.ofToken(token);
+			Jwt unauthenticatedJwt = new Jwt(token);
 			Jwt authenticatedJwt = authenticate(unauthenticatedJwt);
 
 			log.debug("authenticate user ");
@@ -49,6 +49,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		long profileId = ((Integer)claims.get("profileId")).longValue();
 
 		SecurityUser securityUser = new SecurityUser(userId, profileId);
-		return Jwt.ofAuthenticated(securityUser);
+		return new Jwt(securityUser);
 	}
 }
