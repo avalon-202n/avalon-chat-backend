@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/profiles")
 public class ProfileController {
 
-	private final ProfileService profileService;
+	private final ProfileService service;
 
 	@Operation(
 		summary = "프로필 생성",
@@ -39,7 +39,7 @@ public class ProfileController {
 		@RequestBody ProfileAddRequest request
 	) {
 		// action
-		ProfileAddResponse response = profileService.addProfile(userId, request);
+		ProfileAddResponse response = service.addProfile(userId, request);
 
 		// response
 		return created(response);
@@ -53,7 +53,6 @@ public class ProfileController {
 	public ProfileDetailedGetResponse getMyProfile(
 		@AuthenticationPrincipal SecurityUser securityUser
 	) {
-		System.out.println("securityUser = " + securityUser);
-		return new ProfileDetailedGetResponse("bio", "nickname");
+		return service.getDetailedById(securityUser.getProfileId());
 	}
 }
