@@ -1,79 +1,54 @@
 package com.avalon.avalonchat.global.configuration.jwt;
 
 import java.io.IOException;
-import java.io.OutputStream;
+import java.util.Map;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
-import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.avalon.avalonchat.global.error.ErrorResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.avalon.avalonchat.domain.model.SecurityUser;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
-	private JwtTokenService jwtTokenService;
-
-	public JwtAuthenticationFilter(
-		JwtTokenService jwtTokenService,
-		RequestMatcher matcher,
-		AuthenticationManager authenticationManager
-	) {
-		super(matcher);
-		super.setAuthenticationManager(authenticationManager);
-		this.jwtTokenService = jwtTokenService;
-	}
+@RequiredArgsConstructor
+@Component
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
+	private final JwtTokenService jwtTokenService;
 
 	@Override
-	public Authentication attemptAuthentication(
-		HttpServletRequest req,
-		HttpServletResponse res
-	) {
-		String token = req.getHeader("Authorization");
-		if (token != null && token.startsWith("Bearer ")) {
-			token = token.substring(7);
-		}
-		final JwtAuthenticationToken authentication = JwtAuthenticationToken.of(token);
-		return getAuthenticationManager().authenticate(authentication);
-	}
-
-	// TODO - can be removed?
-	@Override
-	protected void successfulAuthentication(
-		HttpServletRequest req,
-		HttpServletResponse res,
-		FilterChain chain,
-		Authentication auth
-	) throws IOException, ServletException {
-		SecurityContextHolder.getContext().setAuthentication(auth);
-		chain.doFilter(req, res);
-	}
-
-	// TODO - introduce authenticationFailureHandler and apply @Here and CustomAuthenticationEntryPoint?
-	@Override
-	protected void unsuccessfulAuthentication(
+	protected void doFilterInternal(
 		HttpServletRequest request,
 		HttpServletResponse response,
-		AuthenticationException failed
-	) throws IOException {
-		response.setStatus(HttpStatus.FORBIDDEN.value());
-		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-		try (OutputStream os = response.getOutputStream()) {
-			ObjectMapper objectMapper = new ObjectMapper();
-			objectMapper.writeValue(os, new ErrorResponse(HttpStatus.FORBIDDEN, failed));
-			os.flush();
+		FilterChain filterChain
+	) throws ServletException, IOException {
+		String token = request.getHeader("Authorization");
+		if (token != null && token.startsWith("Bearer ")) {
+			token = token.substring(7);
+
+			Jwt unauthenticatedJwt = Jwt.ofToken(token);
+			Jwt authenticatedJwt = authenticate(unauthenticatedJwt);
+
+			log.debug("authenticate user ");
+			SecurityContextHolder.getContext().setAuthentication(authenticatedJwt);
 		}
+		filterChain.doFilter(request, response);
+	}
+
+	private Jwt authenticate(Jwt jwt) throws AuthenticationException {
+		Map<String, Object> claims = jwtTokenService.parseClaim((String)jwt.getPrincipal());
+		long userId = ((Integer)claims.get("userId")).longValue();
+		long profileId = ((Integer)claims.get("profileId")).longValue();
+
+		SecurityUser securityUser = new SecurityUser(userId, profileId);
+		return Jwt.ofAuthenticated(securityUser);
 	}
 }
