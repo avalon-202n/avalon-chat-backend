@@ -18,6 +18,7 @@ import com.avalon.avalonchat.domain.profile.dto.ProfileDetailedGetResponse;
 import com.avalon.avalonchat.domain.profile.service.ProfileService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -47,7 +48,8 @@ public class ProfileController {
 
 	@Operation(
 		summary = "내 프로필 조회",
-		description = "내 프로필 상세 조회"
+		description = "내 프로필 상세 조회",
+		security = {@SecurityRequirement(name = "bearer-key")}
 	)
 	@GetMapping("/me")
 	public ProfileDetailedGetResponse getMyProfile(
