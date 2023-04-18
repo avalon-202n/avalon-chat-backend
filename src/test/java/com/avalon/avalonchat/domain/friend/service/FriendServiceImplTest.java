@@ -3,6 +3,7 @@ package com.avalon.avalonchat.domain.friend.service;
 import static org.assertj.core.api.AssertionsForClassTypes.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.avalon.avalonchat.domain.friend.domain.Friend;
 import com.avalon.avalonchat.domain.friend.dto.FriendAddRequest;
 import com.avalon.avalonchat.domain.friend.dto.FriendAddResponse;
 import com.avalon.avalonchat.domain.friend.repository.FriendRepository;
@@ -40,7 +42,9 @@ class FriendServiceImplTest {
 		// given
 		String phoneNumber1 = "010-1234-5678";
 		String phoneNumber2 = "010-8765-4321";
-		String[] phoneNumbers = {phoneNumber1, phoneNumber2};
+		List<String> phoneNumbers = new ArrayList<>();
+		phoneNumbers.add(phoneNumber1);
+		phoneNumbers.add(phoneNumber2);
 		FriendAddRequest request = new FriendAddRequest(phoneNumbers);
 
 		User myUser = new User(Email.of("myuser@gmail.com"), Password.of("password"));
@@ -88,10 +92,10 @@ class FriendServiceImplTest {
 			assertThat(response.getNickname()).isIn(
 				Arrays.asList(friendProfile1.getNickname(), friendProfile2.getNickname()));
 			assertThat(response.getBio()).isIn(Arrays.asList(friendProfile1.getBio(), friendProfile2.getBio()));
-			assertThat(response.getProfileImages()[0]).isIn(Arrays.asList(friendProfileUrl1, friendProfileUrl2));
-			assertThat(response.getBackgroundImages()[0]).isIn(
+			assertThat(response.getProfileImages().get(0)).isIn(Arrays.asList(friendProfileUrl1, friendProfileUrl2));
+			assertThat(response.getBackgroundImages().get(0)).isIn(
 				Arrays.asList(friendBackgroundUrl1, friendBackgroundUrl2));
-			assertThat(response.getFriendStatus()).isEqualTo("NORMAL");
+			assertThat(response.getFriendStatus()).isEqualTo(Friend.FriendStatus.NORMAL);
 		}
 	}
 }

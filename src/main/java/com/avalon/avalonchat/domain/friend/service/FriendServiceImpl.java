@@ -29,7 +29,7 @@ public class FriendServiceImpl implements FriendService {
 	public List<FriendAddResponse> addFriend(long profileId, FriendAddRequest request) {
 		// 1. find profile & create friends
 		Profile myProfile = profileRepository.findById(profileId)
-			.orElseThrow(() -> new AvalonChatRuntimeException("Profile Not Found"));
+			.orElseThrow(() -> new AvalonChatRuntimeException("profile not found: " + profileId));
 
 		List<Friend> friends = profileRepository.findAllByPhoneNumberIn(request.getPhoneNumbers()).stream()
 			.map(friendprofile -> new Friend(myProfile, friendprofile))

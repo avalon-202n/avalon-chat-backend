@@ -15,7 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.avalon.avalonchat.domain.profile.domain.Profile;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddRequest;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddResponse;
-import com.avalon.avalonchat.domain.profile.exception.UnAuthenticatedPhoneNumberException;
 import com.avalon.avalonchat.domain.profile.repository.ProfileRepository;
 import com.avalon.avalonchat.domain.user.domain.Email;
 import com.avalon.avalonchat.domain.user.domain.Password;
@@ -25,6 +24,7 @@ import com.avalon.avalonchat.domain.user.dto.PhoneNumberAuthenticationCheckReque
 import com.avalon.avalonchat.domain.user.repository.PhoneNumberAuthenticationRepository;
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
 import com.avalon.avalonchat.domain.user.service.UserService;
+import com.avalon.avalonchat.global.error.exception.AvalonChatRuntimeException;
 import com.avalon.avalonchat.infra.message.MessageService;
 import com.avalon.avalonchat.testsupport.base.BaseTestContainerTest;
 
@@ -114,7 +114,7 @@ class ProfileServiceImplTest extends BaseTestContainerTest {
 			backgroundImageUrl, toPhoneNumber);
 
 		// when & then
-		assertThatExceptionOfType(UnAuthenticatedPhoneNumberException.class)
+		assertThatExceptionOfType(AvalonChatRuntimeException.class)
 			.isThrownBy(() -> sut.addProfile(savedUser.getId(), request));
 	}
 
