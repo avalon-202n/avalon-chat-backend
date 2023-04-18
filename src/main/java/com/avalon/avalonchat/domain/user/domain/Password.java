@@ -15,14 +15,14 @@ import lombok.NoArgsConstructor;
 @Getter
 @Embeddable
 public class Password {
-	private static final int MAXIMUM_LENGTH = 16;
-	private static final int MINIMUM_LENGTH = 7;
+	public static final int MIN_LENGTH = 7;
+	public static final int MAX_LENGTH = 16;
 
 	@Column(name = "password", nullable = false)
 	private String value;
 
 	private Password(String value) {
-		checkLength(MAXIMUM_LENGTH, MINIMUM_LENGTH, value, "password.length");
+		checkLength(MIN_LENGTH, MAX_LENGTH, value, "password.length");
 		this.value = value;
 	}
 

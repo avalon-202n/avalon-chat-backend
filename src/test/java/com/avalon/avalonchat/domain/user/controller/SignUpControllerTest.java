@@ -9,10 +9,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.avalon.avalonchat.domain.user.dto.EmailAuthenticationCheckRequest;
 import com.avalon.avalonchat.domain.user.dto.EmailAuthenticationCheckResponse;
@@ -27,8 +28,9 @@ import com.avalon.avalonchat.domain.user.service.UserService;
 import com.avalon.avalonchat.testsupport.DtoFixture;
 import com.avalon.avalonchat.testsupport.base.BaseControllerTest;
 
-@AutoConfigureMockMvc(addFilters = false)
-@WebMvcTest(SignUpController.class)
+@Transactional
+@AutoConfigureMockMvc
+@SpringBootTest
 class SignUpControllerTest extends BaseControllerTest {
 
 	@MockBean
