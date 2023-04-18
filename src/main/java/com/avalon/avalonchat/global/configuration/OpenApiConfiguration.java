@@ -11,6 +11,7 @@ import com.avalon.avalonchat.global.configuration.openapi.CustomSchemas;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 
 @Configuration(proxyBeanMethods = false)
 public class OpenApiConfiguration {
@@ -22,7 +23,11 @@ public class OpenApiConfiguration {
 			.version("v1.0")
 			.description("avalon-chat REST API documentation");
 
-		Components components = new Components();
+		SecurityScheme securityScheme = new SecurityScheme()
+			.type(SecurityScheme.Type.HTTP)
+			.scheme("bearer")
+			.bearerFormat("JWT");
+		Components components = new Components().addSecuritySchemes("bearer-key", securityScheme);
 
 		return new OpenAPI()
 			.info(info)

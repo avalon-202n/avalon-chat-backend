@@ -11,10 +11,12 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.avalon.avalonchat.domain.profile.domain.Profile;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddRequest;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddResponse;
+import com.avalon.avalonchat.domain.profile.dto.ProfileDetailedGetResponse;
 import com.avalon.avalonchat.domain.profile.exception.UnAuthenticatedPhoneNumberException;
 import com.avalon.avalonchat.domain.profile.repository.ProfileRepository;
 import com.avalon.avalonchat.domain.user.domain.Email;
@@ -28,6 +30,7 @@ import com.avalon.avalonchat.domain.user.service.UserService;
 import com.avalon.avalonchat.infra.message.MessageService;
 import com.avalon.avalonchat.testsupport.base.BaseTestContainerTest;
 
+@Transactional
 @SpringBootTest
 class ProfileServiceImplTest extends BaseTestContainerTest {
 
@@ -50,7 +53,7 @@ class ProfileServiceImplTest extends BaseTestContainerTest {
 	private PhoneNumberAuthenticationRepository phoneNumberAuthenticationRepository;
 
 	@Test
-	@Disabled
+	@Disabled("TODO - add mocking or add new NullMessageService for test")
 	void addProfile_성공() {
 		// given - authenticate phone number
 		String certificationCode = RandomStringUtils.randomNumeric(6);
@@ -132,6 +135,23 @@ class ProfileServiceImplTest extends BaseTestContainerTest {
 
 		//then
 		assertThat(foundProfileId).isEqualTo(savedProfile.getId());
+	}
+
+	@Test
+	void profileId_로_profile_상세_조회_성공() {
+		//given
+		User user = createUser("hello@world.com", "password");
+		User savedUser = userRepository.save(user);
+
+		Profile profile = createProfile(user, "hi there", LocalDate.of(1997, 8, 21), "haha", "01055110625");
+		Profile savedProfile = profileRepository.save(profile);
+
+		//when
+		ProfileDetailedGetResponse response = sut.getDetailedById(savedProfile.getId());
+
+		//then
+		assertThat(response.getBio()).isEqualTo("hi there");
+		assertThat(response.getNickname()).isEqualTo("haha");
 	}
 
 	@AfterEach

@@ -9,6 +9,7 @@ import com.avalon.avalonchat.domain.profile.domain.Profile;
 import com.avalon.avalonchat.domain.profile.domain.ProfileImage;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddRequest;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddResponse;
+import com.avalon.avalonchat.domain.profile.dto.ProfileDetailedGetResponse;
 import com.avalon.avalonchat.domain.profile.exception.UnAuthenticatedPhoneNumberException;
 import com.avalon.avalonchat.domain.profile.repository.ProfileRepository;
 import com.avalon.avalonchat.domain.user.domain.PhoneNumberAuthenticationCode;
@@ -25,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class ProfileServiceImpl
 	implements ProfileService, GetProfileIdService {
 
-	private final ProfileRepository profileRepository;
+	private final ProfileRepository repository;
 	private final UserRepository userRepository;
 	private final PhoneNumberAuthenticationRepository phoneNumberAuthenticationRepository;
 
@@ -38,10 +39,9 @@ public class ProfileServiceImpl
 
 		// 2. check
 		String phoneNumber = request.getPhoneNumber();
-		PhoneNumberAuthenticationCode phoneNumberAuthenticationCode = phoneNumberAuthenticationRepository.findById(
-				phoneNumber)
-			.orElseThrow(
-				() -> new AvalonChatRuntimeException("certificationCode not found for phoneNumber: " + phoneNumber));
+		PhoneNumberAuthenticationCode phoneNumberAuthenticationCode = phoneNumberAuthenticationRepository
+			.findById(phoneNumber)
+			.orElseThrow(() -> new AvalonChatRuntimeException("code not found for phoneNumber: " + phoneNumber));
 		if (!phoneNumberAuthenticationCode.isAuthenticated()) {
 			throw new UnAuthenticatedPhoneNumberException("unAuthenticated phoneNumber: " + phoneNumber);
 		}
@@ -56,28 +56,27 @@ public class ProfileServiceImpl
 		);
 
 		// 4. create images & add to profile
-		saveImages(profile, request);
+		profile.addProfileImage(new ProfileImage(profile, request.getProfileImageUrl()));
+		profile.addBackgroundImage(new BackgroundImage(profile, request.getBackgroundImageUrl()));
 
 		// 5. save it
-		profileRepository.save(profile);
+		repository.save(profile);
 
 		// 6. return
 		return ProfileAddResponse.ofEntity(profile);
 	}
 
-	private void saveImages(Profile profile, ProfileAddRequest request) {
-		// 1. create images
-		ProfileImage profileImage = new ProfileImage(profile, request.getProfileImageUrl());
-		BackgroundImage backgroundImage = new BackgroundImage(profile, request.getBackgroundImageUrl());
+	@Override
+	public ProfileDetailedGetResponse getDetailedById(long profileId) {
+		Profile profile = repository.findById(profileId)
+			.orElseThrow(() -> new AvalonChatRuntimeException("no such profile id : " + profileId));
 
-		// 2. add to profile
-		profile.addProfileImage(profileImage);
-		profile.addBackgroundImage(backgroundImage);
+		return ProfileDetailedGetResponse.from(profile);
 	}
 
 	@Override
 	public long getProfileIdByUserId(long userId) {
-		return profileRepository.findProfileIdByUserId(userId)
+		return repository.findProfileIdByUserId(userId)
 			.orElseThrow(() -> new IllegalStateException("profile not found for userId :" + userId));
 	}
 }
