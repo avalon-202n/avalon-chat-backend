@@ -62,11 +62,8 @@ public class LoginServiceImpl implements LoginService {
 
 	@Override
 	public PasswordFindResponse findPasswordByEmail(PasswordFindRequest request) {
-		final User findUser = userRepository.findByEmail(request.getEmail())
-			.orElseThrow(() -> new AvalonChatRuntimeException("일치하는 계정이 없습니다."));
-		log.info("findUser.getPassword() : {}", findUser.getPassword().getValue());
 		//TODO 이메일 인증 하기
-		//TODO 임시번호 발급
+		//TODO 비밀번호 찾기 설계필요 (임시 비밀번호 발급 & 비밀 번호 재설정)
 		return new PasswordFindResponse(Password.of("password"));
 	}
 }

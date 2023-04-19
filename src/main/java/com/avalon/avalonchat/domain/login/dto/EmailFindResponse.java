@@ -9,9 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.ToString;
 
-@AllArgsConstructor
-@ToString
 @Data
+@AllArgsConstructor
 public class EmailFindResponse {
 	@NotNull
 	@Schema(description = "이메일", example = "test1234@gmail.com")

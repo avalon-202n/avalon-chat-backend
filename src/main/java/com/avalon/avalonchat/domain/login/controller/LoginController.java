@@ -38,17 +38,15 @@ public class LoginController {
 		return loginService.login(request);
 	}
 
-	@Operation(summary = "비밀번호 찾기")
-	@ErrorResponseApi(messages = INVALID_LENGTH, args = {"Password", "max", "min"})
-	@GetMapping("/password/find")
-	public PasswordFindResponse findPassword(
+	@Operation(summary = "비밀번호 재설정")
+	@GetMapping("/password/reset")
+	public PasswordFindResponse resetPassword(
 		@RequestBody PasswordFindRequest request
 	) {
 		return loginService.findPasswordByEmail(request);
 	}
 
 	@Operation(summary = "아이디 찾기")
-	@ErrorResponseApi(messages = INVALID_LENGTH, args = {"Password", "max", "min"})
 	@GetMapping("/email/find")
 	public EmailFindResponse findEmail(
 		@RequestBody EmailFindRequest request
