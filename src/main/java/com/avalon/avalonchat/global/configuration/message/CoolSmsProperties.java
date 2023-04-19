@@ -1,4 +1,4 @@
-package com.avalon.avalonchat.infra.message.configuration;
+package com.avalon.avalonchat.global.configuration.message;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConstructorBinding;

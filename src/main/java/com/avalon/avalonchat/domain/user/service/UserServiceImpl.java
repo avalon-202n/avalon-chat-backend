@@ -20,7 +20,6 @@ import com.avalon.avalonchat.domain.user.dto.SignUpResponse;
 import com.avalon.avalonchat.domain.user.repository.PhoneNumberAuthenticationRepository;
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
 import com.avalon.avalonchat.global.error.exception.NotFoundException;
-import com.avalon.avalonchat.infra.message.MessageService;
 
 import lombok.RequiredArgsConstructor;
 

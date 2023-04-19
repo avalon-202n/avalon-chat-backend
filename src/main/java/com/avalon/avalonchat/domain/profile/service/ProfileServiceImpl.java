@@ -10,13 +10,11 @@ import com.avalon.avalonchat.domain.profile.domain.ProfileImage;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddRequest;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddResponse;
 import com.avalon.avalonchat.domain.profile.dto.ProfileDetailedGetResponse;
-import com.avalon.avalonchat.domain.profile.exception.UnAuthenticatedPhoneNumberException;
 import com.avalon.avalonchat.domain.profile.repository.ProfileRepository;
 import com.avalon.avalonchat.domain.user.domain.PhoneNumberAuthenticationCode;
 import com.avalon.avalonchat.domain.user.domain.User;
 import com.avalon.avalonchat.domain.user.repository.PhoneNumberAuthenticationRepository;
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
-import com.avalon.avalonchat.global.error.exception.AvalonChatRuntimeException;
 import com.avalon.avalonchat.global.error.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
@@ -43,9 +41,7 @@ public class ProfileServiceImpl
 		PhoneNumberAuthenticationCode phoneNumberAuthenticationCode = phoneNumberAuthenticationRepository
 			.findById(phoneNumber)
 			.orElseThrow(() -> new NotFoundException(PhoneNumberAuthenticationCode.class, phoneNumber));
-		if (!phoneNumberAuthenticationCode.isAuthenticated()) {
-			throw new UnAuthenticatedPhoneNumberException("unAuthenticated phoneNumber: " + phoneNumber);
-		}
+		phoneNumberAuthenticationCode.checkAuthenticated();
 
 		// 3. create profile
 		Profile profile = new Profile(
@@ -70,7 +66,7 @@ public class ProfileServiceImpl
 	@Override
 	public ProfileDetailedGetResponse getDetailedById(long profileId) {
 		Profile profile = repository.findById(profileId)
-			.orElseThrow(() -> new AvalonChatRuntimeException("no such profile id : " + profileId));
+			.orElseThrow(() -> new NotFoundException(Profile.class, profileId));
 
 		return ProfileDetailedGetResponse.from(profile);
 	}
