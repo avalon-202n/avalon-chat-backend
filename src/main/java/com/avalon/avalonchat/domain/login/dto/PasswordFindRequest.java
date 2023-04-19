@@ -9,11 +9,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.ToString;
 
-@AllArgsConstructor
-@ToString
 @Data
-public class EmailFindResponse {
+@AllArgsConstructor
+public class PasswordFindRequest {
 	@NotNull
-	@Schema(description = "이메일", example = "test1234@gmail.com")
 	private Email email;
+
+	@NotNull
+	@Schema(description = "이메일 인증 코드", example = "A1B2C3")
+	private String certificationCode;
 }

@@ -38,8 +38,8 @@ public class Profile extends BaseAuditingEntity {
 	@Column
 	private String nickname;
 
-	@Column
 	@Setter
+	@Column(nullable = false, unique = true)
 	private String phoneNumber;
 
 	@OneToMany(mappedBy = "profile", cascade = CascadeType.PERSIST, orphanRemoval = true)

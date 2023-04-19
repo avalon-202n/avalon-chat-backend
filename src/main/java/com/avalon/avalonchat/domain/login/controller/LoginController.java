@@ -2,12 +2,18 @@ package com.avalon.avalonchat.domain.login.controller;
 
 import static com.avalon.avalonchat.global.error.ErrorResponseWithMessages.*;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.avalon.avalonchat.domain.login.dto.EmailFindRequest;
 import com.avalon.avalonchat.domain.login.dto.EmailFindResponse;
-import org.springframework.web.bind.annotation.*;
-
 import com.avalon.avalonchat.domain.login.dto.LoginRequest;
 import com.avalon.avalonchat.domain.login.dto.LoginResponse;
+import com.avalon.avalonchat.domain.login.dto.PasswordFindRequest;
+import com.avalon.avalonchat.domain.login.dto.PasswordFindResponse;
 import com.avalon.avalonchat.domain.login.service.LoginService;
 import com.avalon.avalonchat.global.openapi.ErrorResponseApi;
 
@@ -31,13 +37,14 @@ public class LoginController {
 	) {
 		return loginService.login(request);
 	}
+
 	@Operation(summary = "비밀번호 찾기")
 	@ErrorResponseApi(messages = INVALID_LENGTH, args = {"Password", "max", "min"})
 	@GetMapping("/password/find")
-	public LoginResponse findPassword(
-		@RequestBody LoginRequest request
+	public PasswordFindResponse findPassword(
+		@RequestBody PasswordFindRequest request
 	) {
-		return loginService.login(request);
+		return loginService.findPasswordByEmail(request);
 	}
 
 	@Operation(summary = "아이디 찾기")
