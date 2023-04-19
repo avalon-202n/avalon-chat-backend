@@ -131,6 +131,14 @@ class ProfileRepositoryTest {
 		Profile friendProfile2 = createProfile(
 			friendUser2, "I'm friend2", LocalDate.of(1999, 10, 23), ",my", "01011112222"
 		);
+		ProfileImage profileImage1 = new ProfileImage(friendProfile1, "url1");
+		ProfileImage profileImage2 = new ProfileImage(friendProfile1, "url2");
+		ProfileImage profileImage3 = new ProfileImage(friendProfile2, "url3");
+		ProfileImage profileImage4 = new ProfileImage(friendProfile2, "url4");
+		friendProfile1.addProfileImage(profileImage1);
+		friendProfile1.addProfileImage(profileImage2);
+		friendProfile2.addProfileImage(profileImage3);
+		friendProfile2.addProfileImage(profileImage4);
 		Profile savedMyProfile = profileRepository.save(myProfile);
 		Profile savedFriendProfile1 = profileRepository.save(friendProfile1);
 		Profile savedFriendProfile2 = profileRepository.save(friendProfile2);
@@ -141,14 +149,15 @@ class ProfileRepositoryTest {
 		friendRepository.save(friend1);
 		friendRepository.save(friend2);
 
-		// when
-		List<Profile> friendProfiles = profileRepository.findAllByMyProfileIdAndNicknameLike(savedMyProfile.getId(),
-			"");
+		// when & then
+		List<Profile> friendProfiles = profileRepository.findAllByMyProfileId(savedMyProfile.getId());
 
-		// then
 		assertThat(friendProfiles.size()).isEqualTo(2);
 		for (Profile profile : friendProfiles) {
 			assertThat(profile.getId()).isIn(savedFriendProfile1.getId(), savedFriendProfile2.getId());
 		}
+
+		profileRepository.findAllByMyProfileId(savedMyProfile.getId()).stream()
+			.forEach(profile -> assertThat(profile.getProfileImages().size()).isEqualTo(2));
 	}
 }

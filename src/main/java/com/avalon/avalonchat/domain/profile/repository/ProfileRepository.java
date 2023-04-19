@@ -20,11 +20,9 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
 
 	Optional<Profile> findByUser(User user);
 
-	@Query(value = "SELECT p "
+	@Query(value = "SELECT DISTINCT p "
 		+ "FROM Profile p "
-		+ "WHERE "
-		+ "p.id IN (SELECT f.friendProfile.id FROM Friend f WHERE f.myProfile.id = :myProfileId) "
-		+ "AND p.nickname like %:nickname%")
-	List<Profile> findAllByMyProfileIdAndNicknameLike(@Param("myProfileId") long myProfileId,
-		@Param("nickname") String nickname);
+		+ "JOIN FETCH p.profileImages "
+		+ "WHERE p.id IN (SELECT f.friendProfile.id FROM Friend f WHERE f.myProfile.id = :myProfileId)")
+	List<Profile> findAllByMyProfileId(@Param("myProfileId") long myProfileId);
 }

@@ -17,8 +17,7 @@ import com.avalon.avalonchat.domain.model.SecurityUser;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddRequest;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddResponse;
 import com.avalon.avalonchat.domain.profile.dto.ProfileDetailedGetResponse;
-import com.avalon.avalonchat.domain.profile.dto.ProfileSummaryGetRequest;
-import com.avalon.avalonchat.domain.profile.dto.ProfileSummaryGetResponse;
+import com.avalon.avalonchat.domain.profile.dto.ProfileListGetResponse;
 import com.avalon.avalonchat.domain.profile.service.ProfileService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -61,14 +60,13 @@ public class ProfileController {
 
 	@Operation(
 		summary = "친구 프로필 목록 조회",
-		description = "인증객체의 profileId 와 검색어 nickname 을 사용해 친구 프로필을 전체 조회합니다.",
+		description = "인증객체의 profileId 를 사용해 친구 프로필 레코드를 전체 조회합니다.",
 		security = {@SecurityRequirement(name = "bearer-key")}
 	)
 	@GetMapping
-	public List<ProfileSummaryGetResponse> getFriendProfiles(
-		@AuthenticationPrincipal SecurityUser securityUser,
-		ProfileSummaryGetRequest request
+	public List<ProfileListGetResponse> getFriendProfiles(
+		@AuthenticationPrincipal SecurityUser securityUser
 	) {
-		return service.getSummaryById(securityUser.getProfileId(), request);
+		return service.getListById(securityUser.getProfileId());
 	}
 }

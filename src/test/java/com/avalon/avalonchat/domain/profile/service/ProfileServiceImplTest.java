@@ -21,8 +21,7 @@ import com.avalon.avalonchat.domain.profile.domain.ProfileImage;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddRequest;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddResponse;
 import com.avalon.avalonchat.domain.profile.dto.ProfileDetailedGetResponse;
-import com.avalon.avalonchat.domain.profile.dto.ProfileSummaryGetRequest;
-import com.avalon.avalonchat.domain.profile.dto.ProfileSummaryGetResponse;
+import com.avalon.avalonchat.domain.profile.dto.ProfileListGetResponse;
 import com.avalon.avalonchat.domain.profile.repository.ProfileRepository;
 import com.avalon.avalonchat.domain.user.domain.Email;
 import com.avalon.avalonchat.domain.user.domain.Password;
@@ -183,9 +182,13 @@ class ProfileServiceImplTest extends BaseTestContainerTest {
 			friendUser2, "I'm friend2", LocalDate.of(1999, 10, 23), "my", "01011112222"
 		);
 		ProfileImage profileImage1 = new ProfileImage(friendProfile1, "url1");
-		ProfileImage profileImage2 = new ProfileImage(friendProfile2, "url2");
+		ProfileImage profileImage2 = new ProfileImage(friendProfile1, "url2");
+		ProfileImage profileImage3 = new ProfileImage(friendProfile2, "url3");
+		ProfileImage profileImage4 = new ProfileImage(friendProfile2, "url4");
 		friendProfile1.addProfileImage(profileImage1);
-		friendProfile2.addProfileImage(profileImage2);
+		friendProfile1.addProfileImage(profileImage2);
+		friendProfile2.addProfileImage(profileImage3);
+		friendProfile2.addProfileImage(profileImage4);
 		Profile savedMyProfile = profileRepository.save(myProfile);
 		profileRepository.save(friendProfile1);
 		profileRepository.save(friendProfile2);
@@ -196,10 +199,8 @@ class ProfileServiceImplTest extends BaseTestContainerTest {
 		friendRepository.save(friend1);
 		friendRepository.save(friend2);
 
-		ProfileSummaryGetRequest request = new ProfileSummaryGetRequest(null);
-
 		// when
-		List<ProfileSummaryGetResponse> responses = sut.getSummaryById(savedMyProfile.getId(), request);
+		List<ProfileListGetResponse> responses = sut.getListById(savedMyProfile.getId());
 
 		// then
 		assertThat(responses.size()).isEqualTo(2);

@@ -14,8 +14,7 @@ import com.avalon.avalonchat.domain.profile.domain.ProfileImage;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddRequest;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddResponse;
 import com.avalon.avalonchat.domain.profile.dto.ProfileDetailedGetResponse;
-import com.avalon.avalonchat.domain.profile.dto.ProfileSummaryGetRequest;
-import com.avalon.avalonchat.domain.profile.dto.ProfileSummaryGetResponse;
+import com.avalon.avalonchat.domain.profile.dto.ProfileListGetResponse;
 import com.avalon.avalonchat.domain.profile.repository.ProfileRepository;
 import com.avalon.avalonchat.domain.user.domain.PhoneNumberAuthenticationCode;
 import com.avalon.avalonchat.domain.user.domain.User;
@@ -85,9 +84,9 @@ public class ProfileServiceImpl
 	}
 
 	@Override
-	public List<ProfileSummaryGetResponse> getSummaryById(long profileId, ProfileSummaryGetRequest request) {
-		return repository.findAllByMyProfileIdAndNicknameLike(profileId, request.getNickname()).stream()
-			.map(profile -> ProfileSummaryGetResponse.from(profile,
+	public List<ProfileListGetResponse> getListById(long profileId) {
+		return repository.findAllByMyProfileId(profileId).stream()
+			.map(profile -> ProfileListGetResponse.from(profile,
 				profile.getProfileImages().get(profile.getProfileImages().size() - 1)))
 			.collect(Collectors.toList());
 	}
