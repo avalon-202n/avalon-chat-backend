@@ -1,5 +1,8 @@
 package com.avalon.avalonchat.domain.friend.dto;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.avalon.avalonchat.domain.friend.domain.Friend;
 import com.avalon.avalonchat.domain.profile.domain.BackgroundImage;
 import com.avalon.avalonchat.domain.profile.domain.ProfileImage;
@@ -11,9 +14,9 @@ public class FriendAddResponse {
 	private final long friendProfileId;
 	private final String nickname;
 	private final String bio;
-	private final String[] profileImages;
-	private final String[] backgroundImages;
-	private final String friendStatus;
+	private final List<String> profileImages;
+	private final List<String> backgroundImages;
+	private final Friend.FriendStatus friendStatus;
 
 	public FriendAddResponse(Friend friend) {
 		this.friendProfileId = friend.getFriendProfile().getId();
@@ -21,11 +24,11 @@ public class FriendAddResponse {
 		this.bio = friend.getFriendProfile().getBio();
 		this.profileImages = friend.getFriendProfile().getProfileImages().stream()
 			.map(ProfileImage::getUrl)
-			.toArray(String[]::new);
+			.collect(Collectors.toList());
 		this.backgroundImages = friend.getFriendProfile().getBackgroundImages().stream()
 			.map(BackgroundImage::getUrl)
-			.toArray(String[]::new);
-		this.friendStatus = friend.getFriendStatus().toString();
+			.collect(Collectors.toList());
+		this.friendStatus = friend.getFriendStatus();
 	}
 
 	public static FriendAddResponse ofEntity(Friend friend) {

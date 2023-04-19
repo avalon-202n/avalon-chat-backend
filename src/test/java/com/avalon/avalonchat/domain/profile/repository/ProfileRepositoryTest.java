@@ -75,7 +75,9 @@ class ProfileRepositoryTest {
 		// given
 		String phoneNumber1 = "010-1234-5678";
 		String phoneNumber2 = "010-8765-4321";
-		String[] phoneNumbers = {phoneNumber1, phoneNumber2};
+		List<String> phoneNumbers = new ArrayList<>();
+		phoneNumbers.add(phoneNumber1);
+		phoneNumbers.add(phoneNumber2);
 		String phoneNumber = "01055110625";
 
 		User myUser = new User(Email.of("email@gmail.com"), Password.of("password"));
