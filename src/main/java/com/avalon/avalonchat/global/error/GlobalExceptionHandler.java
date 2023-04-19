@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
 	@ExceptionHandler(AvalonChatRuntimeException.class)
 	public ErrorResponse handleAvalonChatRuntimeException(AvalonChatRuntimeException ex) {
 		String type = ex.getClass().getSimpleName();
-		String message = messageSourceAccessor.getMessage(ex.getDetailKey(), ex.getParams());
+		String message = messageSourceAccessor.getMessage(ex.getMessageKey(), ex.getParams());
 		return new ErrorResponse(BAD_REQUEST, type, message);
 	}
 

@@ -34,13 +34,13 @@ public class ProfileServiceImpl
 	public ProfileAddResponse addProfile(long userId, ProfileAddRequest request) {
 		// 1. find user
 		User user = userRepository.findById(userId)
-			.orElseThrow(() -> new NotFoundException(User.class, userId));
+			.orElseThrow(() -> new NotFoundException("user", userId));
 
 		// 2. check
 		String phoneNumber = request.getPhoneNumber();
 		PhoneNumberAuthenticationCode phoneNumberAuthenticationCode = phoneNumberAuthenticationRepository
 			.findById(phoneNumber)
-			.orElseThrow(() -> new NotFoundException(PhoneNumberAuthenticationCode.class, phoneNumber));
+			.orElseThrow(() -> new NotFoundException("phoneNumber AuthenticationCode", phoneNumber));
 		phoneNumberAuthenticationCode.checkAuthenticated();
 
 		// 3. create profile
@@ -66,7 +66,7 @@ public class ProfileServiceImpl
 	@Override
 	public ProfileDetailedGetResponse getDetailedById(long profileId) {
 		Profile profile = repository.findById(profileId)
-			.orElseThrow(() -> new NotFoundException(Profile.class, profileId));
+			.orElseThrow(() -> new NotFoundException("profile", profileId));
 
 		return ProfileDetailedGetResponse.from(profile);
 	}

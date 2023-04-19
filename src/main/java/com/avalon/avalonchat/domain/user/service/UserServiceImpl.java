@@ -112,7 +112,7 @@ public class UserServiceImpl implements UserService {
 		// 2. check: if equals authenticate and return true, if not return false
 		PhoneNumberAuthenticationCode phoneNumberAuthenticationCode = phoneNumberAuthenticationRepository
 			.findById(phoneNumber)
-			.orElseThrow(() -> new NotFoundException(PhoneNumberAuthenticationCode.class, phoneNumber));
+			.orElseThrow(() -> new NotFoundException("PhoneNumber AuthenticationCode", phoneNumber));
 
 		if (phoneNumberAuthenticationCode.getCertificationCode().equals(certificationCode)) {
 			phoneNumberAuthenticationCode.authenticate();

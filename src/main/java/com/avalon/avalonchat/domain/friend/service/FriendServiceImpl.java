@@ -29,7 +29,7 @@ public class FriendServiceImpl implements FriendService {
 	public List<FriendAddResponse> addFriend(long profileId, FriendAddRequest request) {
 		// 1. find profile & create friends
 		Profile myProfile = profileRepository.findById(profileId)
-			.orElseThrow(() -> new NotFoundException(Profile.class, profileId));
+			.orElseThrow(() -> new NotFoundException("profile", profileId));
 
 		List<Friend> friends = profileRepository.findAllByPhoneNumberIn(request.getPhoneNumbers()).stream()
 			.map(friendprofile -> new Friend(myProfile, friendprofile))
