@@ -12,7 +12,7 @@ import com.avalon.avalonchat.domain.friend.dto.FriendAddResponse;
 import com.avalon.avalonchat.domain.friend.repository.FriendRepository;
 import com.avalon.avalonchat.domain.profile.domain.Profile;
 import com.avalon.avalonchat.domain.profile.repository.ProfileRepository;
-import com.avalon.avalonchat.global.error.exception.AvalonChatRuntimeException;
+import com.avalon.avalonchat.global.error.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,7 +29,7 @@ public class FriendServiceImpl implements FriendService {
 	public List<FriendAddResponse> addFriend(long profileId, FriendAddRequest request) {
 		// 1. find profile & create friends
 		Profile myProfile = profileRepository.findById(profileId)
-			.orElseThrow(() -> new AvalonChatRuntimeException("profile not found: " + profileId));
+			.orElseThrow(() -> new NotFoundException(Profile.class, profileId));
 
 		List<Friend> friends = profileRepository.findAllByPhoneNumberIn(request.getPhoneNumbers()).stream()
 			.map(friendprofile -> new Friend(myProfile, friendprofile))

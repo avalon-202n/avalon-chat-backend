@@ -17,6 +17,7 @@ import com.avalon.avalonchat.domain.user.domain.User;
 import com.avalon.avalonchat.domain.user.repository.PhoneNumberAuthenticationRepository;
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
 import com.avalon.avalonchat.global.error.exception.AvalonChatRuntimeException;
+import com.avalon.avalonchat.global.error.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,13 +36,13 @@ public class ProfileServiceImpl
 	public ProfileAddResponse addProfile(long userId, ProfileAddRequest request) {
 		// 1. find user
 		User user = userRepository.findById(userId)
-			.orElseThrow(() -> new AvalonChatRuntimeException("user not found for userId: " + userId));
+			.orElseThrow(() -> new NotFoundException(User.class, userId));
 
 		// 2. check
 		String phoneNumber = request.getPhoneNumber();
 		PhoneNumberAuthenticationCode phoneNumberAuthenticationCode = phoneNumberAuthenticationRepository
 			.findById(phoneNumber)
-			.orElseThrow(() -> new AvalonChatRuntimeException("code not found for phoneNumber: " + phoneNumber));
+			.orElseThrow(() -> new NotFoundException(PhoneNumberAuthenticationCode.class, phoneNumber));
 		if (!phoneNumberAuthenticationCode.isAuthenticated()) {
 			throw new UnAuthenticatedPhoneNumberException("unAuthenticated phoneNumber: " + phoneNumber);
 		}
