@@ -8,9 +8,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.avalon.avalonchat.domain.profile.domain.Profile;
+import com.avalon.avalonchat.domain.user.domain.User;
 
 public interface ProfileRepository extends JpaRepository<Profile, Long> {
-	List<Profile> findAllByPhoneNumberIn(String[] phoneNumbers);
+	List<Profile> findAllByPhoneNumberIn(List<String> phoneNumbers);
 
 	Optional<Profile> findByPhoneNumber(String phoneNumbers);
 
@@ -18,4 +19,6 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
 		+ "FROM Profile p "
 		+ "WHERE p.user.id = :userId")
 	Optional<Long> findProfileIdByUserId(@Param("userId") long userId);
+
+	Optional<Profile> findByUser(User user);
 }

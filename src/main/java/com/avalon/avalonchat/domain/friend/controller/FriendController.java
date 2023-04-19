@@ -13,6 +13,8 @@ import com.avalon.avalonchat.domain.friend.dto.FriendAddRequest;
 import com.avalon.avalonchat.domain.friend.dto.FriendAddResponse;
 import com.avalon.avalonchat.domain.friend.service.FriendService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,6 +25,11 @@ import lombok.extern.slf4j.Slf4j;
 public class FriendController {
 	private final FriendService friendService;
 
+	@Operation(
+		summary = "친구 추가",
+		description = "phoneNumbers 를 이용하여 friend 레코드를 추가합니다.",
+		security = {@SecurityRequirement(name = "bearer-key")}
+	)
 	@PostMapping
 	public ResponseEntity<List<FriendAddResponse>> addFriend(
 		//TODO: @AuthenticationPrincipal 활용 -> SecurityUser 타입 Authentication 객체에서 userId 가져올 것

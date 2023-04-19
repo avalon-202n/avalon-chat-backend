@@ -2,14 +2,13 @@ package com.avalon.avalonchat.global.configuration.jwt;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.avalon.avalonchat.domain.user.domain.Email;
 import com.avalon.avalonchat.domain.user.domain.User;
 
-import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -37,20 +36,10 @@ public class JwtTokenService {
 		this.jwtParser = Jwts.parserBuilder().setSigningKey(secretKey).build();
 	}
 
-	public long getUserIdFromAccessToken(String token) {
+	public Map<String, Object> parseClaim(String token) {
 		return jwtParser
 			.parseClaimsJws(token)
-			.getBody()
-			.get("userId", Long.class);
-	}
-
-	public Email getEmailFromAccessToken(String token) {
-		String email = jwtParser
-			.parseClaimsJws(token)
-			.getBody()
-			.get("email", String.class);
-
-		return Email.of(email);
+			.getBody();
 	}
 
 	public String createAccessToken(User user, long profileId) {
@@ -76,18 +65,5 @@ public class JwtTokenService {
 			.setExpiration(refreshTokenExpiresIn)
 			.signWith(secretKey, SignatureAlgorithm.HS512)
 			.compact();
-	}
-
-	public Boolean validateToken(String token) {
-		try {
-			Jwts.parserBuilder()
-				.setSigningKey(secretKey)
-				.build()
-				.parseClaimsJws(token)
-				.getBody();
-		} catch (JwtException e) {
-			return false;
-		}
-		return true;
 	}
 }

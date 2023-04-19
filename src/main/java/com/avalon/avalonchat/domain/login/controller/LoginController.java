@@ -30,7 +30,7 @@ public class LoginController {
 	private final LoginService loginService;
 
 	@Operation(summary = "로그인")
-	@ErrorResponseApi(messages = INVALID_LENGTH, args = {"Password", "max", "min"})
+	@ErrorResponseApi(messages = INVALID_LENGTH, args = {"Password", "7", "16"})
 	@PostMapping
 	public LoginResponse login(
 		@RequestBody LoginRequest request

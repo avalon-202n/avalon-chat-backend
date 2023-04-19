@@ -1,13 +1,16 @@
 package com.avalon.avalonchat.domain.friend.dto;
 
+import java.util.List;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 
 @Getter
 public class FriendAddRequest {
-	private final String[] phoneNumbers;
+	@Schema(description = "핸드폰 번호 리스트", example = "[010-1234-5678, 010-1212-3434]")
+	private final List<String> phoneNumbers;
 
-	//TODO: 프론트쪽과 연락처 리스트를 어떠한 형태로 보내줄 것인지 request 체크 후 리팩토링 필요
-	public FriendAddRequest(String[] phoneNumbers) {
+	public FriendAddRequest(List<String> phoneNumbers) {
 		this.phoneNumbers = phoneNumbers;
 	}
 }
