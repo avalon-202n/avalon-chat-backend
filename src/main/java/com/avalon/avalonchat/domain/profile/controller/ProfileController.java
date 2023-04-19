@@ -39,10 +39,7 @@ public class ProfileController {
 		@RequestHeader("user-id") Long userId,
 		@RequestBody ProfileAddRequest request
 	) {
-		// action
 		ProfileAddResponse response = service.addProfile(userId, request);
-
-		// response
 		return created(response);
 	}
 
