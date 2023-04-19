@@ -26,9 +26,10 @@ import com.avalon.avalonchat.testsupport.Fixture;
 
 @Transactional
 @SpringBootTest
-public class LoginServiceTest {
+public class LoginServiceImplTest {
 	@Autowired
 	private LoginServiceImpl sut;
+
 	@Autowired
 	private UserServiceImpl userServiceImpl;
 
@@ -90,5 +91,15 @@ public class LoginServiceTest {
 
 		//then
 		assertThat(emailFindResponse.getEmail().getValue()).isEqualTo("avalon@e.com");
+	}
+
+	@Test
+	void 전화번호로_이메일_찾기_실패() {
+		//when
+		EmailFindRequest emailFindRequest = new EmailFindRequest("01012345679");
+
+		//then
+		assertThatExceptionOfType(RuntimeException.class)
+			.isThrownBy(() -> sut.findEmailByPhoneNumber(emailFindRequest));
 	}
 }
