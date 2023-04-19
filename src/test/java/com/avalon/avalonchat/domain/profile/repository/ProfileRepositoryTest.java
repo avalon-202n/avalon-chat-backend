@@ -1,5 +1,6 @@
 package com.avalon.avalonchat.domain.profile.repository;
 
+import static com.avalon.avalonchat.testsupport.Fixture.*;
 import static org.assertj.core.api.AssertionsForClassTypes.*;
 
 import java.time.LocalDate;
@@ -13,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.avalon.avalonchat.domain.friend.domain.Friend;
+import com.avalon.avalonchat.domain.friend.repository.FriendRepository;
 import com.avalon.avalonchat.domain.profile.domain.BackgroundImage;
 import com.avalon.avalonchat.domain.profile.domain.Profile;
 import com.avalon.avalonchat.domain.profile.domain.ProfileImage;
@@ -30,6 +33,8 @@ class ProfileRepositoryTest {
 	private ProfileRepository profileRepository;
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private FriendRepository friendRepository;
 
 	@Test
 	void profile_영속성_저장성공() {
@@ -104,5 +109,46 @@ class ProfileRepositoryTest {
 
 		// then
 		assertThat(savedProfiles.containsAll(profiles)).isTrue();
+	}
+
+	@Test
+	void myProfileId로_friendProfiles_조회성공() {
+		//given - ready for users
+		User myUser = createUser("myUser@world.com", "myUserPassword");
+		User friendUser1 = createUser("friendUser1@world.com", "friendUser1");
+		User friendUser2 = createUser("friendUser2@world.com", "friendUser2");
+		userRepository.save(myUser);
+		userRepository.save(friendUser1);
+		userRepository.save(friendUser2);
+
+		// given - ready for profiles
+		Profile myProfile = createProfile(
+			myUser, "I'm myUser", LocalDate.of(1997, 8, 21), ",my", "01012345678"
+		);
+		Profile friendProfile1 = createProfile(
+			friendUser1, "I'm friend1", LocalDate.of(1998, 9, 22), ",friend", "01012123434"
+		);
+		Profile friendProfile2 = createProfile(
+			friendUser2, "I'm friend2", LocalDate.of(1999, 10, 23), ",my", "01011112222"
+		);
+		Profile savedMyProfile = profileRepository.save(myProfile);
+		Profile savedFriendProfile1 = profileRepository.save(friendProfile1);
+		Profile savedFriendProfile2 = profileRepository.save(friendProfile2);
+
+		// given - ready for friends
+		Friend friend1 = new Friend(myProfile, friendProfile1);
+		Friend friend2 = new Friend(myProfile, friendProfile2);
+		friendRepository.save(friend1);
+		friendRepository.save(friend2);
+
+		// when
+		List<Profile> friendProfiles = profileRepository.findAllByMyProfileIdAndNicknameLike(savedMyProfile.getId(),
+			"");
+
+		// then
+		assertThat(friendProfiles.size()).isEqualTo(2);
+		for (Profile profile : friendProfiles) {
+			assertThat(profile.getId()).isIn(savedFriendProfile1.getId(), savedFriendProfile2.getId());
+		}
 	}
 }

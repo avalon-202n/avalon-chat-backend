@@ -4,6 +4,7 @@ import static com.avalon.avalonchat.testsupport.Fixture.*;
 import static org.assertj.core.api.AssertionsForClassTypes.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.AfterEach;
@@ -13,10 +14,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.avalon.avalonchat.domain.friend.domain.Friend;
+import com.avalon.avalonchat.domain.friend.repository.FriendRepository;
 import com.avalon.avalonchat.domain.profile.domain.Profile;
+import com.avalon.avalonchat.domain.profile.domain.ProfileImage;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddRequest;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddResponse;
 import com.avalon.avalonchat.domain.profile.dto.ProfileDetailedGetResponse;
+import com.avalon.avalonchat.domain.profile.dto.ProfileSummaryGetRequest;
+import com.avalon.avalonchat.domain.profile.dto.ProfileSummaryGetResponse;
 import com.avalon.avalonchat.domain.profile.repository.ProfileRepository;
 import com.avalon.avalonchat.domain.user.domain.Email;
 import com.avalon.avalonchat.domain.user.domain.Password;
@@ -51,6 +57,8 @@ class ProfileServiceImplTest extends BaseTestContainerTest {
 
 	@Autowired
 	private PhoneNumberAuthenticationRepository phoneNumberAuthenticationRepository;
+	@Autowired
+	private FriendRepository friendRepository;
 
 	@Test
 	@Disabled("TODO - add mocking or add new NullMessageService for test")
@@ -152,6 +160,49 @@ class ProfileServiceImplTest extends BaseTestContainerTest {
 		//then
 		assertThat(response.getBio()).isEqualTo("hi there");
 		assertThat(response.getNickname()).isEqualTo("haha");
+	}
+
+	@Test
+	void myProfileId와_검색어로_friendProfiles_목록조회성공() {
+		//given - ready for users
+		User myUser = createUser("myUser@world.com", "myUserPassword");
+		User friendUser1 = createUser("friendUser1@world.com", "friendUser1");
+		User friendUser2 = createUser("friendUser2@world.com", "friendUser2");
+		userRepository.save(myUser);
+		userRepository.save(friendUser1);
+		userRepository.save(friendUser2);
+
+		// given - ready for profiles
+		Profile myProfile = createProfile(
+			myUser, "I'm myUser", LocalDate.of(1997, 8, 21), "my", "01012345678"
+		);
+		Profile friendProfile1 = createProfile(
+			friendUser1, "I'm friend1", LocalDate.of(1998, 9, 22), "friend", "01012123434"
+		);
+		Profile friendProfile2 = createProfile(
+			friendUser2, "I'm friend2", LocalDate.of(1999, 10, 23), "my", "01011112222"
+		);
+		ProfileImage profileImage1 = new ProfileImage(friendProfile1, "url1");
+		ProfileImage profileImage2 = new ProfileImage(friendProfile2, "url2");
+		friendProfile1.addProfileImage(profileImage1);
+		friendProfile2.addProfileImage(profileImage2);
+		Profile savedMyProfile = profileRepository.save(myProfile);
+		profileRepository.save(friendProfile1);
+		profileRepository.save(friendProfile2);
+
+		// given - ready for friends
+		Friend friend1 = new Friend(myProfile, friendProfile1);
+		Friend friend2 = new Friend(myProfile, friendProfile2);
+		friendRepository.save(friend1);
+		friendRepository.save(friend2);
+
+		ProfileSummaryGetRequest request = new ProfileSummaryGetRequest(null);
+
+		// when
+		List<ProfileSummaryGetResponse> responses = sut.getSummaryById(savedMyProfile.getId(), request);
+
+		// then
+		assertThat(responses.size()).isEqualTo(2);
 	}
 
 	@AfterEach

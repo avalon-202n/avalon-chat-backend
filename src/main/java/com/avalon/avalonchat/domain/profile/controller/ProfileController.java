@@ -2,6 +2,8 @@ package com.avalon.avalonchat.domain.profile.controller;
 
 import static com.avalon.avalonchat.global.util.ResponseEntityUtil.*;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +17,8 @@ import com.avalon.avalonchat.domain.model.SecurityUser;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddRequest;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddResponse;
 import com.avalon.avalonchat.domain.profile.dto.ProfileDetailedGetResponse;
+import com.avalon.avalonchat.domain.profile.dto.ProfileSummaryGetRequest;
+import com.avalon.avalonchat.domain.profile.dto.ProfileSummaryGetResponse;
 import com.avalon.avalonchat.domain.profile.service.ProfileService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -53,5 +57,18 @@ public class ProfileController {
 		@AuthenticationPrincipal SecurityUser securityUser
 	) {
 		return service.getDetailedById(securityUser.getProfileId());
+	}
+
+	@Operation(
+		summary = "친구 프로필 목록 조회",
+		description = "인증객체의 profileId 와 검색어 nickname 을 사용해 친구 프로필을 전체 조회합니다.",
+		security = {@SecurityRequirement(name = "bearer-key")}
+	)
+	@GetMapping
+	public List<ProfileSummaryGetResponse> getFriendProfiles(
+		@AuthenticationPrincipal SecurityUser securityUser,
+		ProfileSummaryGetRequest request
+	) {
+		return service.getSummaryById(securityUser.getProfileId(), request);
 	}
 }

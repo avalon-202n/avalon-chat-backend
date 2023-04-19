@@ -19,4 +19,12 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
 	Optional<Long> findProfileIdByUserId(@Param("userId") long userId);
 
 	Optional<Profile> findByUser(User user);
+
+	@Query(value = "SELECT p "
+		+ "FROM Profile p "
+		+ "WHERE "
+		+ "p.id IN (SELECT f.friendProfile.id FROM Friend f WHERE f.myProfile.id = :myProfileId) "
+		+ "AND p.nickname like %:nickname%")
+	List<Profile> findAllByMyProfileIdAndNicknameLike(@Param("myProfileId") long myProfileId,
+		@Param("nickname") String nickname);
 }
