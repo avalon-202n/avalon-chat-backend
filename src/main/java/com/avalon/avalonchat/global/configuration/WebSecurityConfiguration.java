@@ -45,6 +45,7 @@ public class WebSecurityConfiguration {
 				.antMatchers("/actuator/**").permitAll()
 				.antMatchers("/**/swagger*/**", "/**/api-docs/**").permitAll()
 				.antMatchers("/signup/**", "/login").permitAll()
+				.antMatchers("/profiles").permitAll()
 				.anyRequest().authenticated()
 			)
 			.exceptionHandling(ex -> ex.authenticationEntryPoint(authenticationEntryPoint))

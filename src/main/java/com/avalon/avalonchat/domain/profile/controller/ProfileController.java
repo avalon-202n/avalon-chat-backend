@@ -32,7 +32,7 @@ public class ProfileController {
 
 	@Operation(
 		summary = "프로필 생성",
-		description = "헤더의 user_id를 통해 회원과 매핑"
+		description = "헤더의 user_id 를 사용하여 user 레코드와 매핑된 profile 레코드가 생성됩니다."
 	)
 	@PostMapping
 	public ResponseEntity<ProfileAddResponse> addProfile(
