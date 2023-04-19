@@ -39,7 +39,7 @@ public enum ErrorResponseWithMessages {
 
 	public ErrorResponse toInstance(Object[] args) {
 		String formattedMessage = MessageFormat.format(message, args);
-		return new ErrorResponse(status.value(), type, formattedMessage);
+		return new ErrorResponse(status, type, formattedMessage);
 	}
 
 	public String getMessage(Object... args) {

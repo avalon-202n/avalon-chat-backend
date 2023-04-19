@@ -2,8 +2,6 @@ package com.avalon.avalonchat.global.error.exception;
 
 import org.apache.commons.lang3.StringUtils;
 
-import com.avalon.avalonchat.global.util.MessageUtils;
-
 public class NotFoundException extends AvalonChatRuntimeException {
 
 	static final String MESSAGE_KEY = "error.notfound";
@@ -20,15 +18,5 @@ public class NotFoundException extends AvalonChatRuntimeException {
 			MESSAGE_DETAILS,
 			new String[] {targetName, (values != null && values.length > 0) ? StringUtils.join(values, ",") : ""}
 		);
-	}
-
-	@Override
-	public String getMessage() {
-		return MessageUtils.getMessage(getDetailKey(), getParams());
-	}
-
-	@Override
-	public String toString() {
-		return MessageUtils.getMessage(getMessageKey());
 	}
 }
