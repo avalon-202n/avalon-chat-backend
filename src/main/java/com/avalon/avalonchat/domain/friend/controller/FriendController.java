@@ -5,6 +5,7 @@ import static com.avalon.avalonchat.global.util.ResponseEntityUtil.*;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.avalon.avalonchat.domain.friend.dto.FriendAddRequest;
 import com.avalon.avalonchat.domain.friend.dto.FriendAddResponse;
 import com.avalon.avalonchat.domain.friend.service.FriendService;
+import com.avalon.avalonchat.domain.model.SecurityUser;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -32,16 +34,10 @@ public class FriendController {
 	)
 	@PostMapping
 	public ResponseEntity<List<FriendAddResponse>> addFriend(
-		//TODO: @AuthenticationPrincipal 활용 -> SecurityUser 타입 Authentication 객체에서 userId 가져올 것
+		@AuthenticationPrincipal SecurityUser securityUser,
 		FriendAddRequest request
 	) {
-		// setup
-		long profileId = 1L;
-
-		// action
-		List<FriendAddResponse> responses = friendService.addFriend(profileId, request);
-
-		// response
+		List<FriendAddResponse> responses = friendService.addFriend(securityUser.getProfileId(), request);
 		return created(responses);
 	}
 }

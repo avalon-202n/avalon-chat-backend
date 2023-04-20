@@ -26,7 +26,7 @@ import lombok.Setter;
 public class Profile extends BaseAuditingEntity {
 
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "users_id")
+	@JoinColumn(name = "users_id", unique = true)
 	private User user;
 
 	@Column

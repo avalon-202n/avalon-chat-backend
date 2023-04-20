@@ -1,5 +1,8 @@
 package com.avalon.avalonchat.domain.profile.service;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,7 +13,7 @@ import com.avalon.avalonchat.domain.profile.domain.ProfileImage;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddRequest;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddResponse;
 import com.avalon.avalonchat.domain.profile.dto.ProfileDetailedGetResponse;
-import com.avalon.avalonchat.domain.profile.exception.UnAuthenticatedPhoneNumberException;
+import com.avalon.avalonchat.domain.profile.dto.ProfileListGetResponse;
 import com.avalon.avalonchat.domain.profile.repository.ProfileRepository;
 import com.avalon.avalonchat.domain.user.domain.PhoneNumberAuthenticationCode;
 import com.avalon.avalonchat.domain.user.domain.User;
@@ -43,7 +46,12 @@ public class ProfileServiceImpl
 			.findById(phoneNumber)
 			.orElseThrow(() -> new AvalonChatRuntimeException("code not found for phoneNumber: " + phoneNumber));
 		if (!phoneNumberAuthenticationCode.isAuthenticated()) {
-			throw new UnAuthenticatedPhoneNumberException("unAuthenticated phoneNumber: " + phoneNumber);
+			throw new AvalonChatRuntimeException("unAuthenticated phoneNumber: " + phoneNumber);
+		}
+
+		Optional<Profile> optionalProfile = repository.findByUser(user);
+		if (optionalProfile.isPresent()) {
+			throw new AvalonChatRuntimeException("profile already exists: " + optionalProfile.get().getId());
 		}
 
 		// 3. create profile
@@ -72,6 +80,11 @@ public class ProfileServiceImpl
 			.orElseThrow(() -> new AvalonChatRuntimeException("no such profile id : " + profileId));
 
 		return ProfileDetailedGetResponse.from(profile);
+	}
+
+	@Override
+	public List<ProfileListGetResponse> getListById(long profileId) {
+		return repository.findAllByMyProfileId(profileId);
 	}
 
 	@Override
