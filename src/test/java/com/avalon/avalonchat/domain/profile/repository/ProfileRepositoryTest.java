@@ -19,6 +19,7 @@ import com.avalon.avalonchat.domain.friend.repository.FriendRepository;
 import com.avalon.avalonchat.domain.profile.domain.BackgroundImage;
 import com.avalon.avalonchat.domain.profile.domain.Profile;
 import com.avalon.avalonchat.domain.profile.domain.ProfileImage;
+import com.avalon.avalonchat.domain.profile.dto.ProfileListGetResponse;
 import com.avalon.avalonchat.domain.user.domain.Email;
 import com.avalon.avalonchat.domain.user.domain.Password;
 import com.avalon.avalonchat.domain.user.domain.User;
@@ -126,10 +127,10 @@ class ProfileRepositoryTest {
 			myUser, "I'm myUser", LocalDate.of(1997, 8, 21), ",my", "01012345678"
 		);
 		Profile friendProfile1 = createProfile(
-			friendUser1, "I'm friend1", LocalDate.of(1998, 9, 22), ",friend", "01012123434"
+			friendUser1, "I'm friend1", LocalDate.of(1998, 9, 22), "A_friend", "01012123434"
 		);
 		Profile friendProfile2 = createProfile(
-			friendUser2, "I'm friend2", LocalDate.of(1999, 10, 23), ",my", "01011112222"
+			friendUser2, "I'm friend2", LocalDate.of(1999, 10, 23), "B_friend", "01011112222"
 		);
 		ProfileImage profileImage1 = new ProfileImage(friendProfile1, "url1");
 		ProfileImage profileImage2 = new ProfileImage(friendProfile1, "url2");
@@ -140,8 +141,8 @@ class ProfileRepositoryTest {
 		friendProfile2.addProfileImage(profileImage3);
 		friendProfile2.addProfileImage(profileImage4);
 		Profile savedMyProfile = profileRepository.save(myProfile);
-		Profile savedFriendProfile1 = profileRepository.save(friendProfile1);
-		Profile savedFriendProfile2 = profileRepository.save(friendProfile2);
+		profileRepository.save(friendProfile1);
+		profileRepository.save(friendProfile2);
 
 		// given - ready for friends
 		Friend friend1 = new Friend(myProfile, friendProfile1);
@@ -149,15 +150,12 @@ class ProfileRepositoryTest {
 		friendRepository.save(friend1);
 		friendRepository.save(friend2);
 
-		// when & then
-		List<Profile> friendProfiles = profileRepository.findAllByMyProfileId(savedMyProfile.getId());
+		// when
+		List<ProfileListGetResponse> friendProfiles = profileRepository.findAllByMyProfileId(savedMyProfile.getId());
 
+		// then
 		assertThat(friendProfiles.size()).isEqualTo(2);
-		for (Profile profile : friendProfiles) {
-			assertThat(profile.getId()).isIn(savedFriendProfile1.getId(), savedFriendProfile2.getId());
-		}
-
-		profileRepository.findAllByMyProfileId(savedMyProfile.getId()).stream()
-			.forEach(profile -> assertThat(profile.getProfileImages().size()).isEqualTo(2));
+		assertThat(friendProfiles.get(0).getProfileImageUrl()).isEqualTo("url2");
+		assertThat(friendProfiles.get(1).getProfileImageUrl()).isEqualTo("url4");
 	}
 }

@@ -2,7 +2,6 @@ package com.avalon.avalonchat.domain.profile.service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -85,10 +84,7 @@ public class ProfileServiceImpl
 
 	@Override
 	public List<ProfileListGetResponse> getListById(long profileId) {
-		return repository.findAllByMyProfileId(profileId).stream()
-			.map(profile -> ProfileListGetResponse.from(profile,
-				profile.getProfileImages().get(profile.getProfileImages().size() - 1)))
-			.collect(Collectors.toList());
+		return repository.findAllByMyProfileId(profileId);
 	}
 
 	@Override

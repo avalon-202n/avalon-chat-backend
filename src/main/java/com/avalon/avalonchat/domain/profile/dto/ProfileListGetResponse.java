@@ -1,8 +1,5 @@
 package com.avalon.avalonchat.domain.profile.dto;
 
-import com.avalon.avalonchat.domain.profile.domain.Profile;
-import com.avalon.avalonchat.domain.profile.domain.ProfileImage;
-
 import lombok.Getter;
 
 @Getter
@@ -15,9 +12,5 @@ public class ProfileListGetResponse {
 		this.nickname = nickname;
 		this.bio = bio;
 		this.profileImageUrl = profileImageUrl;
-	}
-
-	public static ProfileListGetResponse from(Profile profile, ProfileImage profileImage) {
-		return new ProfileListGetResponse(profile.getNickname(), profile.getBio(), profileImage.getUrl());
 	}
 }

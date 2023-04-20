@@ -176,10 +176,10 @@ class ProfileServiceImplTest extends BaseTestContainerTest {
 			myUser, "I'm myUser", LocalDate.of(1997, 8, 21), "my", "01012345678"
 		);
 		Profile friendProfile1 = createProfile(
-			friendUser1, "I'm friend1", LocalDate.of(1998, 9, 22), "friend", "01012123434"
+			friendUser1, "I'm friend1", LocalDate.of(1998, 9, 22), "A_friend", "01012123434"
 		);
 		Profile friendProfile2 = createProfile(
-			friendUser2, "I'm friend2", LocalDate.of(1999, 10, 23), "my", "01011112222"
+			friendUser2, "I'm friend2", LocalDate.of(1999, 10, 23), "B_friend", "01011112222"
 		);
 		ProfileImage profileImage1 = new ProfileImage(friendProfile1, "url1");
 		ProfileImage profileImage2 = new ProfileImage(friendProfile1, "url2");
@@ -204,6 +204,10 @@ class ProfileServiceImplTest extends BaseTestContainerTest {
 
 		// then
 		assertThat(responses.size()).isEqualTo(2);
+		assertThat(responses.get(0).getNickname()).isEqualTo("A_friend");
+		assertThat(responses.get(1).getNickname()).isEqualTo("B_friend");
+		assertThat(responses.get(0).getProfileImageUrl()).isEqualTo("url2");
+		assertThat(responses.get(1).getProfileImageUrl()).isEqualTo("url4");
 	}
 
 	@AfterEach
