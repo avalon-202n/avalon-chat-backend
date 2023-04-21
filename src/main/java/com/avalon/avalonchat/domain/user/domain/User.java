@@ -1,19 +1,21 @@
 package com.avalon.avalonchat.domain.user.domain;
 
+import static com.avalon.avalonchat.global.util.Preconditions.*;
+import static lombok.AccessLevel.*;
+
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import com.avalon.avalonchat.domain.model.BaseAuditingEntity;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = PROTECTED)
 @Table(name = "users")
+@Entity
 public class User extends BaseAuditingEntity {
 
 	@Embedded
@@ -23,6 +25,9 @@ public class User extends BaseAuditingEntity {
 	private Password password;
 
 	public User(Email email, Password password) {
+		checkNotNull(email, "User.email cannot be null");
+		checkNotNull(password, "User.password cannot be null");
+
 		this.email = email;
 		this.password = password;
 	}

@@ -17,18 +17,20 @@ import com.avalon.avalonchat.domain.model.SecurityUser;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@RestController
-@RequiredArgsConstructor
 @Slf4j
+@RequiredArgsConstructor
+@Tag(name = "친구 API", description = "WIP")
 @RequestMapping("/friends")
+@RestController
 public class FriendController {
 	private final FriendService friendService;
 
 	@Operation(
-		summary = "친구 추가",
+		summary = "[WIP] 친구 추가",
 		description = "phoneNumbers 를 이용하여 friend 레코드를 추가합니다.",
 		security = {@SecurityRequirement(name = "bearer-key")}
 	)

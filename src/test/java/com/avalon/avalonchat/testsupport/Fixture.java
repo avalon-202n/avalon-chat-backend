@@ -20,8 +20,13 @@ public final class Fixture {
 		);
 	}
 
-	public static Profile createProfile(User user, String bio, LocalDate birthDate, String nickname,
-		String phoneNumber) {
+	public static Profile createProfile(
+		User user,
+		String bio,
+		LocalDate birthDate,
+		String nickname,
+		String phoneNumber
+	) {
 		return new Profile(
 			user,
 			bio,

@@ -13,10 +13,10 @@ import com.avalon.avalonchat.global.error.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Service
-@Slf4j
 public class LoginServiceImpl implements LoginService {
 
 	private final UserRepository userRepository;
@@ -27,7 +27,7 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public LoginResponse login(LoginRequest request) {
 		// 1. check user exists
-		final User findUser = userRepository.findByEmail(request.getEmail())
+		User findUser = userRepository.findByEmail(request.getEmail())
 			.orElseThrow(() -> new BadRequestException("login-failed.email.notfound", request.getEmail()));
 
 		// 2. verify password
@@ -37,7 +37,7 @@ public class LoginServiceImpl implements LoginService {
 
 		// 3. jwt token create
 		long profileId = getProfileIdService.getProfileIdByUserId(findUser.getId());
-		final String accessToken = tokenService.createAccessToken(findUser, profileId);
+		String accessToken = tokenService.createAccessToken(findUser, profileId);
 		return new LoginResponse(findUser.getEmail(), accessToken);
 	}
 }

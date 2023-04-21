@@ -16,9 +16,9 @@ import com.avalon.avalonchat.global.error.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
-@Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
+@Service
 public class FriendServiceImpl implements FriendService {
 
 	private final FriendRepository friendRepository;
@@ -37,7 +37,7 @@ public class FriendServiceImpl implements FriendService {
 
 		// 2. save them & return
 		return friendRepository.saveAll(friends).stream()
-			.map(savedFriend -> FriendAddResponse.ofEntity(savedFriend))
+			.map(FriendAddResponse::from)
 			.collect(Collectors.toList());
 	}
 }

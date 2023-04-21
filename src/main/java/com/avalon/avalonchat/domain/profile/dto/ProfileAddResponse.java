@@ -8,33 +8,22 @@ import com.avalon.avalonchat.domain.profile.domain.BackgroundImage;
 import com.avalon.avalonchat.domain.profile.domain.Profile;
 import com.avalon.avalonchat.domain.profile.domain.ProfileImage;
 
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class ProfileAddResponse {
-	private final LocalDate birthDate;
-	private final String nickname;
-	private final String bio;
-	private final List<String> profileImages;
-	private final List<String> backgroundImages;
-	private final String phoneNumber;
+	private LocalDate birthDate;
+	private String nickname;
+	private String bio;
+	private List<String> profileImages;
+	private List<String> backgroundImages;
+	private String phoneNumber;
 
-	public ProfileAddResponse(
-		LocalDate birthDate,
-		String nickname,
-		String bio,
-		List<String> profileImages,
-		List<String> backgroundImages,
-		String phoneNumber) {
-		this.birthDate = birthDate;
-		this.nickname = nickname;
-		this.bio = bio;
-		this.profileImages = profileImages;
-		this.backgroundImages = backgroundImages;
-		this.phoneNumber = phoneNumber;
-	}
-
-	public static ProfileAddResponse ofEntity(Profile profile) {
+	public static ProfileAddResponse from(Profile profile) {
 		return new ProfileAddResponse(
 			profile.getBirthDate(),
 			profile.getNickname(),

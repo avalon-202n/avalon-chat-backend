@@ -29,7 +29,7 @@ class FriendTest {
 		//then
 		assertThat(friend.getMyProfile()).isEqualTo(myProfile);
 		assertThat(friend.getFriendProfile()).isEqualTo(friendProfile);
-		assertThat(friend.getFriendStatus()).isEqualTo(Friend.FriendStatus.NORMAL);
+		assertThat(friend.getStatus()).isEqualTo(Friend.Status.NORMAL);
 	}
 
 }
