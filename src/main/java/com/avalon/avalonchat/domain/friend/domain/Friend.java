@@ -35,6 +35,10 @@ public class Friend extends BaseAuditingEntity {
 		this.friendProfile = friendProfile;
 	}
 
+	public void updateStatus(FriendStatus status) {
+		this.friendStatus = status;
+	}
+
 	/* 친구상태 종류 */
 	public enum FriendStatus {
 		NORMAL,
