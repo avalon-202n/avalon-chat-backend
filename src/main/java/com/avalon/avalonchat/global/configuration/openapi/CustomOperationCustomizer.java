@@ -56,7 +56,8 @@ public class CustomOperationCustomizer implements OperationCustomizer {
 	}
 
 	private void addErrorResponseApi(ApiResponses apiResponses, ErrorResponseApi errorResponseApi) {
-		ErrorResponse errorResponse = errorResponseApi.value().toInstance(errorResponseApi.args());
+		// FIXME
+		ErrorResponse errorResponse = null;
 
 		@SuppressWarnings("unchecked")
 		Schema<ErrorResponse> schema = new Schema<ErrorResponse>().$ref(errorResponseRef);

@@ -19,8 +19,7 @@ import com.avalon.avalonchat.domain.user.dto.SignUpRequest;
 import com.avalon.avalonchat.domain.user.dto.SignUpResponse;
 import com.avalon.avalonchat.domain.user.repository.PhoneNumberAuthenticationRepository;
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
-import com.avalon.avalonchat.global.error.exception.AvalonChatRuntimeException;
-import com.avalon.avalonchat.infra.message.MessageService;
+import com.avalon.avalonchat.global.error.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -111,10 +110,9 @@ public class UserServiceImpl implements UserService {
 		String certificationCode = request.getCertificationCode();
 
 		// 2. check: if equals authenticate and return true, if not return false
-		PhoneNumberAuthenticationCode phoneNumberAuthenticationCode = phoneNumberAuthenticationRepository.findById(
-				phoneNumber)
-			.orElseThrow(
-				() -> new AvalonChatRuntimeException("certificationCode not found for phoneNumber:" + phoneNumber));
+		PhoneNumberAuthenticationCode phoneNumberAuthenticationCode = phoneNumberAuthenticationRepository
+			.findById(phoneNumber)
+			.orElseThrow(() -> new NotFoundException("PhoneNumber AuthenticationCode", phoneNumber));
 
 		if (phoneNumberAuthenticationCode.getCertificationCode().equals(certificationCode)) {
 			phoneNumberAuthenticationCode.authenticate();

@@ -15,7 +15,7 @@ import com.avalon.avalonchat.domain.user.domain.Email;
 import com.avalon.avalonchat.domain.user.domain.Password;
 import com.avalon.avalonchat.domain.user.domain.User;
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
-import com.avalon.avalonchat.global.configuration.jwt.JwtTokenService;
+import com.avalon.avalonchat.global.error.exception.BadRequestException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,8 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 public class LoginServiceImpl implements LoginService {
 
 	private final UserRepository userRepository;
-
-	private final ProfileRepository profileRepository;
 	private final GetProfileIdService getProfileIdService;
 	private final JwtTokenService jwtTokenService;
 	private final PasswordEncoder passwordEncoder;
@@ -37,17 +35,16 @@ public class LoginServiceImpl implements LoginService {
 	public LoginResponse login(LoginRequest request) {
 		// 1. check user exists
 		User findUser = userRepository.findByEmail(request.getEmail())
-			.orElseThrow(() -> new LoginInvalidInputException("일치하는 이메일이 존재하지 않습니다."));
+			.orElseThrow(() -> new BadRequestException("login-failed.email.notfound", request.getEmail()));
 
 		// 2. verify password
 		if (!passwordEncoder.matches(request.getPassword(), findUser.getPassword().getValue())) {
 			throw new LoginInvalidInputException("비밀번호가 일치하지 않습니다.");
 		}
 
-		long profileId = getProfileIdService.getProfileIdByUserId(findUser.getId());
-
 		// 3. jwt token create
-		String accessToken = jwtTokenService.createAccessToken(findUser, profileId);
+		long profileId = getProfileIdService.getProfileIdByUserId(findUser.getId());
+		String accessToken = tokenService.createAccessToken(findUser, profileId);
 		return new LoginResponse(findUser.getEmail(), accessToken);
 	}
 

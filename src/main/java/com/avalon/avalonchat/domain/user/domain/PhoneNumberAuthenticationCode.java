@@ -6,6 +6,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceCreator;
 import org.springframework.data.redis.core.RedisHash;
 
+import com.avalon.avalonchat.global.error.exception.BadRequestException;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -33,5 +35,11 @@ public class PhoneNumberAuthenticationCode {
 
 	public void authenticate() {
 		this.authenticated = true;
+	}
+
+	public void checkAuthenticated() {
+		if (!authenticated) {
+			throw new BadRequestException("phonenumber.no-auth", phoneNumber);
+		}
 	}
 }

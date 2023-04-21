@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.avalon.avalonchat.domain.login.service.TokenService;
 import com.avalon.avalonchat.domain.user.domain.User;
 
 import io.jsonwebtoken.JwtParser;
@@ -21,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Component
-public class JwtTokenService {
+public class JwtTokenService implements TokenService {
 
 	private final JwtParser jwtParser;
 	private long accessValidity;
@@ -36,12 +37,14 @@ public class JwtTokenService {
 		this.jwtParser = Jwts.parserBuilder().setSigningKey(secretKey).build();
 	}
 
+	@Override
 	public Map<String, Object> parseClaim(String token) {
 		return jwtParser
 			.parseClaimsJws(token)
 			.getBody();
 	}
 
+	@Override
 	public String createAccessToken(User user, long profileId) {
 		long currentTime = (new Date()).getTime();
 		final Date accessTokenExpiresIn = new Date(currentTime + accessValidity);
@@ -56,6 +59,7 @@ public class JwtTokenService {
 			.compact();
 	}
 
+	@Override
 	public String createRefreshToken(User user) {
 		long currentTime = (new Date()).getTime();
 		final Date refreshTokenExpiresIn = new Date(currentTime + refreshValidity);

@@ -2,14 +2,11 @@ package com.avalon.avalonchat.infra.message;
 
 import org.springframework.stereotype.Service;
 
-import net.nurigo.sdk.message.exception.NurigoEmptyResponseException;
-import net.nurigo.sdk.message.exception.NurigoMessageNotReceivedException;
-import net.nurigo.sdk.message.exception.NurigoUnknownException;
 import net.nurigo.sdk.message.model.Message;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 
-import com.avalon.avalonchat.global.error.exception.AvalonChatRuntimeException;
-import com.avalon.avalonchat.infra.message.configuration.CoolSmsProperties;
+import com.avalon.avalonchat.domain.user.service.MessageService;
+import com.avalon.avalonchat.global.configuration.message.CoolSmsProperties;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,12 +27,8 @@ public class CoolSmsMessageService implements MessageService {
 
 		try {
 			coolSms.send(message);
-		} catch (NurigoMessageNotReceivedException e) {
-			throw new AvalonChatRuntimeException("인증문자전송 중 에러발생", e);
-		} catch (NurigoEmptyResponseException e) {
-			throw new AvalonChatRuntimeException("인증문자전송 중 에러발생", e);
-		} catch (NurigoUnknownException e) {
-			throw new AvalonChatRuntimeException("인증문자전송 중 에러발생", e);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
 	}
 }

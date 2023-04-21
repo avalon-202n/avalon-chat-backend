@@ -20,12 +20,13 @@ import com.avalon.avalonchat.domain.user.domain.User;
 import com.avalon.avalonchat.domain.user.dto.SignUpRequest;
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
 import com.avalon.avalonchat.domain.user.service.UserServiceImpl;
+import com.avalon.avalonchat.global.error.exception.BadRequestException;
 import com.avalon.avalonchat.testsupport.DtoFixture;
 import com.avalon.avalonchat.testsupport.Fixture;
 
 @Transactional
 @SpringBootTest
-public class LoginServiceImplTest {
+public class LoginServiceTest {
 	@Autowired
 	private LoginServiceImpl sut;
 
@@ -67,7 +68,7 @@ public class LoginServiceImplTest {
 		LoginRequest loginRequest = DtoFixture.loginRequest(email, password);
 
 		// when then
-		assertThatExceptionOfType(LoginInvalidInputException.class)
+		assertThatExceptionOfType(BadRequestException.class)
 			.isThrownBy(() -> sut.login(loginRequest));
 	}
 

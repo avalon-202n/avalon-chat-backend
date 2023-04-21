@@ -22,7 +22,7 @@ public class Password {
 	private String value;
 
 	private Password(String value) {
-		checkLength(MIN_LENGTH, MAX_LENGTH, value, "password.length");
+		checkLength(MIN_LENGTH, MAX_LENGTH, value, "password");
 		this.value = value;
 	}
 
