@@ -30,11 +30,10 @@ import com.avalon.avalonchat.domain.user.domain.User;
 import com.avalon.avalonchat.domain.user.dto.PhoneNumberAuthenticationCheckRequest;
 import com.avalon.avalonchat.domain.user.repository.PhoneNumberAuthenticationRepository;
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
+import com.avalon.avalonchat.domain.user.service.MessageService;
 import com.avalon.avalonchat.domain.user.service.UserService;
-import com.avalon.avalonchat.global.error.exception.AvalonChatRuntimeException;
-import com.avalon.avalonchat.infra.message.MessageService;
+import com.avalon.avalonchat.global.error.exception.BadRequestException;
 import com.avalon.avalonchat.testsupport.base.BaseTestContainerTest;
-
 @Transactional
 @SpringBootTest
 class ProfileServiceImplTest extends BaseTestContainerTest {
@@ -56,6 +55,7 @@ class ProfileServiceImplTest extends BaseTestContainerTest {
 
 	@Autowired
 	private PhoneNumberAuthenticationRepository phoneNumberAuthenticationRepository;
+
 	@Autowired
 	private FriendRepository friendRepository;
 
@@ -124,7 +124,7 @@ class ProfileServiceImplTest extends BaseTestContainerTest {
 			backgroundImageUrl, toPhoneNumber);
 
 		// when & then
-		assertThatExceptionOfType(AvalonChatRuntimeException.class)
+		assertThatExceptionOfType(BadRequestException.class)
 			.isThrownBy(() -> sut.addProfile(savedUser.getId(), request));
 	}
 

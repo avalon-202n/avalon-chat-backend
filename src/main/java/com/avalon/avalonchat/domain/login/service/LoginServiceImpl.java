@@ -6,10 +6,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.avalon.avalonchat.domain.login.dto.LoginRequest;
 import com.avalon.avalonchat.domain.login.dto.LoginResponse;
-import com.avalon.avalonchat.domain.login.exception.LoginInvalidInputException;
 import com.avalon.avalonchat.domain.user.domain.User;
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
-import com.avalon.avalonchat.global.configuration.jwt.JwtTokenService;
+import com.avalon.avalonchat.global.error.exception.BadRequestException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,24 +21,23 @@ public class LoginServiceImpl implements LoginService {
 
 	private final UserRepository userRepository;
 	private final GetProfileIdService getProfileIdService;
-	private final JwtTokenService jwtTokenService;
+	private final TokenService tokenService;
 	private final PasswordEncoder passwordEncoder;
 
 	@Override
 	public LoginResponse login(LoginRequest request) {
 		// 1. check user exists
 		final User findUser = userRepository.findByEmail(request.getEmail())
-			.orElseThrow(() -> new LoginInvalidInputException("일치하는 이메일이 존재하지 않습니다."));
+			.orElseThrow(() -> new BadRequestException("login-failed.email.notfound", request.getEmail()));
 
 		// 2. verify password
 		if (!passwordEncoder.matches(request.getPassword(), findUser.getPassword().getValue())) {
-			throw new LoginInvalidInputException("비밀번호가 일치하지 않습니다.");
+			throw new BadRequestException("login-failed.password.mismatch");
 		}
 
-		long profileId = getProfileIdService.getProfileIdByUserId(findUser.getId());
-
 		// 3. jwt token create
-		final String accessToken = jwtTokenService.createAccessToken(findUser, profileId);
+		long profileId = getProfileIdService.getProfileIdByUserId(findUser.getId());
+		final String accessToken = tokenService.createAccessToken(findUser, profileId);
 		return new LoginResponse(findUser.getEmail(), accessToken);
 	}
 }

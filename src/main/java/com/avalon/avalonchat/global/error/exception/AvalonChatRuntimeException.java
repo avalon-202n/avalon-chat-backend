@@ -3,25 +3,22 @@ package com.avalon.avalonchat.global.error.exception;
 /**
  * Root RuntimeException for this Application
  */
-public class AvalonChatRuntimeException extends RuntimeException {
+public abstract class AvalonChatRuntimeException extends RuntimeException {
 
-	public AvalonChatRuntimeException() {
+	private final String messageKey;
+
+	private final Object[] params;
+
+	public AvalonChatRuntimeException(String messageKey, Object[] params) {
+		this.messageKey = messageKey;
+		this.params = params;
 	}
 
-	public AvalonChatRuntimeException(String message) {
-		super(message);
+	public String getMessageKey() {
+		return messageKey;
 	}
 
-	public AvalonChatRuntimeException(String message, Throwable cause) {
-		super(message, cause);
-	}
-
-	public AvalonChatRuntimeException(Throwable cause) {
-		super(cause);
-	}
-
-	public AvalonChatRuntimeException(String message, Throwable cause, boolean enableSuppression,
-		boolean writableStackTrace) {
-		super(message, cause, enableSuppression, writableStackTrace);
+	public Object[] getParams() {
+		return params;
 	}
 }

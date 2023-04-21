@@ -1,7 +1,6 @@
 package com.avalon.avalonchat.domain.profile.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,13 +18,13 @@ import com.avalon.avalonchat.domain.user.domain.PhoneNumberAuthenticationCode;
 import com.avalon.avalonchat.domain.user.domain.User;
 import com.avalon.avalonchat.domain.user.repository.PhoneNumberAuthenticationRepository;
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
-import com.avalon.avalonchat.global.error.exception.AvalonChatRuntimeException;
+import com.avalon.avalonchat.global.error.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
-@Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Service
 public class ProfileServiceImpl
 	implements ProfileService, GetProfileIdService {
 
@@ -38,21 +37,14 @@ public class ProfileServiceImpl
 	public ProfileAddResponse addProfile(long userId, ProfileAddRequest request) {
 		// 1. find user
 		User user = userRepository.findById(userId)
-			.orElseThrow(() -> new AvalonChatRuntimeException("user not found for userId: " + userId));
+			.orElseThrow(() -> new NotFoundException("user", userId));
 
 		// 2. check
 		String phoneNumber = request.getPhoneNumber();
 		PhoneNumberAuthenticationCode phoneNumberAuthenticationCode = phoneNumberAuthenticationRepository
 			.findById(phoneNumber)
-			.orElseThrow(() -> new AvalonChatRuntimeException("code not found for phoneNumber: " + phoneNumber));
-		if (!phoneNumberAuthenticationCode.isAuthenticated()) {
-			throw new AvalonChatRuntimeException("unAuthenticated phoneNumber: " + phoneNumber);
-		}
-
-		Optional<Profile> optionalProfile = repository.findByUser(user);
-		if (optionalProfile.isPresent()) {
-			throw new AvalonChatRuntimeException("profile already exists: " + optionalProfile.get().getId());
-		}
+			.orElseThrow(() -> new NotFoundException("phoneNumber AuthenticationCode", phoneNumber));
+		phoneNumberAuthenticationCode.checkAuthenticated();
 
 		// 3. create profile
 		Profile profile = new Profile(
@@ -77,7 +69,7 @@ public class ProfileServiceImpl
 	@Override
 	public ProfileDetailedGetResponse getDetailedById(long profileId) {
 		Profile profile = repository.findById(profileId)
-			.orElseThrow(() -> new AvalonChatRuntimeException("no such profile id : " + profileId));
+			.orElseThrow(() -> new NotFoundException("profile", profileId));
 
 		return ProfileDetailedGetResponse.from(profile);
 	}

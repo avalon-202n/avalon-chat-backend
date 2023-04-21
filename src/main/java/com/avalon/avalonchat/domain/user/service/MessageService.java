@@ -1,4 +1,4 @@
-package com.avalon.avalonchat.infra.message;
+package com.avalon.avalonchat.domain.user.service;
 
 public interface MessageService {
 	void sendAuthenticationCode(String toNumber, String code);

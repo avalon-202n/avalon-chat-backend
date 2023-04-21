@@ -1,7 +1,5 @@
 package com.avalon.avalonchat.global.error;
 
-import static org.apache.commons.lang3.ObjectUtils.*;
-
 import javax.validation.constraints.NotNull;
 
 import org.springframework.http.HttpStatus;
@@ -27,16 +25,8 @@ public class ErrorResponse {
 	@NotNull
 	private final String message;
 
-	public ErrorResponse(HttpStatus httpStatus, Exception exception) {
-		this(
-			httpStatus.value(),
-			exception.getClass().getSimpleName(),
-			defaultIfNull(exception.getMessage(), "")
-		);
-	}
-
-	public ErrorResponse(int code, String type, String message) {
-		this.code = code;
+	public ErrorResponse(HttpStatus httpStatus, String type, String message) {
+		this.code = httpStatus.value();
 		this.type = type;
 		this.message = message;
 	}

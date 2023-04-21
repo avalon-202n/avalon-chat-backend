@@ -19,7 +19,6 @@ import com.avalon.avalonchat.domain.user.dto.PhoneNumberAuthenticationSendReques
 import com.avalon.avalonchat.domain.user.dto.SignUpRequest;
 import com.avalon.avalonchat.domain.user.dto.SignUpResponse;
 import com.avalon.avalonchat.domain.user.repository.PhoneNumberAuthenticationRepository;
-import com.avalon.avalonchat.infra.message.MessageService;
 import com.avalon.avalonchat.testsupport.DtoFixture;
 import com.avalon.avalonchat.testsupport.base.BaseTestContainerTest;
 

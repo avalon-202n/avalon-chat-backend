@@ -12,9 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.avalon.avalonchat.domain.login.dto.LoginRequest;
 import com.avalon.avalonchat.domain.login.dto.LoginResponse;
-import com.avalon.avalonchat.domain.login.exception.LoginInvalidInputException;
 import com.avalon.avalonchat.domain.user.dto.SignUpRequest;
 import com.avalon.avalonchat.domain.user.service.UserServiceImpl;
+import com.avalon.avalonchat.global.error.exception.BadRequestException;
 import com.avalon.avalonchat.testsupport.DtoFixture;
 
 @Transactional
@@ -54,7 +54,7 @@ public class LoginServiceTest {
 		LoginRequest loginRequest = DtoFixture.loginRequest(email, password);
 
 		// when then
-		assertThatExceptionOfType(LoginInvalidInputException.class)
+		assertThatExceptionOfType(BadRequestException.class)
 			.isThrownBy(() -> sut.login(loginRequest));
 	}
 }
