@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.avalon.avalonchat.domain.login.dto.EmailFindRequest;
 import com.avalon.avalonchat.domain.login.dto.EmailFindResponse;
 import com.avalon.avalonchat.domain.login.dto.LoginRequest;
 import com.avalon.avalonchat.domain.login.dto.LoginResponse;
@@ -86,8 +85,8 @@ public class LoginServiceImplTest {
 		profileRepository.save(profile);
 
 		//when
-		EmailFindRequest emailFindRequest = new EmailFindRequest("01012345678");
-		EmailFindResponse emailFindResponse = sut.findEmailByPhoneNumber(emailFindRequest);
+		String phoneNumber = "01012345678";
+		EmailFindResponse emailFindResponse = sut.findEmailByPhoneNumber(phoneNumber);
 
 		//then
 		assertThat(emailFindResponse.getEmail().getValue()).isEqualTo("avalon@e.com");
@@ -96,10 +95,10 @@ public class LoginServiceImplTest {
 	@Test
 	void 전화번호로_이메일_찾기_실패() {
 		//when
-		EmailFindRequest emailFindRequest = new EmailFindRequest("01012345679");
+		String phoneNumber = "01012345678";
 
 		//then
 		assertThatExceptionOfType(RuntimeException.class)
-			.isThrownBy(() -> sut.findEmailByPhoneNumber(emailFindRequest));
+			.isThrownBy(() -> sut.findEmailByPhoneNumber(phoneNumber));
 	}
 }

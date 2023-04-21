@@ -7,7 +7,6 @@ import com.avalon.avalonchat.domain.user.domain.Email;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.ToString;
 
 @Data
 @AllArgsConstructor

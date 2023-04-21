@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.avalon.avalonchat.domain.login.dto.EmailFindRequest;
 import com.avalon.avalonchat.domain.login.dto.EmailFindResponse;
 import com.avalon.avalonchat.domain.login.dto.LoginRequest;
 import com.avalon.avalonchat.domain.login.dto.LoginResponse;
@@ -38,19 +38,19 @@ public class LoginController {
 		return loginService.login(request);
 	}
 
-	@Operation(summary = "비밀번호 재설정")
-	@GetMapping("/password/reset")
+	@Operation(summary = "비밀번호 초기화")
+	@PostMapping("/password/reset")
 	public PasswordFindResponse resetPassword(
 		@RequestBody PasswordFindRequest request
 	) {
-		return loginService.findPasswordByEmail(request);
+		return loginService.resetPassword(request);
 	}
 
 	@Operation(summary = "아이디 찾기")
-	@GetMapping("/email/find")
+	@GetMapping("/email")
 	public EmailFindResponse findEmail(
-		@RequestBody EmailFindRequest request
+		@RequestParam(value = "phone_number", required = true) String phoneNumber
 	) {
-		return loginService.findEmailByPhoneNumber(request);
+		return loginService.findEmailByPhoneNumber(phoneNumber);
 	}
 }
