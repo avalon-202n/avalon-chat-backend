@@ -55,12 +55,12 @@ class FriendRepositoryTest {
 	void Friend_Profile_다대일_매핑_성공() {
 		// given
 		User myUser = new User(Email.of("email1@gmail.com"), Password.of("password1"));
-		Profile myProfile = new Profile(myUser, "bio1", LocalDate.now(), "nickname1", "01055110625");
+		Profile myProfile = new Profile(myUser, "bio1", LocalDate.now(), "nickname1", "01055110626");
 
 		User friendUser1 = new User(Email.of("email2@gmail.com"), Password.of("password2"));
-		Profile friendProfile1 = new Profile(friendUser1, "bio2", LocalDate.now(), "nickname2", "01055110625");
+		Profile friendProfile1 = new Profile(friendUser1, "bio2", LocalDate.now(), "nickname2", "01055110627");
 		User friendUser2 = new User(Email.of("email3@gmail.com"), Password.of("password3"));
-		Profile friendProfile2 = new Profile(friendUser2, "bio4", LocalDate.now(), "nickname4", "01055110625");
+		Profile friendProfile2 = new Profile(friendUser2, "bio4", LocalDate.now(), "nickname4", "01055110628");
 
 		Friend friend1 = new Friend(myProfile, friendProfile1);
 		Friend friend2 = new Friend(myProfile, friendProfile2);
@@ -97,7 +97,7 @@ class FriendRepositoryTest {
 
 		for (int i = 0; i < 10; i++) {
 			User friendUser = new User(Email.of("email@gmail" + i + ".com"), Password.of("password" + i));
-			Profile friendProfile = new Profile(friendUser, "bio", LocalDate.now(), "nickname", "01055110625");
+			Profile friendProfile = new Profile(friendUser, "bio", LocalDate.now(), "nickname", "01055110626"+i);
 			Friend friend = new Friend(myProfile, friendProfile);
 
 			userRepository.save(friendUser);

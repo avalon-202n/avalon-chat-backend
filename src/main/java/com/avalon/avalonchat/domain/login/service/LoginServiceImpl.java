@@ -1,5 +1,7 @@
 package com.avalon.avalonchat.domain.login.service;
 
+import java.util.Optional;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,6 +11,7 @@ import com.avalon.avalonchat.domain.login.dto.LoginRequest;
 import com.avalon.avalonchat.domain.login.dto.LoginResponse;
 import com.avalon.avalonchat.domain.login.dto.PasswordFindRequest;
 import com.avalon.avalonchat.domain.login.dto.PasswordFindResponse;
+import com.avalon.avalonchat.domain.profile.domain.Profile;
 import com.avalon.avalonchat.domain.profile.repository.ProfileRepository;
 import com.avalon.avalonchat.domain.user.domain.Email;
 import com.avalon.avalonchat.domain.user.domain.Password;
@@ -51,9 +54,9 @@ public class LoginServiceImpl implements LoginService {
 
 	@Override
 	public EmailFindResponse findEmailByPhoneNumber(String phoneNumber) {
-		Email email = profileRepository.findByPhoneNumber(phoneNumber)
+		Profile findProfile= profileRepository.findByPhoneNumber(phoneNumber)
 			.orElseThrow(() -> new BadRequestException("email-find.phoneNumber.notfound"));
-		return new EmailFindResponse(email);
+		return new EmailFindResponse(findProfile.getUser().getEmail());
 	}
 
 	@Override
