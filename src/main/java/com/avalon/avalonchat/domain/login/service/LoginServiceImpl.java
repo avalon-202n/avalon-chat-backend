@@ -4,10 +4,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.avalon.avalonchat.domain.login.dto.EmailFindResponse;
 import com.avalon.avalonchat.domain.login.dto.LoginRequest;
 import com.avalon.avalonchat.domain.login.dto.LoginResponse;
+import com.avalon.avalonchat.domain.login.dto.PasswordFindRequest;
+import com.avalon.avalonchat.domain.login.dto.PasswordFindResponse;
+import com.avalon.avalonchat.domain.profile.domain.Profile;
+import com.avalon.avalonchat.domain.profile.repository.ProfileRepository;
+import com.avalon.avalonchat.domain.user.domain.Password;
 import com.avalon.avalonchat.domain.user.domain.User;
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
+import com.avalon.avalonchat.global.configuration.jwt.JwtTokenService;
 import com.avalon.avalonchat.global.error.exception.BadRequestException;
 
 import lombok.RequiredArgsConstructor;
@@ -20,14 +27,15 @@ import lombok.extern.slf4j.Slf4j;
 public class LoginServiceImpl implements LoginService {
 
 	private final UserRepository userRepository;
+	private final ProfileRepository profileRepository;
 	private final GetProfileIdService getProfileIdService;
-	private final TokenService tokenService;
+	private final JwtTokenService tokenService;
 	private final PasswordEncoder passwordEncoder;
 
 	@Override
 	public LoginResponse login(LoginRequest request) {
 		// 1. check user exists
-		final User findUser = userRepository.findByEmail(request.getEmail())
+		User findUser = userRepository.findByEmail(request.getEmail())
 			.orElseThrow(() -> new BadRequestException("login-failed.email.notfound", request.getEmail()));
 
 		// 2. verify password
@@ -37,7 +45,21 @@ public class LoginServiceImpl implements LoginService {
 
 		// 3. jwt token create
 		long profileId = getProfileIdService.getProfileIdByUserId(findUser.getId());
-		final String accessToken = tokenService.createAccessToken(findUser, profileId);
+		String accessToken = tokenService.createAccessToken(findUser, profileId);
 		return new LoginResponse(findUser.getEmail(), accessToken);
+	}
+
+	@Override
+	public EmailFindResponse findEmailByPhoneNumber(String phoneNumber) {
+		Profile findProfile = profileRepository.findByPhoneNumber(phoneNumber)
+			.orElseThrow(() -> new BadRequestException("email-find.phoneNumber.notfound"));
+		return new EmailFindResponse(findProfile.getUser().getEmail());
+	}
+
+	@Override
+	public PasswordFindResponse resetPassword(PasswordFindRequest request) {
+		//TODO 이메일 인증 하기
+		//TODO 비밀번호 찾기 설계필요 (임시 비밀번호 발급 & 비밀 번호 재설정)
+		return new PasswordFindResponse(Password.of("password"));
 	}
 }

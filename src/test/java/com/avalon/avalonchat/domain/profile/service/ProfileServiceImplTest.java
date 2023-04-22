@@ -34,6 +34,7 @@ import com.avalon.avalonchat.domain.user.service.MessageService;
 import com.avalon.avalonchat.domain.user.service.UserService;
 import com.avalon.avalonchat.global.error.exception.BadRequestException;
 import com.avalon.avalonchat.testsupport.base.BaseTestContainerTest;
+
 @Transactional
 @SpringBootTest
 class ProfileServiceImplTest extends BaseTestContainerTest {
