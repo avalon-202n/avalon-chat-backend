@@ -9,12 +9,12 @@ import com.avalon.avalonchat.domain.login.dto.LoginRequest;
 import com.avalon.avalonchat.domain.login.dto.LoginResponse;
 import com.avalon.avalonchat.domain.login.dto.PasswordFindRequest;
 import com.avalon.avalonchat.domain.login.dto.PasswordFindResponse;
-import com.avalon.avalonchat.domain.login.exception.LoginInvalidInputException;
 import com.avalon.avalonchat.domain.profile.repository.ProfileRepository;
 import com.avalon.avalonchat.domain.user.domain.Email;
 import com.avalon.avalonchat.domain.user.domain.Password;
 import com.avalon.avalonchat.domain.user.domain.User;
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
+import com.avalon.avalonchat.global.configuration.jwt.JwtTokenService;
 import com.avalon.avalonchat.global.error.exception.BadRequestException;
 
 import lombok.RequiredArgsConstructor;
@@ -27,8 +27,9 @@ import lombok.extern.slf4j.Slf4j;
 public class LoginServiceImpl implements LoginService {
 
 	private final UserRepository userRepository;
+	private final ProfileRepository profileRepository;
 	private final GetProfileIdService getProfileIdService;
-	private final JwtTokenService jwtTokenService;
+	private final JwtTokenService tokenService;
 	private final PasswordEncoder passwordEncoder;
 
 	@Override
@@ -39,7 +40,7 @@ public class LoginServiceImpl implements LoginService {
 
 		// 2. verify password
 		if (!passwordEncoder.matches(request.getPassword(), findUser.getPassword().getValue())) {
-			throw new LoginInvalidInputException("비밀번호가 일치하지 않습니다.");
+			throw new BadRequestException("login-failed.password.mismatch");
 		}
 
 		// 3. jwt token create
@@ -51,8 +52,8 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public EmailFindResponse findEmailByPhoneNumber(String phoneNumber) {
 		Email email = profileRepository.findByPhoneNumber(phoneNumber)
-			.orElseThrow(() -> new RuntimeException("일치하는 계정이 없습니다."));
-		return new EmailFindResponse(findProfile.getUser().getEmail());
+			.orElseThrow(() -> new BadRequestException("email-find.phoneNumber.notfound"));
+		return new EmailFindResponse(email);
 	}
 
 	@Override

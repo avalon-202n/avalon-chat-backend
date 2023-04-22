@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.avalon.avalonchat.domain.login.dto.EmailFindResponse;
 import com.avalon.avalonchat.domain.login.dto.LoginRequest;
 import com.avalon.avalonchat.domain.login.dto.LoginResponse;
-import com.avalon.avalonchat.domain.login.exception.LoginInvalidInputException;
 import com.avalon.avalonchat.domain.profile.domain.Profile;
 import com.avalon.avalonchat.domain.profile.repository.ProfileRepository;
 import com.avalon.avalonchat.domain.user.domain.User;
@@ -26,7 +25,7 @@ import com.avalon.avalonchat.testsupport.Fixture;
 
 @Transactional
 @SpringBootTest
-public class LoginServiceTest {
+public class LoginServiceImplTest {
 	@Autowired
 	private LoginServiceImpl sut;
 

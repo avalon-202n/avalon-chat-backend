@@ -1,16 +1,18 @@
 package com.avalon.avalonchat.domain.login.controller;
 
-import static com.avalon.avalonchat.global.error.ErrorResponseWithMessages.*;
-
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.avalon.avalonchat.domain.login.dto.EmailFindResponse;
 import com.avalon.avalonchat.domain.login.dto.LoginRequest;
 import com.avalon.avalonchat.domain.login.dto.LoginResponse;
+import com.avalon.avalonchat.domain.login.dto.PasswordFindRequest;
+import com.avalon.avalonchat.domain.login.dto.PasswordFindResponse;
 import com.avalon.avalonchat.domain.login.service.LoginService;
-import com.avalon.avalonchat.global.openapi.ErrorResponseApi;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
