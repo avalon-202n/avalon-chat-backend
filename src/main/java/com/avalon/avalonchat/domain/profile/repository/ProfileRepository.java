@@ -9,7 +9,6 @@ import org.springframework.data.repository.query.Param;
 
 import com.avalon.avalonchat.domain.profile.domain.Profile;
 import com.avalon.avalonchat.domain.profile.dto.ProfileListGetResponse;
-import com.avalon.avalonchat.domain.user.domain.Email;
 import com.avalon.avalonchat.domain.user.domain.User;
 
 public interface ProfileRepository extends JpaRepository<Profile, Long> {

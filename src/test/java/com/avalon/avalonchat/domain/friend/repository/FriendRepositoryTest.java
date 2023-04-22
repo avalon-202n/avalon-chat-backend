@@ -97,7 +97,7 @@ class FriendRepositoryTest {
 
 		for (int i = 0; i < 10; i++) {
 			User friendUser = new User(Email.of("email@gmail" + i + ".com"), Password.of("password" + i));
-			Profile friendProfile = new Profile(friendUser, "bio", LocalDate.now(), "nickname", "01055110626"+i);
+			Profile friendProfile = new Profile(friendUser, "bio", LocalDate.now(), "nickname", "01055110626" + i);
 			Friend friend = new Friend(myProfile, friendProfile);
 
 			userRepository.save(friendUser);
