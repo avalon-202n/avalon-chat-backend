@@ -54,7 +54,7 @@ public class LoginServiceImpl implements LoginService {
 
 	@Override
 	public EmailFindResponse findEmailByPhoneNumber(String phoneNumber) {
-		Profile findProfile= profileRepository.findByPhoneNumber(phoneNumber)
+		Profile findProfile = profileRepository.findByPhoneNumber(phoneNumber)
 			.orElseThrow(() -> new BadRequestException("email-find.phoneNumber.notfound"));
 		return new EmailFindResponse(findProfile.getUser().getEmail());
 	}
