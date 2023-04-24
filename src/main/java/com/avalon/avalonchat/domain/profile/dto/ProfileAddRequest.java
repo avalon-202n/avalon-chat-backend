@@ -31,6 +31,7 @@ public class ProfileAddRequest {
 	@Schema(description = "배경 이미지 주소", example = "http://background/image/url")
 	private String backgroundImageUrl;
 
+	@NotNull
 	@Schema(description = "핸드폰 번호", example = "010-1234-5678")
 	private String phoneNumber;
 }

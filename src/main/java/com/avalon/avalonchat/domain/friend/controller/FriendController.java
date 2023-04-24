@@ -6,12 +6,17 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.avalon.avalonchat.domain.friend.dto.FriendAddRequest;
 import com.avalon.avalonchat.domain.friend.dto.FriendAddResponse;
+import com.avalon.avalonchat.domain.friend.dto.FriendStatusUpdateRequest;
+import com.avalon.avalonchat.domain.friend.dto.FriendStatusUpdateResponse;
 import com.avalon.avalonchat.domain.friend.service.FriendService;
 import com.avalon.avalonchat.domain.model.SecurityUser;
 
@@ -41,5 +46,19 @@ public class FriendController {
 	) {
 		List<FriendAddResponse> responses = friendService.addFriend(securityUser.getProfileId(), request);
 		return created(responses);
+	}
+
+	@Operation(
+		summary = "친구 상태 변경",
+		description = "friendProfileId를 사용해 현재 로그인된 회원의 친구의 상태를 변경합니다.",
+		security = {@SecurityRequirement(name = "bearer-key")}
+	)
+	@PatchMapping("/{friendProfileId}")
+	public FriendStatusUpdateResponse updateFriendStatus(
+		@AuthenticationPrincipal SecurityUser securityUser,
+		@PathVariable Long friendProfileId,
+		@RequestBody FriendStatusUpdateRequest request
+	) {
+		return friendService.updateFriendStatus(securityUser.getProfileId(), friendProfileId, request);
 	}
 }

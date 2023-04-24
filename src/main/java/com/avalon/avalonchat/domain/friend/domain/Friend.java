@@ -2,11 +2,11 @@ package com.avalon.avalonchat.domain.friend.domain;
 
 import static com.avalon.avalonchat.global.util.Preconditions.*;
 import static javax.persistence.EnumType.*;
-import static javax.persistence.FetchType.*;
 import static lombok.AccessLevel.*;
 
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
@@ -26,11 +26,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = PROTECTED)
 @Entity
 public class Friend extends BaseAuditingEntity {
-	@ManyToOne(fetch = LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "myProfileId")
 	private Profile myProfile;
 
-	@OneToOne(fetch = LAZY)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "friendProfileId")
 	private Profile friendProfile;
 
@@ -44,6 +44,10 @@ public class Friend extends BaseAuditingEntity {
 		this.myProfile = myProfile;
 		this.friendProfile = friendProfile;
 		this.status = Status.NORMAL;
+	}
+
+	public void updateStatus(Status status) {
+		this.status = status;
 	}
 
 	/* 친구 상태*/

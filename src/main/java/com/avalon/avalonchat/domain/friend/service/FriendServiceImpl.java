@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.avalon.avalonchat.domain.friend.domain.Friend;
 import com.avalon.avalonchat.domain.friend.dto.FriendAddRequest;
 import com.avalon.avalonchat.domain.friend.dto.FriendAddResponse;
+import com.avalon.avalonchat.domain.friend.dto.FriendStatusUpdateRequest;
+import com.avalon.avalonchat.domain.friend.dto.FriendStatusUpdateResponse;
 import com.avalon.avalonchat.domain.friend.repository.FriendRepository;
 import com.avalon.avalonchat.domain.profile.domain.Profile;
 import com.avalon.avalonchat.domain.profile.repository.ProfileRepository;
@@ -39,5 +41,20 @@ public class FriendServiceImpl implements FriendService {
 		return friendRepository.saveAll(friends).stream()
 			.map(FriendAddResponse::from)
 			.collect(Collectors.toList());
+	}
+
+	@Override
+	public FriendStatusUpdateResponse updateFriendStatus(long myProfileId, long friendProfileId,
+		FriendStatusUpdateRequest request) {
+		// 1. find friend
+		Friend friend = friendRepository.findByMyProfileIdAndFriendProfileId(myProfileId, friendProfileId)
+			.orElseThrow(() -> new NotFoundException("friend", friendProfileId));
+
+		// 2. update
+		friend.updateStatus(request.getStatus());
+
+		// 3. save & return
+		friendRepository.save(friend);
+		return FriendStatusUpdateResponse.ofEntity(friend);
 	}
 }

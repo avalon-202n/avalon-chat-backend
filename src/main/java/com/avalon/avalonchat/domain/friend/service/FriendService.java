@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.avalon.avalonchat.domain.friend.dto.FriendAddRequest;
 import com.avalon.avalonchat.domain.friend.dto.FriendAddResponse;
+import com.avalon.avalonchat.domain.friend.dto.FriendStatusUpdateRequest;
+import com.avalon.avalonchat.domain.friend.dto.FriendStatusUpdateResponse;
 
 public interface FriendService {
 
@@ -16,4 +18,10 @@ public interface FriendService {
 	 */
 	// TODO - do not response List as Response
 	List<FriendAddResponse> addFriend(long profileId, FriendAddRequest request);
+
+	FriendStatusUpdateResponse updateFriendStatus(
+		long myProfileId,
+		long friendProfileId,
+		FriendStatusUpdateRequest request
+	);
 }
