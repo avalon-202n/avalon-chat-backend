@@ -25,6 +25,7 @@ import com.avalon.avalonchat.domain.user.domain.Password;
 import com.avalon.avalonchat.domain.user.domain.User;
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
 
+@Transactional
 @SpringBootTest
 class FriendServiceImplTest {
 	@Autowired

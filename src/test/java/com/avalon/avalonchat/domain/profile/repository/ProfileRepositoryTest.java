@@ -25,8 +25,8 @@ import com.avalon.avalonchat.domain.user.domain.Password;
 import com.avalon.avalonchat.domain.user.domain.User;
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
 
-@DataJpaTest
 @Transactional
+@DataJpaTest
 class ProfileRepositoryTest {
 	@Autowired
 	private EntityManager em;
