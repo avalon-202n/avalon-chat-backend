@@ -113,4 +113,31 @@ class FriendRepositoryTest {
 		// then
 		assertThat(findFriends.size()).isEqualTo(10);
 	}
+
+	@Test
+	void myProfileId와_friendProfileId로_친구찾기성공() {
+		// given - ready for users & profiles
+		User myUser = new User(Email.of("myUser@gmail.com"), Password.of("myPassword"));
+		Profile myProfile = new Profile(myUser, "myBio", LocalDate.now(), "myProfile", "01012345678");
+
+		User friendUser = new User(Email.of("friendUser@gmail.com"), Password.of("friendPassword"));
+		Profile friendProfile = new Profile(friendUser, "friendBio", LocalDate.now(), "friendNickname", "01012123434");
+
+		userRepository.save(myUser);
+		userRepository.save(friendUser);
+		Profile savedMyProfile = profileRepository.save(myProfile);
+		Profile savedFriendProfile = profileRepository.save(friendProfile);
+
+		// given - ready for friend
+		Friend friend = new Friend(savedMyProfile, savedFriendProfile);
+		friendRepository.save(friend);
+
+		// when
+		Friend foundFriend = friendRepository.findByMyProfileIdAndFriendProfileId(savedMyProfile.getId(),
+			savedFriendProfile.getId()).get();
+
+		// then
+		assertThat(foundFriend.getMyProfile().getId()).isEqualTo(savedMyProfile.getId());
+		assertThat(foundFriend.getFriendProfile().getId()).isEqualTo(savedFriendProfile.getId());
+	}
 }

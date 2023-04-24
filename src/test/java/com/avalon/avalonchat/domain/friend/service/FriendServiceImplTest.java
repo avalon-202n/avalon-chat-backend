@@ -15,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.avalon.avalonchat.domain.friend.domain.Friend;
 import com.avalon.avalonchat.domain.friend.dto.FriendAddRequest;
 import com.avalon.avalonchat.domain.friend.dto.FriendAddResponse;
+import com.avalon.avalonchat.domain.friend.dto.FriendStatusUpdateRequest;
+import com.avalon.avalonchat.domain.friend.dto.FriendStatusUpdateResponse;
 import com.avalon.avalonchat.domain.friend.repository.FriendRepository;
 import com.avalon.avalonchat.domain.profile.domain.BackgroundImage;
 import com.avalon.avalonchat.domain.profile.domain.Profile;
@@ -28,7 +30,7 @@ import com.avalon.avalonchat.domain.user.repository.UserRepository;
 @SpringBootTest
 class FriendServiceImplTest {
 	@Autowired
-	private FriendServiceImpl friendService;
+	private FriendServiceImpl sut;
 	@Autowired
 	private FriendRepository friendRepository;
 	@Autowired
@@ -83,7 +85,7 @@ class FriendServiceImplTest {
 		profileRepository.save(friendProfile2);
 
 		// when
-		List<FriendAddResponse> responses = friendService.addFriend(savedMyProfile.getId(), request);
+		List<FriendAddResponse> responses = sut.addFriend(savedMyProfile.getId(), request);
 
 		// then
 		for (FriendAddResponse response : responses) {
@@ -97,5 +99,34 @@ class FriendServiceImplTest {
 				Arrays.asList(friendBackgroundUrl1, friendBackgroundUrl2));
 			assertThat(response.getFriendStatus()).isEqualTo(Friend.FriendStatus.NORMAL);
 		}
+	}
+
+	@Test
+	void 친구상태변경_성공() {
+		// given - ready for users & profiles
+		User myUser = new User(Email.of("myUser@gmail.com"), Password.of("myPassword"));
+		Profile myProfile = new Profile(myUser, "myBio", LocalDate.now(), "myProfile", "01012345678");
+
+		User friendUser = new User(Email.of("friendUser@gmail.com"), Password.of("friendPassword"));
+		Profile friendProfile = new Profile(friendUser, "friendBio", LocalDate.now(), "friendNickname", "01012123434");
+
+		userRepository.save(myUser);
+		userRepository.save(friendUser);
+		Profile savedMyProfile = profileRepository.save(myProfile);
+		Profile savedFriendProfile = profileRepository.save(friendProfile);
+
+		// given - ready for friend
+		Friend friend = new Friend(savedMyProfile, savedFriendProfile);
+		friendRepository.save(friend);
+
+		// given - ready for the request
+		FriendStatusUpdateRequest request = new FriendStatusUpdateRequest("BLOCKED");
+
+		// when
+		FriendStatusUpdateResponse response = sut.updateFriendStatus(myProfile.getId(),
+			friendProfile.getId(), request);
+
+		// then
+		assertThat(response.getStatus()).isEqualTo(Friend.FriendStatus.BLOCKED);
 	}
 }
