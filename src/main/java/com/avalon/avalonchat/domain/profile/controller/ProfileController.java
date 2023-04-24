@@ -22,13 +22,15 @@ import com.avalon.avalonchat.domain.profile.service.ProfileService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-@RestController
-@RequiredArgsConstructor
 @Slf4j
+@RequiredArgsConstructor
+@Tag(name = "프로필 API")
 @RequestMapping("/profiles")
+@RestController
 public class ProfileController {
 
 	private final ProfileService service;

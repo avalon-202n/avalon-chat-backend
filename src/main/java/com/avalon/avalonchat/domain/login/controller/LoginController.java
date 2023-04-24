@@ -19,7 +19,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-@Tag(name = "login", description = "로그인과 관련된 endpoint 모음")
+@Tag(name = "login")
 @RequestMapping("/login")
 @RestController
 public class LoginController {

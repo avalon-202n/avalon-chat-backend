@@ -5,9 +5,9 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 
 import lombok.Getter;
 
-@ConfigurationProperties(prefix = "cool-sms")
-@ConstructorBinding
 @Getter
+@ConstructorBinding
+@ConfigurationProperties(prefix = "cool-sms")
 public class CoolSmsProperties {
 	private final String apiKey;
 	private final String apiSecret;

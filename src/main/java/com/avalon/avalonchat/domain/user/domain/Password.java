@@ -1,18 +1,18 @@
 package com.avalon.avalonchat.domain.user.domain;
 
 import static com.avalon.avalonchat.global.util.Preconditions.*;
+import static lombok.AccessLevel.*;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
-import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode
 @Getter
+@NoArgsConstructor(access = PROTECTED)
+@EqualsAndHashCode
 @Embeddable
 public class Password {
 	public static final int MIN_LENGTH = 7;

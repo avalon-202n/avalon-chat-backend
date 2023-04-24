@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.avalon.avalonchat.domain.friend.domain.Friend;
 import com.avalon.avalonchat.domain.friend.repository.FriendRepository;
 import com.avalon.avalonchat.domain.profile.domain.Profile;
-import com.avalon.avalonchat.domain.profile.domain.ProfileImage;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddRequest;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddResponse;
 import com.avalon.avalonchat.domain.profile.dto.ProfileDetailedGetResponse;
@@ -182,14 +181,10 @@ class ProfileServiceImplTest extends BaseTestContainerTest {
 		Profile friendProfile2 = createProfile(
 			friendUser2, "I'm friend2", LocalDate.of(1999, 10, 23), "B_friend", "01011112222"
 		);
-		ProfileImage profileImage1 = new ProfileImage(friendProfile1, "url1");
-		ProfileImage profileImage2 = new ProfileImage(friendProfile1, "url2");
-		ProfileImage profileImage3 = new ProfileImage(friendProfile2, "url3");
-		ProfileImage profileImage4 = new ProfileImage(friendProfile2, "url4");
-		friendProfile1.addProfileImage(profileImage1);
-		friendProfile1.addProfileImage(profileImage2);
-		friendProfile2.addProfileImage(profileImage3);
-		friendProfile2.addProfileImage(profileImage4);
+		friendProfile1.addProfileImage("url1");
+		friendProfile1.addProfileImage("url2");
+		friendProfile2.addProfileImage("url3");
+		friendProfile2.addProfileImage("url4");
 		Profile savedMyProfile = profileRepository.save(myProfile);
 		profileRepository.save(friendProfile1);
 		profileRepository.save(friendProfile2);

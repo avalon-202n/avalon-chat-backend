@@ -42,16 +42,4 @@ public class ChatMessage {
 	@PersistenceCreator
 	public ChatMessage() {
 	}
-
-	@Override
-	public String toString() {
-		final StringBuilder sb = new StringBuilder("ChatMessage{");
-		sb.append("id='").append(id).append('\'');
-		sb.append(", senderId=").append(senderId);
-		sb.append(", chatRoomId='").append(chatRoomId).append('\'');
-		sb.append(", content='").append(content).append('\'');
-		sb.append(", createdAt=").append(createdAt);
-		sb.append('}');
-		return sb.toString();
-	}
 }

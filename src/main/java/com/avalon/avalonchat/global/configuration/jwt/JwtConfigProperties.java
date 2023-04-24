@@ -1,22 +1,22 @@
 package com.avalon.avalonchat.global.configuration.jwt;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.context.properties.ConstructorBinding;
 
 import lombok.Getter;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
-@Setter
+@RequiredArgsConstructor
+@ConstructorBinding
 @ConfigurationProperties(prefix = "jwt")
-@Configuration
 public class JwtConfigProperties {
 
 	// access token validity in millis
-	private int accessValidity;
+	private final int accessValidity;
 
 	// refresh token validity in millis
-	private int refreshValidity;
+	private final int refreshValidity;
 
-	private String secret;
+	private final String secret;
 }

@@ -7,31 +7,35 @@ import com.avalon.avalonchat.domain.friend.domain.Friend;
 import com.avalon.avalonchat.domain.profile.domain.BackgroundImage;
 import com.avalon.avalonchat.domain.profile.domain.ProfileImage;
 
-import lombok.Getter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class FriendAddResponse {
-	private final long friendProfileId;
-	private final String nickname;
-	private final String bio;
-	private final List<String> profileImages;
-	private final List<String> backgroundImages;
-	private final Friend.FriendStatus friendStatus;
+	private long friendProfileId;
+	private String nickname;
+	private String bio;
+	private List<String> profileImages;
+	private List<String> backgroundImages;
+	private Friend.Status status;
 
-	public FriendAddResponse(Friend friend) {
-		this.friendProfileId = friend.getFriendProfile().getId();
-		this.nickname = friend.getFriendProfile().getNickname();
-		this.bio = friend.getFriendProfile().getBio();
-		this.profileImages = friend.getFriendProfile().getProfileImages().stream()
-			.map(ProfileImage::getUrl)
-			.collect(Collectors.toList());
-		this.backgroundImages = friend.getFriendProfile().getBackgroundImages().stream()
-			.map(BackgroundImage::getUrl)
-			.collect(Collectors.toList());
-		this.friendStatus = friend.getFriendStatus();
-	}
-
-	public static FriendAddResponse ofEntity(Friend friend) {
-		return new FriendAddResponse(friend);
+	// TODO - resolve n+1 problem,
+	// Q - do we really need all image links for added friends?
+	public static FriendAddResponse from(Friend friend) {
+		return new FriendAddResponse(
+			friend.getFriendProfile().getId(),
+			friend.getFriendProfile().getNickname(),
+			friend.getFriendProfile().getBio(),
+			friend.getFriendProfile().getProfileImages().stream()
+				.map(ProfileImage::getUrl)
+				.collect(Collectors.toList()),
+			friend.getFriendProfile().getBackgroundImages().stream()
+				.map(BackgroundImage::getUrl)
+				.collect(Collectors.toList()),
+			friend.getStatus()
+		);
 	}
 }

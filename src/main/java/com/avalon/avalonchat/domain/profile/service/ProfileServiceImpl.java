@@ -6,9 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.avalon.avalonchat.domain.login.service.GetProfileIdService;
-import com.avalon.avalonchat.domain.profile.domain.BackgroundImage;
 import com.avalon.avalonchat.domain.profile.domain.Profile;
-import com.avalon.avalonchat.domain.profile.domain.ProfileImage;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddRequest;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddResponse;
 import com.avalon.avalonchat.domain.profile.dto.ProfileDetailedGetResponse;
@@ -56,14 +54,14 @@ public class ProfileServiceImpl
 		);
 
 		// 4. create images & add to profile
-		profile.addProfileImage(new ProfileImage(profile, request.getProfileImageUrl()));
-		profile.addBackgroundImage(new BackgroundImage(profile, request.getBackgroundImageUrl()));
+		profile.addProfileImage(request.getProfileImageUrl());
+		profile.addBackgroundImage(request.getBackgroundImageUrl());
 
 		// 5. save it
 		repository.save(profile);
 
 		// 6. return
-		return ProfileAddResponse.ofEntity(profile);
+		return ProfileAddResponse.from(profile);
 	}
 
 	@Override

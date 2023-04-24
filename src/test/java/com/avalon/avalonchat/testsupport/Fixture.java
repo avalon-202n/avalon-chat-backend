@@ -21,11 +21,22 @@ public final class Fixture {
 	}
 
 	public static Profile createProfile(User user) {
-		return createProfile(user, "bio", LocalDate.of(2023, 4, 20), "nickname", "01012345678");
+		return createProfile(
+			user,
+			"bio",
+			LocalDate.of(2023, 4, 20),
+			"nickname",
+			"01012345678"
+		);
 	}
 
-	public static Profile createProfile(User user, String bio, LocalDate birthDate, String nickname,
-		String phoneNumber) {
+	public static Profile createProfile(
+		User user,
+		String bio,
+		LocalDate birthDate,
+		String nickname,
+		String phoneNumber
+	) {
 		return new Profile(
 			user,
 			bio,

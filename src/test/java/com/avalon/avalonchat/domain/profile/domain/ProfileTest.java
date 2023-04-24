@@ -1,38 +1,31 @@
 package com.avalon.avalonchat.domain.profile.domain;
 
+import static com.avalon.avalonchat.testsupport.Fixture.*;
 import static org.assertj.core.api.AssertionsForClassTypes.*;
 
 import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
 
-import com.avalon.avalonchat.domain.user.domain.Email;
-import com.avalon.avalonchat.domain.user.domain.Password;
 import com.avalon.avalonchat.domain.user.domain.User;
 
 class ProfileTest {
 	@Test
 	void profile_생성성공() {
 		//given
-		User user = new User(Email.of("email@gmail.com"), Password.of("password"));
-
+		User user = createUser("email@gmail.com", "password");
 		String bio = "This is my bio";
 		LocalDate birthDate = LocalDate.now();
 		String nickname = "nickname";
-
 		String profileUrl = "storage/url/profile_image.png";
 		String backgroundUrl = "storage/url/background_image.png";
-
 		String phoneNumber = "01055110625";
 
 		// when
+		// TODO - 처음 생성자에서 profileImageUrl 과 backgroundImageUrl 을 받아도 되지 않을까?
 		Profile profile = new Profile(user, bio, birthDate, nickname, phoneNumber);
-
-		ProfileImage profileImage = new ProfileImage(profile, profileUrl);
-		BackgroundImage backgroundImage = new BackgroundImage(profile, backgroundUrl);
-
-		profile.addProfileImage(profileImage);
-		profile.addBackgroundImage(backgroundImage);
+		profile.addProfileImage("storage/url/profile_image.png");
+		profile.addBackgroundImage("storage/url/background_image.png");
 
 		//then
 		assertThat(profile.getUser()).isEqualTo(user);

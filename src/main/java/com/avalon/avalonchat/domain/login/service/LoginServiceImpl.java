@@ -20,10 +20,10 @@ import com.avalon.avalonchat.global.error.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 @Service
-@Slf4j
 public class LoginServiceImpl implements LoginService {
 
 	private final UserRepository userRepository;

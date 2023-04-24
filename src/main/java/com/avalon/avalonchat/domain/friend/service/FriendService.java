@@ -8,8 +8,20 @@ import com.avalon.avalonchat.domain.friend.dto.FriendStatusUpdateRequest;
 import com.avalon.avalonchat.domain.friend.dto.FriendStatusUpdateResponse;
 
 public interface FriendService {
-	List<FriendAddResponse> addFriend(long id, FriendAddRequest request);
 
-	FriendStatusUpdateResponse updateFriendStatus(long myProfileId, long friendProfileId,
-		FriendStatusUpdateRequest request);
+	/**
+	 * add friends by given request(phonenumber list)
+	 *
+	 * @param profileId - current user profileId
+	 * @param request   - phonenumber list
+	 * @return - added Friend profiles
+	 */
+	// TODO - do not response List as Response
+	List<FriendAddResponse> addFriend(long profileId, FriendAddRequest request);
+
+	FriendStatusUpdateResponse updateFriendStatus(
+		long myProfileId,
+		long friendProfileId,
+		FriendStatusUpdateRequest request
+	);
 }

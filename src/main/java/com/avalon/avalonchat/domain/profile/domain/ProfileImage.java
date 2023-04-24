@@ -1,5 +1,8 @@
 package com.avalon.avalonchat.domain.profile.domain;
 
+import static com.avalon.avalonchat.global.util.Preconditions.*;
+import static lombok.AccessLevel.*;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -8,25 +11,25 @@ import javax.persistence.ManyToOne;
 
 import com.avalon.avalonchat.domain.model.BaseAuditingEntity;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = PROTECTED)
+@Entity
 public class ProfileImage extends BaseAuditingEntity {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "profile_id")
-	@Setter
 	private Profile profile;
 
 	@Column
 	private String url;
 
-	public ProfileImage(Profile profile, String url) {
+	ProfileImage(Profile profile, String url) {
+		checkNotNull(profile, "ProfileImage.profile cannot be null");
+		checkNotNull(profile, "ProfileImage.url cannot be null");
+
 		this.profile = profile;
 		this.url = url;
 	}

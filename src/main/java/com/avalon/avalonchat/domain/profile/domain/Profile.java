@@ -1,13 +1,15 @@
 package com.avalon.avalonchat.domain.profile.domain;
 
+import static javax.persistence.CascadeType.*;
+import static javax.persistence.FetchType.*;
+import static lombok.AccessLevel.*;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -15,17 +17,15 @@ import javax.persistence.OneToOne;
 import com.avalon.avalonchat.domain.model.BaseAuditingEntity;
 import com.avalon.avalonchat.domain.user.domain.User;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = PROTECTED)
 public class Profile extends BaseAuditingEntity {
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = LAZY)
 	@JoinColumn(name = "users_id", unique = true)
 	private User user;
 
@@ -38,16 +38,16 @@ public class Profile extends BaseAuditingEntity {
 	@Column
 	private String nickname;
 
-	@Setter
-	@Column(nullable = false, unique = true)
+	@Column
 	private String phoneNumber;
 
-	@OneToMany(mappedBy = "profile", cascade = CascadeType.PERSIST, orphanRemoval = true)
+	@OneToMany(mappedBy = "profile", cascade = ALL, orphanRemoval = true)
 	private List<ProfileImage> profileImages = new ArrayList<>();
 
-	@OneToMany(mappedBy = "profile", cascade = CascadeType.PERSIST, orphanRemoval = true)
+	@OneToMany(mappedBy = "profile", cascade = ALL, orphanRemoval = true)
 	private List<BackgroundImage> backgroundImages = new ArrayList<>();
 
+	// TODO - 처음 생성자에서 profileImageUrl 과 backgroundImageUrl 을 받아도 되지 않을까?
 	public Profile(User user, String bio, LocalDate birthDate, String nickname, String phoneNumber) {
 		this.user = user;
 		this.bio = bio;
@@ -56,13 +56,13 @@ public class Profile extends BaseAuditingEntity {
 		this.phoneNumber = phoneNumber;
 	}
 
-	public void addProfileImage(ProfileImage profileImage) {
+	public void addProfileImage(String profileImageUrl) {
+		ProfileImage profileImage = new ProfileImage(this, profileImageUrl);
 		profileImages.add(profileImage);
-		profileImage.setProfile(this);
 	}
 
-	public void addBackgroundImage(BackgroundImage backgroundImage) {
+	public void addBackgroundImage(String backgroundImageUrl) {
+		BackgroundImage backgroundImage = new BackgroundImage(this, backgroundImageUrl);
 		backgroundImages.add(backgroundImage);
-		backgroundImage.setProfile(this);
 	}
 }

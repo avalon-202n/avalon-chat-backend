@@ -3,6 +3,7 @@ package com.avalon.avalonchat.domain.user.service;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.avalon.avalonchat.domain.user.domain.Email;
 import com.avalon.avalonchat.domain.user.domain.PhoneNumberAuthenticationCode;
@@ -23,8 +24,9 @@ import com.avalon.avalonchat.global.error.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
-@Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
+@Service
 public class UserServiceImpl implements UserService {
 
 	private final UserRepository userRepository;
@@ -32,6 +34,7 @@ public class UserServiceImpl implements UserService {
 	private final MessageService messageService;
 	private final PhoneNumberAuthenticationRepository phoneNumberAuthenticationRepository;
 
+	@Transactional
 	@Override
 	public SignUpResponse signUp(SignUpRequest signUpRequest) {
 		// create user from request
@@ -87,7 +90,7 @@ public class UserServiceImpl implements UserService {
 	public void sendPhoneNumberAuthentication(PhoneNumberAuthenticationSendRequest request) {
 		// 1. get phone number and certification code
 		String phoneNumber = request.getPhoneNumber();
-		String certificationCode = getCertificationCode();
+		String certificationCode = RandomStringUtils.randomNumeric(6);
 
 		// 2. send certification code
 		messageService.sendAuthenticationCode(phoneNumber, certificationCode);
@@ -104,25 +107,23 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public PhoneNumberAuthenticationCheckResponse checkPhoneNumberAuthentication(
-		PhoneNumberAuthenticationCheckRequest request) {
-		// 1. get phone number, certificationCode and phoneNumberAuthenticationCode
+		PhoneNumberAuthenticationCheckRequest request
+	) {
+		// 1. binding
 		String phoneNumber = request.getPhoneNumber();
 		String certificationCode = request.getCertificationCode();
 
-		// 2. check: if equals authenticate and return true, if not return false
+		// 2. find auth-code and check cert-code matches
 		PhoneNumberAuthenticationCode phoneNumberAuthenticationCode = phoneNumberAuthenticationRepository
 			.findById(phoneNumber)
-			.orElseThrow(() -> new NotFoundException("PhoneNumber AuthenticationCode", phoneNumber));
+			.orElseThrow(() -> new NotFoundException("phonenumber.auth-code", phoneNumber));
+		boolean authenticated = phoneNumberAuthenticationCode.getCertificationCode().equals(certificationCode);
 
-		if (phoneNumberAuthenticationCode.getCertificationCode().equals(certificationCode)) {
+		// 3. do post process and return
+		if (authenticated) {
 			phoneNumberAuthenticationCode.authenticate();
 			phoneNumberAuthenticationRepository.save(phoneNumberAuthenticationCode);
-			return new PhoneNumberAuthenticationCheckResponse(true);
 		}
-		return new PhoneNumberAuthenticationCheckResponse(false);
-	}
-
-	private String getCertificationCode() {
-		return RandomStringUtils.randomNumeric(6);
+		return new PhoneNumberAuthenticationCheckResponse(authenticated);
 	}
 }

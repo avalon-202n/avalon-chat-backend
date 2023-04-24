@@ -1,32 +1,35 @@
 package com.avalon.avalonchat.domain.profile.domain;
 
+import static com.avalon.avalonchat.global.util.Preconditions.*;
+import static javax.persistence.FetchType.*;
+import static lombok.AccessLevel.*;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import com.avalon.avalonchat.domain.model.BaseAuditingEntity;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = PROTECTED)
+@Entity
 public class BackgroundImage extends BaseAuditingEntity {
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = LAZY)
 	@JoinColumn(name = "profile_id")
-	@Setter
 	private Profile profile;
 
 	@Column
 	private String url;
 
-	public BackgroundImage(Profile profile, String url) {
+	BackgroundImage(Profile profile, String url) {
+		checkNotNull(profile, "BackgroundImage.profile cannot be null");
+		checkNotNull(profile, "BackgroundImage.url cannot be null");
+
 		this.profile = profile;
 		this.url = url;
 	}
