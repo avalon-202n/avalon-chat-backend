@@ -15,7 +15,7 @@ public class WebMcvConfiguration {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 				// swagger test is only allowed @ local environments
-				registry.addMapping("/**").allowedOrigins("http://localhost:8080/");
+				registry.addMapping("/**").allowedOrigins("*");
 			}
 		};
 	}
