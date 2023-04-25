@@ -1,0 +1,10 @@
+package com.avalon.avalonchat.domain.user.keyvalue;
+
+import com.avalon.avalonchat.global.keyvalue.KeyValueStore;
+
+public interface KeyAuthCodeValueStore<K> extends KeyValueStore<K, AuthCodeValue> {
+
+	default void put(K key, String certificationCode) {
+		put(key, AuthCodeValue.ofUnauthenticated(certificationCode));
+	}
+}

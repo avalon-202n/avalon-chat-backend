@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.avalon.avalonchat.domain.user.domain.Email;
-import com.avalon.avalonchat.domain.user.domain.PhoneNumberAuthenticationCode;
 import com.avalon.avalonchat.domain.user.domain.User;
 import com.avalon.avalonchat.domain.user.dto.EmailAuthenticationCheckRequest;
 import com.avalon.avalonchat.domain.user.dto.EmailAuthenticationCheckResponse;
@@ -18,9 +17,11 @@ import com.avalon.avalonchat.domain.user.dto.PhoneNumberAuthenticationCheckRespo
 import com.avalon.avalonchat.domain.user.dto.PhoneNumberAuthenticationSendRequest;
 import com.avalon.avalonchat.domain.user.dto.SignUpRequest;
 import com.avalon.avalonchat.domain.user.dto.SignUpResponse;
-import com.avalon.avalonchat.domain.user.repository.PhoneNumberAuthenticationRepository;
+import com.avalon.avalonchat.domain.user.keyvalue.AuthCodeValue;
+import com.avalon.avalonchat.domain.user.keyvalue.EmailKey;
+import com.avalon.avalonchat.domain.user.keyvalue.KeyAuthCodeValueStore;
+import com.avalon.avalonchat.domain.user.keyvalue.PhoneNumberKey;
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
-import com.avalon.avalonchat.global.error.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,7 +33,8 @@ public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final MessageService messageService;
-	private final PhoneNumberAuthenticationRepository phoneNumberAuthenticationRepository;
+	private final KeyAuthCodeValueStore<EmailKey> emailKeyValueStore;
+	private final KeyAuthCodeValueStore<PhoneNumberKey> phoneNumberKeyValueStore;
 
 	@Transactional
 	@Override
@@ -95,34 +97,29 @@ public class UserServiceImpl implements UserService {
 		// 2. send certification code
 		messageService.sendAuthenticationCode(phoneNumber, certificationCode);
 
-		// 3. create phoneNumberAuthenticationCode
-		PhoneNumberAuthenticationCode phoneNumberAuthenticationCode = new PhoneNumberAuthenticationCode(
-			phoneNumber,
+		// 3. put it to key-value store
+		phoneNumberKeyValueStore.put(
+			PhoneNumberKey.fromString(phoneNumber),
 			certificationCode
 		);
-
-		// 4. save it
-		phoneNumberAuthenticationRepository.save(phoneNumberAuthenticationCode);
 	}
 
 	@Override
 	public PhoneNumberAuthenticationCheckResponse checkPhoneNumberAuthentication(
 		PhoneNumberAuthenticationCheckRequest request
 	) {
-		// 1. binding
+		// 1. setup variables
 		String phoneNumber = request.getPhoneNumber();
 		String certificationCode = request.getCertificationCode();
+		PhoneNumberKey phoneNumberKey = PhoneNumberKey.fromString(phoneNumber);
 
 		// 2. find auth-code and check cert-code matches
-		PhoneNumberAuthenticationCode phoneNumberAuthenticationCode = phoneNumberAuthenticationRepository
-			.findById(phoneNumber)
-			.orElseThrow(() -> new NotFoundException("phonenumber.auth-code", phoneNumber));
-		boolean authenticated = phoneNumberAuthenticationCode.getCertificationCode().equals(certificationCode);
+		AuthCodeValue authCodeValue = phoneNumberKeyValueStore.get(phoneNumberKey);
+		boolean authenticated = authCodeValue.matches(certificationCode);
 
-		// 3. do post process and return
+		// 3. return authenticated update value if authenticated
 		if (authenticated) {
-			phoneNumberAuthenticationCode.authenticate();
-			phoneNumberAuthenticationRepository.save(phoneNumberAuthenticationCode);
+			phoneNumberKeyValueStore.put(phoneNumberKey, AuthCodeValue.ofAuthenticated());
 		}
 		return new PhoneNumberAuthenticationCheckResponse(authenticated);
 	}
