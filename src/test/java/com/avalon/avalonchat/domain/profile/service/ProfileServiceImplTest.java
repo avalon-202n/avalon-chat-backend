@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +23,10 @@ import com.avalon.avalonchat.domain.profile.dto.ProfileListGetResponse;
 import com.avalon.avalonchat.domain.profile.repository.ProfileRepository;
 import com.avalon.avalonchat.domain.user.domain.Email;
 import com.avalon.avalonchat.domain.user.domain.Password;
-import com.avalon.avalonchat.domain.user.domain.PhoneNumberAuthenticationCode;
 import com.avalon.avalonchat.domain.user.domain.User;
 import com.avalon.avalonchat.domain.user.dto.PhoneNumberAuthenticationCheckRequest;
-import com.avalon.avalonchat.domain.user.repository.PhoneNumberAuthenticationRepository;
+import com.avalon.avalonchat.domain.user.keyvalue.KeyAuthCodeValueStore;
+import com.avalon.avalonchat.domain.user.keyvalue.PhoneNumberKey;
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
 import com.avalon.avalonchat.domain.user.service.MessageService;
 import com.avalon.avalonchat.domain.user.service.UserService;
@@ -54,7 +53,7 @@ class ProfileServiceImplTest extends BaseTestContainerTest {
 	private UserService userService;
 
 	@Autowired
-	private PhoneNumberAuthenticationRepository phoneNumberAuthenticationRepository;
+	private KeyAuthCodeValueStore<PhoneNumberKey> phoneNumberAuthKeyValueStore;
 
 	@Autowired
 	private FriendRepository friendRepository;
@@ -67,37 +66,37 @@ class ProfileServiceImplTest extends BaseTestContainerTest {
 		String toPhoneNumber = "01055110625";
 
 		messageService.sendAuthenticationCode(toPhoneNumber, certificationCode);
-
-		PhoneNumberAuthenticationCode entity = new PhoneNumberAuthenticationCode(toPhoneNumber, certificationCode);
-		phoneNumberAuthenticationRepository.save(entity);
-
-		PhoneNumberAuthenticationCheckRequest authenticationRequest = new PhoneNumberAuthenticationCheckRequest(
-			toPhoneNumber, certificationCode);
-
-		userService.checkPhoneNumberAuthentication(authenticationRequest);
+		phoneNumberAuthKeyValueStore.put(
+			PhoneNumberKey.fromString(toPhoneNumber),
+			certificationCode
+		);
+		userService.checkPhoneNumberAuthentication(
+			new PhoneNumberAuthenticationCheckRequest(toPhoneNumber, certificationCode)
+		);
 
 		// given - ready for the request
-		User user = new User(Email.of("email@gmail.com"), Password.of("password"));
-		User savedUser = userRepository.save(user);
-
-		LocalDate birthDate = LocalDate.now();
-		String nickname = "nickname";
-		String bio = "bio";
-		String profileImageUrl = "profileImageUrl";
-		String backgroundImageUrl = "backgroundImageUrl";
-		ProfileAddRequest request = new ProfileAddRequest(birthDate, nickname, bio, profileImageUrl,
-			backgroundImageUrl, toPhoneNumber);
+		User savedUser = userRepository.save(createUser("email@gmail.com", "password"));
 
 		// when
-		ProfileAddResponse response = sut.addProfile(savedUser.getId(), request);
+		ProfileAddResponse response = sut.addProfile(
+			savedUser.getId(),
+			new ProfileAddRequest(
+				LocalDate.now(),
+				"nickname",
+				"bio",
+				"profileImageUrl",
+				"backgroundImageUrl",
+				"01055110625"
+			)
+		);
 
 		// then
-		assertThat(response.getBirthDate()).isEqualTo(birthDate);
-		assertThat(response.getNickname()).isEqualTo(nickname);
-		assertThat(response.getBio()).isEqualTo(bio);
-		assertThat(response.getProfileImages().get(0)).isEqualTo(profileImageUrl);
-		assertThat(response.getBackgroundImages().get(0)).isEqualTo(backgroundImageUrl);
-		assertThat(response.getPhoneNumber()).isEqualTo(toPhoneNumber);
+		assertThat(response.getBirthDate()).isEqualTo(LocalDate.now());
+		assertThat(response.getNickname()).isEqualTo("nickname");
+		assertThat(response.getBio()).isEqualTo("bio");
+		assertThat(response.getProfileImages().get(0)).isEqualTo("profileImageUrl");
+		assertThat(response.getBackgroundImages().get(0)).isEqualTo("backgroundImageUrl");
+		assertThat(response.getPhoneNumber()).isEqualTo("01055110625");
 	}
 
 	@Test
@@ -107,9 +106,10 @@ class ProfileServiceImplTest extends BaseTestContainerTest {
 		String toPhoneNumber = "01055110625";
 
 		messageService.sendAuthenticationCode(toPhoneNumber, certificationCode);
-
-		PhoneNumberAuthenticationCode entity = new PhoneNumberAuthenticationCode(toPhoneNumber, certificationCode);
-		phoneNumberAuthenticationRepository.save(entity);
+		phoneNumberAuthKeyValueStore.put(
+			PhoneNumberKey.fromString(toPhoneNumber),
+			certificationCode
+		);
 
 		// given - ready for the request
 		User user = new User(Email.of("email@gmail.com"), Password.of("password"));
@@ -204,11 +204,6 @@ class ProfileServiceImplTest extends BaseTestContainerTest {
 		assertThat(responses.get(1).getNickname()).isEqualTo("B_friend");
 		assertThat(responses.get(0).getProfileImageUrl()).isEqualTo("url2");
 		assertThat(responses.get(1).getProfileImageUrl()).isEqualTo("url4");
-	}
-
-	@AfterEach
-	void tearDown() {
-		phoneNumberAuthenticationRepository.deleteAll();
 	}
 }
 

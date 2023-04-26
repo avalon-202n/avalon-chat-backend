@@ -7,4 +7,9 @@ public interface KeyAuthCodeValueStore<K> extends KeyValueStore<K, AuthCodeValue
 	default void put(K key, String certificationCode) {
 		put(key, AuthCodeValue.ofUnauthenticated(certificationCode));
 	}
+
+	default boolean isAuthenticated(K key) {
+		AuthCodeValue authCodeValue = get(key);
+		return authCodeValue.isAuthenticated();
+	}
 }

@@ -2,6 +2,7 @@ package com.avalon.avalonchat.domain.user.keyvalue;
 
 import static lombok.AccessLevel.*;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor(access = PRIVATE)
@@ -11,6 +12,7 @@ public class AuthCodeValue {
 	private static final String PREFIX = "AUTH_CODE::";
 	private final String certificationCode;
 
+	@Getter
 	private final boolean authenticated;
 
 	public static AuthCodeValue ofAuthenticated() {
