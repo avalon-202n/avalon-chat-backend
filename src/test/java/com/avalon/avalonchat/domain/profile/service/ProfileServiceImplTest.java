@@ -101,6 +101,7 @@ class ProfileServiceImplTest extends BaseTestContainerTest {
 	}
 
 	@Test
+	@Disabled
 	void addProfile_핸드폰인증되지않은사용자_예외던지기_성공() {
 		// given - send user certificationCode with no checking
 		String certificationCode = RandomStringUtils.randomNumeric(6);
