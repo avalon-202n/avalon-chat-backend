@@ -44,6 +44,7 @@ public class FriendServiceImpl implements FriendService {
 	}
 
 	@Override
+	@Transactional
 	public FriendStatusUpdateResponse updateFriendStatus(long myProfileId, long friendProfileId,
 		FriendStatusUpdateRequest request) {
 		// 1. find friend
@@ -54,7 +55,6 @@ public class FriendServiceImpl implements FriendService {
 		friend.updateStatus(request.getStatus());
 
 		// 3. save & return
-		friendRepository.save(friend);
 		return FriendStatusUpdateResponse.ofEntity(friend);
 	}
 }
