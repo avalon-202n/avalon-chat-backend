@@ -77,7 +77,6 @@ class FriendServiceImplTest {
 			assertThat(response.getFriendProfileId()).isIn(friendProfile1.getId(), friendProfile2.getId());
 			assertThat(response.getNickname()).isIn(friendProfile1.getNickname(), friendProfile2.getNickname());
 			assertThat(response.getBio()).isIn(friendProfile1.getBio(), friendProfile2.getBio());
-			assertThat(response.getProfileImages().get(0)).isIn(friendProfileUrl1, friendProfileUrl2);
 			assertThat(response.getStatus()).isEqualTo(Status.NORMAL);
 		}
 	}

@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.avalon.avalonchat.domain.friend.domain.Friend;
+import com.avalon.avalonchat.domain.friend.dto.FriendAddResponse;
 import com.avalon.avalonchat.domain.profile.domain.Profile;
 import com.avalon.avalonchat.domain.profile.repository.ProfileRepository;
 import com.avalon.avalonchat.domain.user.domain.Email;
@@ -139,5 +140,42 @@ class FriendRepositoryTest {
 		// then
 		assertThat(foundFriend.getMyProfile().getId()).isEqualTo(savedMyProfile.getId());
 		assertThat(foundFriend.getFriendProfile().getId()).isEqualTo(savedFriendProfile.getId());
+	}
+
+	@Test
+	void friendIds로_추가된_친구_프로필찾기성공() {
+		// given - ready for users & profiles
+		User myUser = new User(Email.of("myUser@gmail.com"), Password.of("myPassword"));
+		Profile myProfile = new Profile(myUser, "myBio", LocalDate.now(), "myProfile", "01012345678");
+
+		User friendUser1 = new User(Email.of("friendUser1@gmail.com"), Password.of("friendPassword"));
+		Profile friendProfile1 = new Profile(friendUser1, "friendBio1", LocalDate.now(), "friendNickname1",
+			"01012123434");
+		User friendUser2 = new User(Email.of("friendUser2@gmail.com"), Password.of("friendPassword"));
+		Profile friendProfile2 = new Profile(friendUser2, "friendBio2", LocalDate.now(), "friendNickname2",
+			"01011112222");
+
+		userRepository.save(myUser);
+		userRepository.save(friendUser1);
+		userRepository.save(friendUser2);
+		Profile savedMyProfile = profileRepository.save(myProfile);
+		Profile savedFriendProfile1 = profileRepository.save(friendProfile1);
+		Profile savedFriendProfile2 = profileRepository.save(friendProfile2);
+
+		// given - ready for friend
+		Friend friend1 = new Friend(savedMyProfile, savedFriendProfile1);
+		Friend friend2 = new Friend(savedMyProfile, savedFriendProfile2);
+
+		friendRepository.save(friend1);
+		friendRepository.save(friend2);
+
+		// when
+		List<Long> friendIds = new ArrayList<>();
+		friendIds.add(friend1.getId());
+		friendIds.add(friend2.getId());
+		List<FriendAddResponse> responses = friendRepository.findAllByFriendIds(friendIds);
+
+		// then
+		assertThat(responses.size()).isEqualTo(2);
 	}
 }
