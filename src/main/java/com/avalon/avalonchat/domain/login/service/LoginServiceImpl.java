@@ -32,7 +32,6 @@ public class LoginServiceImpl implements LoginService {
 
 	private final UserRepository userRepository;
 	private final ProfileRepository profileRepository;
-
 	private final GetProfileIdService getProfileIdService;
 	private final JwtTokenService tokenService;
 	private final PasswordEncoder passwordEncoder;
@@ -50,12 +49,12 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		// 3. jwt token create
-		//long profileId = getProfileIdService.getProfileIdByUserId(findUser.getId());
-		String accessToken = tokenService.createAccessToken(findUser, 4);
+		long profileId = getProfileIdService.getProfileIdByUserId(findUser.getId());
+		String accessToken = tokenService.createAccessToken(findUser, profileId);
 		String refreshToken = tokenService.createRefreshToken();
 
 		// 4.refreshToken save
-		refreshTokenService.save(new RefreshToken(refreshToken, findUser.getId()));
+		refreshTokenService.save(refreshToken, findUser.getId());
 		return new LoginResponse(findUser.getEmail(), accessToken, refreshToken);
 	}
 
@@ -79,23 +78,23 @@ public class LoginServiceImpl implements LoginService {
 		tokenService.parseClaim(request.getRefreshToken());
 
 		// refresh token 조회
-		RefreshToken savedRefreshToken = refreshTokenService.findById(request.getRefreshToken());
+		RefreshToken findRefreshToken = refreshTokenService.findById(request.getRefreshToken());
 
 		// refresh token 의 user 조회
-		User findUser = userRepository.findById(savedRefreshToken.getUserId())
+		User findUser = userRepository.findById(findRefreshToken.getUserId())
 			.orElseThrow(
-				() -> new NotFoundException("token-reissue-failed.userid.notfound", savedRefreshToken.getUserId()));
+				() -> new NotFoundException("token-reissue-failed.userid", findRefreshToken.getUserId()));
 
 		//profile 조회
-		long profileId = getProfileIdService.getProfileIdByUserId(savedRefreshToken.getUserId());
+		long profileId = getProfileIdService.getProfileIdByUserId(findRefreshToken.getUserId());
 
 		//access token & refresh token reissue
 		String accessToken = tokenService.createAccessToken(findUser, profileId);
 		String refreshToken = tokenService.createRefreshToken();
 
 		// 기존 refresh token 삭제 & 새로운 refresh token 등록
-		refreshTokenService.remove(savedRefreshToken);
-		refreshTokenService.save(new RefreshToken(refreshToken, findUser.getId()));
+		refreshTokenService.deleteById(findRefreshToken.getRefreshToken());
+		refreshTokenService.save(refreshToken, findUser.getId());
 		return new TokenReissueResponse(accessToken, refreshToken);
 	}
 }
