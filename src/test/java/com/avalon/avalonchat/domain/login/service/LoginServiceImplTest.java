@@ -51,7 +51,7 @@ public class LoginServiceImplTest {
 
 		//then
 		assertThat(loginResponse.getEmail().getValue()).isEqualTo(loginRequest.getEmail().getValue());
-		assertThat(loginResponse.getToken()).isNotNull();
+		assertThat(loginResponse.getAccessToken()).isNotNull();
 	}
 
 	@CsvSource({

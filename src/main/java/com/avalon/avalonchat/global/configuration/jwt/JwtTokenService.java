@@ -60,7 +60,7 @@ public class JwtTokenService implements TokenService {
 	}
 
 	@Override
-	public String createRefreshToken(User user) {
+	public String createRefreshToken() {
 		long currentTime = (new Date()).getTime();
 		final Date refreshTokenExpiresIn = new Date(currentTime + refreshValidity);
 
