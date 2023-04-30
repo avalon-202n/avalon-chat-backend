@@ -34,7 +34,8 @@ public class FriendServiceImpl implements FriendService {
 			.orElseThrow(() -> new NotFoundException("profile", profileId));
 
 		List<Friend> friends = profileRepository.findAllByPhoneNumberIn(request.getPhoneNumbers()).stream()
-			.map(friendprofile -> new Friend(myProfile, friendprofile))
+			.filter(profile -> !friendRepository.existsByMyProfileAndFriendProfile(myProfile, profile))
+			.map(profile -> new Friend(myProfile, profile))
 			.collect(Collectors.toList());
 
 		// 2. save them

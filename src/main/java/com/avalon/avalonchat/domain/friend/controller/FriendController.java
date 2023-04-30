@@ -2,7 +2,6 @@ package com.avalon.avalonchat.domain.friend.controller;
 
 import static com.avalon.avalonchat.global.util.ResponseEntityUtil.*;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -47,8 +46,7 @@ public class FriendController {
 		FriendAddRequest request
 	) {
 		List<FriendAddResponse> responses = friendService.addFriend(securityUser.getProfileId(), request);
-		Map<String, List<FriendAddResponse>> body = new HashMap<>();
-		body.put("data", responses);
+		Map<String, List<FriendAddResponse>> body = Map.of("data", responses);
 		return created(body);
 	}
 
