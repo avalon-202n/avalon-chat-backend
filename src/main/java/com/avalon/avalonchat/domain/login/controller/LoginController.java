@@ -37,7 +37,7 @@ public class LoginController {
 	}
 
 	@Operation(summary = "token 재발급")
-	@GetMapping("/token/reissue")
+	@PostMapping("/token/reissue")
 	public TokenReissueResponse refreshToken(
 		@RequestBody TokenReissueRequest request
 	) {
