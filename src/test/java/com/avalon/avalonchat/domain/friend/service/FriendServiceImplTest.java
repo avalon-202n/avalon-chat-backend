@@ -100,7 +100,7 @@ class FriendServiceImplTest {
 		friendRepository.save(friend);
 
 		// given - ready for the request
-		FriendStatusUpdateRequest request = new FriendStatusUpdateRequest("BLOCKED");
+		FriendStatusUpdateRequest request = new FriendStatusUpdateRequest(Status.BLOCKED);
 
 		// when
 		FriendStatusUpdateResponse response = sut.updateFriendStatus(myProfile.getId(),
