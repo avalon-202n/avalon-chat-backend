@@ -20,7 +20,8 @@ public class RefreshTokenRepositoryTest extends BaseTestContainerTest {
 	@Test
 	void 리프레시_토큰_생성_테스트() {
 		//given
-		String refreshTokenStr = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE2ODM1NTE5ODd9.jTotEcZNgS-A2Ji5m8L0EJ0tN-qYHhUwdoUesk4t4ufCrUBnk4h3FaQJoSGQrgQtSg1CIWttLD0I05vqZlcDuA";
+		String refreshTokenStr = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE2ODM1NTE5ODd9"
+			+ ".jTotEcZNgS-A2Ji5m8L0EJ0tN-qYHhUwdoUesk4t4ufCrUBnk4h3FaQJoSGQrgQtSg1CIWttLD0I05vqZlcDuA";
 		long userId = 1;
 		RefreshToken refreshToken = new RefreshToken(refreshTokenStr, userId);
 
@@ -36,7 +37,8 @@ public class RefreshTokenRepositoryTest extends BaseTestContainerTest {
 	@Test
 	void 리프레시_토큰_삭제_테스트() {
 		//given
-		String refreshTokenStr = "eyJhbGciOiJIUzUxMiJ11.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE2ODM1NTE5ODd9.jTotEcZNgS-A2Ji5m8L0EJ0tN-qYHhUwdoUesk4t4ufCrUBnk4h3FaQJoSGQrgQtSg1CIWttLD0I05vqZlcDuA";
+		String refreshTokenStr = "eyJhbGciOiJIUzUxMiJ11.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE2ODM1NTE5ODd9"
+			+ ".jTotEcZNgS-A2Ji5m8L0EJ0tN-qYHhUwdoUesk4t4ufCrUBnk4h3FaQJoSGQrgQtSg1CIWttLD0I05vqZlcDuA";
 		long userId = 1;
 		RefreshToken refreshToken = new RefreshToken(refreshTokenStr, userId);
 
