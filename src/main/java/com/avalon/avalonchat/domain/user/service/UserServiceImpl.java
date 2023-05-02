@@ -114,8 +114,7 @@ public class UserServiceImpl implements UserService {
 		PhoneNumberKey phoneNumberKey = PhoneNumberKey.fromString(phoneNumber);
 
 		// 2. find auth-code and check cert-code matches
-		AuthCodeValue authCodeValue = phoneNumberKeyValueStore.get(phoneNumberKey);
-		boolean authenticated = authCodeValue.matches(certificationCode);
+		boolean authenticated = phoneNumberKeyValueStore.isAuthenticated(phoneNumberKey);
 
 		// 3. return authenticated update value if authenticated
 		if (authenticated) {

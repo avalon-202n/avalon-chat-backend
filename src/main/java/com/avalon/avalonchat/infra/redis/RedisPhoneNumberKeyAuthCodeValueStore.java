@@ -14,7 +14,8 @@ public class RedisPhoneNumberKeyAuthCodeValueStore implements KeyAuthCodeValueSt
 	private final ValueOperations<PhoneNumberKey, AuthCodeValue> phoneNumberAuthOperations;
 
 	public RedisPhoneNumberKeyAuthCodeValueStore(
-		RedisTemplate<PhoneNumberKey, AuthCodeValue> phoneNumberAuthRedisTemplate) {
+		RedisTemplate<PhoneNumberKey, AuthCodeValue> phoneNumberAuthRedisTemplate
+	) {
 		this.phoneNumberAuthOperations = phoneNumberAuthRedisTemplate.opsForValue();
 	}
 

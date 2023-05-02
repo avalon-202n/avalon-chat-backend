@@ -2,6 +2,7 @@ package com.avalon.avalonchat.global.configuration;
 
 import static java.nio.charset.StandardCharsets.*;
 
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -19,7 +20,7 @@ import com.avalon.avalonchat.domain.user.keyvalue.PhoneNumberKey;
 import com.avalon.avalonchat.infra.redis.RedisEmailKeyAuthCodeValueStore;
 import com.avalon.avalonchat.infra.redis.RedisPhoneNumberKeyAuthCodeValueStore;
 
-@Configuration(proxyBeanMethods = false)
+@Configuration
 public class KeyValueStoreConfiguration {
 
 	private static void checkNotNullForSerializer(Object target, String name) {
@@ -29,9 +30,12 @@ public class KeyValueStoreConfiguration {
 	}
 
 	@Bean
-	public RedisConnectionFactory redisConnectionFactory() {
-		RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration("127.0.0.1", 6379);
-		configuration.setPassword(RedisPassword.of("avalon"));
+	public RedisConnectionFactory redisConnectionFactory(RedisProperties properties) {
+		RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration(
+			properties.getHost(),
+			properties.getPort()
+		);
+		configuration.setPassword(RedisPassword.of(properties.getPassword()));
 		return new LettuceConnectionFactory(configuration);
 	}
 
@@ -41,6 +45,7 @@ public class KeyValueStoreConfiguration {
 		redisTemplate.setConnectionFactory(connectionFactory);
 		redisTemplate.setKeySerializer(new EmailKeySerializer());
 		redisTemplate.setValueSerializer(new AuthCodeValueSerializer());
+		redisTemplate.afterPropertiesSet();
 		return new RedisEmailKeyAuthCodeValueStore(redisTemplate);
 	}
 
@@ -50,6 +55,8 @@ public class KeyValueStoreConfiguration {
 		redisTemplate.setConnectionFactory(connectionFactory);
 		redisTemplate.setKeySerializer(new PhoneNumberKeySerializer());
 		redisTemplate.setValueSerializer(new AuthCodeValueSerializer());
+		redisTemplate.setEnableTransactionSupport(false);
+		redisTemplate.afterPropertiesSet();
 		return new RedisPhoneNumberKeyAuthCodeValueStore(redisTemplate);
 	}
 
@@ -78,8 +85,7 @@ public class KeyValueStoreConfiguration {
 
 		@Override
 		public PhoneNumberKey deserialize(byte[] bytes) throws SerializationException {
-			checkNotNullForSerializer(bytes, "bytes");
-			return PhoneNumberKey.fromString(new String(bytes, UTF_8));
+			return bytes == null ? null : PhoneNumberKey.fromString(new String(bytes, UTF_8));
 		}
 	}
 
@@ -93,8 +99,7 @@ public class KeyValueStoreConfiguration {
 
 		@Override
 		public AuthCodeValue deserialize(byte[] bytes) throws SerializationException {
-			checkNotNullForSerializer(bytes, "bytes");
-			return AuthCodeValue.fromString(new String(bytes, UTF_8));
+			return bytes == null ? null : AuthCodeValue.fromString(new String(bytes, UTF_8));
 		}
 	}
 }

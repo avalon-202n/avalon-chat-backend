@@ -49,14 +49,14 @@ public class RedisTemplateStudyTest {
 
 	static class CodeSerializer implements RedisSerializer<CodeValue> {
 
-		private final Charset UTF_8 = StandardCharsets.UTF_8;
+		private final Charset charset = StandardCharsets.UTF_8;
 
 		@Override
 		public byte[] serialize(CodeValue code) throws SerializationException {
 			if (code == null) {
 				throw new SerializationException("code is null");
 			}
-			return code.toString().getBytes(UTF_8);
+			return code.toString().getBytes(charset);
 		}
 
 		@Override
@@ -64,7 +64,7 @@ public class RedisTemplateStudyTest {
 			if (bytes == null) {
 				throw new SerializationException("bytes is null");
 			}
-			return CodeValue.fromString(new String(bytes, UTF_8));
+			return CodeValue.fromString(new String(bytes, charset));
 		}
 	}
 

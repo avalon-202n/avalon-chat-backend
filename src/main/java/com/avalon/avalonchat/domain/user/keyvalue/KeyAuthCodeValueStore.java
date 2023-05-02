@@ -10,6 +10,6 @@ public interface KeyAuthCodeValueStore<K> extends KeyValueStore<K, AuthCodeValue
 
 	default boolean isAuthenticated(K key) {
 		AuthCodeValue authCodeValue = get(key);
-		return authCodeValue.isAuthenticated();
+		return authCodeValue != null && authCodeValue.isAuthenticated();
 	}
 }
