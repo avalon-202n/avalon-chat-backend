@@ -17,7 +17,6 @@ import com.avalon.avalonchat.domain.user.dto.PhoneNumberAuthenticationCheckRespo
 import com.avalon.avalonchat.domain.user.dto.PhoneNumberAuthenticationSendRequest;
 import com.avalon.avalonchat.domain.user.dto.SignUpRequest;
 import com.avalon.avalonchat.domain.user.dto.SignUpResponse;
-import com.avalon.avalonchat.domain.user.keyvalue.AuthCodeValue;
 import com.avalon.avalonchat.domain.user.keyvalue.EmailKey;
 import com.avalon.avalonchat.domain.user.keyvalue.KeyAuthCodeValueStore;
 import com.avalon.avalonchat.domain.user.keyvalue.PhoneNumberKey;
@@ -69,22 +68,11 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void sendEmailAuthentication(EmailAuthenticationSendRequest request) {
-		Email email = request.getEmail();
-
-		// 2. send email
-		// emailService.sendAuthCode(signUpId, email); ??
 	}
 
 	@Override
 	public EmailAuthenticationCheckResponse checkEmailAuthentication(EmailAuthenticationCheckRequest request) {
-		Email email = request.getEmail();
-		String certificationCode = request.getCertificationCode();
-
-		// check exists
-		// boolean exists
-		//  	= redisTemplate/emailAuthRepository.existsBy(signUpId, email. certificationCode); ??
 		boolean exist = false;
-
 		return new EmailAuthenticationCheckResponse(exist);
 	}
 
@@ -108,18 +96,13 @@ public class UserServiceImpl implements UserService {
 	public PhoneNumberAuthenticationCheckResponse checkPhoneNumberAuthentication(
 		PhoneNumberAuthenticationCheckRequest request
 	) {
-		// 1. setup variables
-		String phoneNumber = request.getPhoneNumber();
-		String certificationCode = request.getCertificationCode();
-		PhoneNumberKey phoneNumberKey = PhoneNumberKey.fromString(phoneNumber);
+		// 1. get key
+		PhoneNumberKey phoneNumberKey = PhoneNumberKey.fromString(request.getPhoneNumber());
 
-		// 2. find auth-code and check cert-code matches
-		boolean authenticated = phoneNumberKeyValueStore.isAuthenticated(phoneNumberKey);
+		// 2. check authenticated
+		boolean authenticated = phoneNumberKeyValueStore.getAndPutIfAuthenticated(phoneNumberKey);
 
-		// 3. return authenticated update value if authenticated
-		if (authenticated) {
-			phoneNumberKeyValueStore.put(phoneNumberKey, AuthCodeValue.ofAuthenticated());
-		}
+		// 3. return
 		return new PhoneNumberAuthenticationCheckResponse(authenticated);
 	}
 }

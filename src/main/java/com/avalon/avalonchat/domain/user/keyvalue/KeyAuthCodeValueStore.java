@@ -12,4 +12,12 @@ public interface KeyAuthCodeValueStore<K> extends KeyValueStore<K, AuthCodeValue
 		AuthCodeValue authCodeValue = get(key);
 		return authCodeValue != null && authCodeValue.isAuthenticated();
 	}
+
+	default boolean getAndPutIfAuthenticated(K key) {
+		boolean authenticated = isAuthenticated(key);
+		if (authenticated) {
+			put(key, AuthCodeValue.ofAuthenticated());
+		}
+		return authenticated;
+	}
 }
