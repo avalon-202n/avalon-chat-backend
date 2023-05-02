@@ -95,8 +95,8 @@ class ProfileServiceImplTest extends BaseTestContainerTest {
 		assertThat(response.getBirthDate()).isEqualTo(birthDate);
 		assertThat(response.getNickname()).isEqualTo(nickname);
 		assertThat(response.getBio()).isEqualTo(bio);
-		assertThat(response.getProfileImages().get(0)).isEqualTo(profileImageUrl);
-		assertThat(response.getBackgroundImages().get(0)).isEqualTo(backgroundImageUrl);
+		assertThat(response.getProfileImageUrl()).isEqualTo(profileImageUrl);
+		assertThat(response.getBackgroundImageUrls().get(0)).isEqualTo(backgroundImageUrl);
 		assertThat(response.getPhoneNumber()).isEqualTo(toPhoneNumber);
 	}
 
