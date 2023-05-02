@@ -3,6 +3,7 @@ package com.avalon.avalonchat.domain.profile.controller;
 import static com.avalon.avalonchat.global.util.ResponseEntityUtil.*;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -66,9 +67,11 @@ public class ProfileController {
 		security = {@SecurityRequirement(name = "bearer-key")}
 	)
 	@GetMapping
-	public List<ProfileListGetResponse> getFriendProfiles(
+	public Map<String, List<ProfileListGetResponse>> getFriendProfiles(
 		@AuthenticationPrincipal SecurityUser securityUser
 	) {
-		return service.getListById(securityUser.getProfileId());
+		List<ProfileListGetResponse> responses = service.getListById(securityUser.getProfileId());
+		Map<String, List<ProfileListGetResponse>> body = Map.of("data", responses);
+		return body;
 	}
 }
