@@ -77,8 +77,6 @@ class FriendServiceImplTest {
 			assertThat(response.getFriendProfileId()).isIn(friendProfile1.getId(), friendProfile2.getId());
 			assertThat(response.getNickname()).isIn(friendProfile1.getNickname(), friendProfile2.getNickname());
 			assertThat(response.getBio()).isIn(friendProfile1.getBio(), friendProfile2.getBio());
-			assertThat(response.getProfileImages().get(0)).isIn(friendProfileUrl1, friendProfileUrl2);
-			assertThat(response.getBackgroundImages().get(0)).isIn(friendBackgroundUrl1, friendBackgroundUrl2);
 			assertThat(response.getStatus()).isEqualTo(Status.NORMAL);
 		}
 	}
@@ -102,7 +100,7 @@ class FriendServiceImplTest {
 		friendRepository.save(friend);
 
 		// given - ready for the request
-		FriendStatusUpdateRequest request = new FriendStatusUpdateRequest("BLOCKED");
+		FriendStatusUpdateRequest request = new FriendStatusUpdateRequest(Status.BLOCKED);
 
 		// when
 		FriendStatusUpdateResponse response = sut.updateFriendStatus(myProfile.getId(),

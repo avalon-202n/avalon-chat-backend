@@ -23,11 +23,13 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
 
 	Optional<Profile> findByUser(User user);
 
-	@Query("SELECT new com.avalon.avalonchat.domain.profile.dto.ProfileListGetResponse(p.nickname, p.bio, pi.url) "
-		+ "FROM Profile p "
-		+ "INNER JOIN p.profileImages pi "
-		+ "WHERE p.id IN (SELECT f.friendProfile.id FROM Friend f WHERE f.myProfile.id = :myProfileId) "
-		+ "AND pi.createdAt = (SELECT MAX(i.createdAt) FROM ProfileImage i WHERE i.profile.id = p.id) "
-		+ "ORDER BY p.nickname")
+	@Query(
+		"SELECT new com.avalon.avalonchat.domain.profile.dto.ProfileListGetResponse("
+			+ "p.nickname, "
+			+ "p.bio, "
+			+ "p.latestProfileImageUrl) "
+			+ "FROM Profile p "
+			+ "WHERE p.id IN (SELECT f.friendProfile.id FROM Friend f WHERE f.myProfile.id = :myProfileId) "
+			+ "ORDER BY p.nickname")
 	List<ProfileListGetResponse> findAllByMyProfileId(@Param("myProfileId") long myProfileId);
 }

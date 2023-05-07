@@ -3,6 +3,7 @@ package com.avalon.avalonchat.domain.friend.controller;
 import static com.avalon.avalonchat.global.util.ResponseEntityUtil.*;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -40,12 +41,13 @@ public class FriendController {
 		security = {@SecurityRequirement(name = "bearer-key")}
 	)
 	@PostMapping
-	public ResponseEntity<List<FriendAddResponse>> addFriend(
+	public ResponseEntity<Map<String, List<FriendAddResponse>>> addFriend(
 		@AuthenticationPrincipal SecurityUser securityUser,
 		FriendAddRequest request
 	) {
 		List<FriendAddResponse> responses = friendService.addFriend(securityUser.getProfileId(), request);
-		return created(responses);
+		Map<String, List<FriendAddResponse>> body = Map.of("data", responses);
+		return created(body);
 	}
 
 	@Operation(

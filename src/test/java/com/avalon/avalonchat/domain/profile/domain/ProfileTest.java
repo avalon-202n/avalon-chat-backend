@@ -22,7 +22,6 @@ class ProfileTest {
 		String phoneNumber = "01055110625";
 
 		// when
-		// TODO - 처음 생성자에서 profileImageUrl 과 backgroundImageUrl 을 받아도 되지 않을까?
 		Profile profile = new Profile(user, bio, birthDate, nickname, phoneNumber);
 		profile.addProfileImage("storage/url/profile_image.png");
 		profile.addBackgroundImage("storage/url/background_image.png");
