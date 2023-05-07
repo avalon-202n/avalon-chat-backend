@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.avalon.avalonchat.domain.user.domain.Email;
-import com.avalon.avalonchat.domain.user.domain.PhoneNumberAuthenticationCode;
 import com.avalon.avalonchat.domain.user.domain.User;
 import com.avalon.avalonchat.domain.user.dto.EmailAuthenticationCheckRequest;
 import com.avalon.avalonchat.domain.user.dto.EmailAuthenticationCheckResponse;
@@ -18,9 +17,10 @@ import com.avalon.avalonchat.domain.user.dto.PhoneNumberAuthenticationCheckRespo
 import com.avalon.avalonchat.domain.user.dto.PhoneNumberAuthenticationSendRequest;
 import com.avalon.avalonchat.domain.user.dto.SignUpRequest;
 import com.avalon.avalonchat.domain.user.dto.SignUpResponse;
-import com.avalon.avalonchat.domain.user.repository.PhoneNumberAuthenticationRepository;
+import com.avalon.avalonchat.domain.user.keyvalue.EmailKey;
+import com.avalon.avalonchat.domain.user.keyvalue.KeyAuthCodeValueStore;
+import com.avalon.avalonchat.domain.user.keyvalue.PhoneNumberKey;
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
-import com.avalon.avalonchat.global.error.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -32,7 +32,8 @@ public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final MessageService messageService;
-	private final PhoneNumberAuthenticationRepository phoneNumberAuthenticationRepository;
+	private final KeyAuthCodeValueStore<EmailKey> emailKeyValueStore;
+	private final KeyAuthCodeValueStore<PhoneNumberKey> phoneNumberKeyValueStore;
 
 	@Transactional
 	@Override
@@ -67,22 +68,11 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void sendEmailAuthentication(EmailAuthenticationSendRequest request) {
-		Email email = request.getEmail();
-
-		// 2. send email
-		// emailService.sendAuthCode(signUpId, email); ??
 	}
 
 	@Override
 	public EmailAuthenticationCheckResponse checkEmailAuthentication(EmailAuthenticationCheckRequest request) {
-		Email email = request.getEmail();
-		String certificationCode = request.getCertificationCode();
-
-		// check exists
-		// boolean exists
-		//  	= redisTemplate/emailAuthRepository.existsBy(signUpId, email. certificationCode); ??
 		boolean exist = false;
-
 		return new EmailAuthenticationCheckResponse(exist);
 	}
 
@@ -95,35 +85,24 @@ public class UserServiceImpl implements UserService {
 		// 2. send certification code
 		messageService.sendAuthenticationCode(phoneNumber, certificationCode);
 
-		// 3. create phoneNumberAuthenticationCode
-		PhoneNumberAuthenticationCode phoneNumberAuthenticationCode = new PhoneNumberAuthenticationCode(
-			phoneNumber,
+		// 3. put it to key-value store
+		phoneNumberKeyValueStore.put(
+			PhoneNumberKey.fromString(phoneNumber),
 			certificationCode
 		);
-
-		// 4. save it
-		phoneNumberAuthenticationRepository.save(phoneNumberAuthenticationCode);
 	}
 
 	@Override
 	public PhoneNumberAuthenticationCheckResponse checkPhoneNumberAuthentication(
 		PhoneNumberAuthenticationCheckRequest request
 	) {
-		// 1. binding
-		String phoneNumber = request.getPhoneNumber();
-		String certificationCode = request.getCertificationCode();
+		// 1. get key
+		PhoneNumberKey phoneNumberKey = PhoneNumberKey.fromString(request.getPhoneNumber());
 
-		// 2. find auth-code and check cert-code matches
-		PhoneNumberAuthenticationCode phoneNumberAuthenticationCode = phoneNumberAuthenticationRepository
-			.findById(phoneNumber)
-			.orElseThrow(() -> new NotFoundException("phonenumber.auth-code", phoneNumber));
-		boolean authenticated = phoneNumberAuthenticationCode.getCertificationCode().equals(certificationCode);
+		// 2. check authenticated
+		boolean authenticated = phoneNumberKeyValueStore.getAndPutIfAuthenticated(phoneNumberKey);
 
-		// 3. do post process and return
-		if (authenticated) {
-			phoneNumberAuthenticationCode.authenticate();
-			phoneNumberAuthenticationRepository.save(phoneNumberAuthenticationCode);
-		}
+		// 3. return
 		return new PhoneNumberAuthenticationCheckResponse(authenticated);
 	}
 }

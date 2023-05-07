@@ -12,10 +12,11 @@ import com.avalon.avalonchat.domain.profile.dto.ProfileAddResponse;
 import com.avalon.avalonchat.domain.profile.dto.ProfileDetailedGetResponse;
 import com.avalon.avalonchat.domain.profile.dto.ProfileListGetResponse;
 import com.avalon.avalonchat.domain.profile.repository.ProfileRepository;
-import com.avalon.avalonchat.domain.user.domain.PhoneNumberAuthenticationCode;
 import com.avalon.avalonchat.domain.user.domain.User;
-import com.avalon.avalonchat.domain.user.repository.PhoneNumberAuthenticationRepository;
+import com.avalon.avalonchat.domain.user.keyvalue.KeyAuthCodeValueStore;
+import com.avalon.avalonchat.domain.user.keyvalue.PhoneNumberKey;
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
+import com.avalon.avalonchat.global.error.exception.BadRequestException;
 import com.avalon.avalonchat.global.error.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ public class ProfileServiceImpl
 
 	private final ProfileRepository repository;
 	private final UserRepository userRepository;
-	private final PhoneNumberAuthenticationRepository phoneNumberAuthenticationRepository;
+	private final KeyAuthCodeValueStore<PhoneNumberKey> phoneNumberKeyValueStore;
 
 	@Transactional
 	@Override
@@ -39,10 +40,9 @@ public class ProfileServiceImpl
 
 		// 2. check
 		String phoneNumber = request.getPhoneNumber();
-		PhoneNumberAuthenticationCode phoneNumberAuthenticationCode = phoneNumberAuthenticationRepository
-			.findById(phoneNumber)
-			.orElseThrow(() -> new NotFoundException("phoneNumber AuthenticationCode", phoneNumber));
-		phoneNumberAuthenticationCode.checkAuthenticated();
+		if (!phoneNumberKeyValueStore.isAuthenticated(PhoneNumberKey.fromString(phoneNumber))) {
+			throw new BadRequestException("phonenumber.no-auth", phoneNumber);
+		}
 
 		// 3. create profile
 		Profile profile = new Profile(
