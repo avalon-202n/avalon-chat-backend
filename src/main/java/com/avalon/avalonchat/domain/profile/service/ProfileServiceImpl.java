@@ -74,6 +74,7 @@ public class ProfileServiceImpl
 
 	@Override
 	public List<ProfileListGetResponse> getListById(long profileId) {
+		// find friendProfiles & return
 		return repository.findAllByMyProfileId(profileId);
 	}
 

@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void sendPhoneNumberAuthentication(PhoneNumberAuthenticationSendRequest request) {
 		// 1. get phone number and certification code
-		String phoneNumber = request.getPhoneNumber();
+		String phoneNumber = request.getPhoneNumber().replaceAll("-", "").trim();
 		String certificationCode = RandomStringUtils.randomNumeric(6);
 
 		// 2. send certification code

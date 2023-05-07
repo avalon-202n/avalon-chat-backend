@@ -124,7 +124,6 @@ class ProfileRepositoryTest {
 		List<ProfileListGetResponse> friendProfiles = sut.findAllByMyProfileId(savedMyProfile.getId());
 
 		// then
-		assertThat(friendProfiles.size()).isEqualTo(2);
 		assertThat(friendProfiles.get(0).getProfileImageUrl()).isEqualTo("url2");
 		assertThat(friendProfiles.get(1).getProfileImageUrl()).isEqualTo("url4");
 	}

@@ -41,13 +41,15 @@ public class Profile extends BaseAuditingEntity {
 	@Column
 	private String phoneNumber;
 
+	@Column
+	private String latestProfileImageUrl;
+
 	@OneToMany(mappedBy = "profile", cascade = ALL, orphanRemoval = true)
 	private List<ProfileImage> profileImages = new ArrayList<>();
 
 	@OneToMany(mappedBy = "profile", cascade = ALL, orphanRemoval = true)
 	private List<BackgroundImage> backgroundImages = new ArrayList<>();
 
-	// TODO - 처음 생성자에서 profileImageUrl 과 backgroundImageUrl 을 받아도 되지 않을까?
 	public Profile(User user, String bio, LocalDate birthDate, String nickname, String phoneNumber) {
 		this.user = user;
 		this.bio = bio;
@@ -57,6 +59,7 @@ public class Profile extends BaseAuditingEntity {
 	}
 
 	public void addProfileImage(String profileImageUrl) {
+		this.latestProfileImageUrl = profileImageUrl;
 		ProfileImage profileImage = new ProfileImage(this, profileImageUrl);
 		profileImages.add(profileImage);
 	}

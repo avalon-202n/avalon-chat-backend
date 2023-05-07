@@ -16,7 +16,6 @@ public interface FriendService {
 	 * @param request   - phonenumber list
 	 * @return - added Friend profiles
 	 */
-	// TODO - do not response List as Response
 	List<FriendAddResponse> addFriend(long profileId, FriendAddRequest request);
 
 	FriendStatusUpdateResponse updateFriendStatus(

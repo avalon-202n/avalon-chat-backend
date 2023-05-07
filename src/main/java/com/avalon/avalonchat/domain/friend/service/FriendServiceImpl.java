@@ -26,24 +26,29 @@ public class FriendServiceImpl implements FriendService {
 	private final FriendRepository friendRepository;
 	private final ProfileRepository profileRepository;
 
-	@Transactional
 	@Override
+	@Transactional
 	public List<FriendAddResponse> addFriend(long profileId, FriendAddRequest request) {
 		// 1. find profile & create friends
 		Profile myProfile = profileRepository.findById(profileId)
 			.orElseThrow(() -> new NotFoundException("profile", profileId));
 
 		List<Friend> friends = profileRepository.findAllByPhoneNumberIn(request.getPhoneNumbers()).stream()
-			.map(friendprofile -> new Friend(myProfile, friendprofile))
+			.filter(profile -> !friendRepository.existsByMyProfileAndFriendProfile(myProfile, profile))
+			.map(profile -> new Friend(myProfile, profile))
 			.collect(Collectors.toList());
 
-		// 2. save them & return
-		return friendRepository.saveAll(friends).stream()
-			.map(FriendAddResponse::from)
+		// 2. save them
+		List<Long> friendIds = friendRepository.saveAll(friends).stream()
+			.map(Friend::getId)
 			.collect(Collectors.toList());
+
+		// 3. return
+		return friendRepository.findAllByFriendIds(friendIds);
 	}
 
 	@Override
+	@Transactional
 	public FriendStatusUpdateResponse updateFriendStatus(long myProfileId, long friendProfileId,
 		FriendStatusUpdateRequest request) {
 		// 1. find friend
@@ -54,7 +59,6 @@ public class FriendServiceImpl implements FriendService {
 		friend.updateStatus(request.getStatus());
 
 		// 3. save & return
-		friendRepository.save(friend);
 		return FriendStatusUpdateResponse.ofEntity(friend);
 	}
 }
