@@ -23,9 +23,6 @@ jobs:
           distribution: 'temurin'
           cache: 'gradle'
 
-      - name: Build the stack
-        run: docker-compose up -d
-
       - uses: oNaiPs/secrets-to-env-action@v1
         with:
           secrets: ${{ toJSON(secrets) }}
@@ -44,6 +41,9 @@ jobs:
 
       - name: Configure Docker
         run: gcloud auth configure-docker --quiet
+
+      - name: Build the stack
+        run: docker-compose up -d
 
       - name: Execute Jib - Docker build & Push
         uses: gradle/gradle-build-action@v2.2.1
