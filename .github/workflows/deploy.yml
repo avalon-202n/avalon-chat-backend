@@ -23,6 +23,9 @@ jobs:
           distribution: 'temurin'
           cache: 'gradle'
 
+      - name: Build the stack
+        run: docker-compose up -d
+
       - uses: oNaiPs/secrets-to-env-action@v1
         with:
           secrets: ${{ toJSON(secrets) }}
