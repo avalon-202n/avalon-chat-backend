@@ -4,8 +4,6 @@ import org.springframework.stereotype.Service;
 
 import com.avalon.avalonchat.domain.login.repository.RefreshTokenRepository;
 import com.avalon.avalonchat.domain.model.RefreshToken;
-import com.avalon.avalonchat.global.configuration.jwt.JwtConfigProperties;
-import com.avalon.avalonchat.global.error.exception.BadRequestException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -14,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 public class RefreshTokenServiceImpl implements RefreshTokenService {
 
 	private final RefreshTokenRepository refreshTokenRepository;
-	private final JwtConfigProperties jwtConfigProperties;
 
 	@Override
 	public void save(String refreshTokenStr, long userId) {
@@ -24,12 +21,6 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
 		);
 
 		refreshTokenRepository.save(refreshToken);
-	}
-
-	@Override
-	public RefreshToken findById(String refreshToken) {
-		return refreshTokenRepository.findById(refreshToken)
-			.orElseThrow(() -> new BadRequestException("refresh-token.notfound"));
 	}
 
 	@Override

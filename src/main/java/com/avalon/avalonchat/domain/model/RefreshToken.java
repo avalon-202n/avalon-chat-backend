@@ -23,7 +23,6 @@ public class RefreshToken {
 
 	public RefreshToken(String refreshToken, long userId) {
 		checkNotNull(refreshToken, "RefreshToken.refreshToken cannot be null");
-		checkNotNull(userId, "RefreshToken.userId cannot be null");
 
 		this.refreshToken = refreshToken;
 		this.userId = userId;
