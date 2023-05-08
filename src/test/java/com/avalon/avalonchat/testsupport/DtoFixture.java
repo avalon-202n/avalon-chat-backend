@@ -1,5 +1,8 @@
 package com.avalon.avalonchat.testsupport;
 
+import java.util.List;
+
+import com.avalon.avalonchat.domain.friend.dto.FriendAddRequest;
 import com.avalon.avalonchat.domain.login.dto.LoginRequest;
 import com.avalon.avalonchat.domain.user.domain.Email;
 import com.avalon.avalonchat.domain.user.domain.Password;
@@ -74,4 +77,8 @@ public final class DtoFixture {
 		);
 	}
 	/* Login Package DTO End */
+
+	public static FriendAddRequest friendAddRequest(List<String> phoneNumbers) {
+		return new FriendAddRequest(phoneNumbers);
+	}
 }
