@@ -11,6 +11,7 @@ import com.avalon.avalonchat.domain.login.dto.PasswordFindRequest;
 import com.avalon.avalonchat.domain.login.dto.PasswordFindResponse;
 import com.avalon.avalonchat.domain.login.dto.TokenReissueRequest;
 import com.avalon.avalonchat.domain.login.dto.TokenReissueResponse;
+import com.avalon.avalonchat.domain.login.repository.RefreshTokenRepository;
 import com.avalon.avalonchat.domain.model.RefreshToken;
 import com.avalon.avalonchat.domain.profile.domain.Profile;
 import com.avalon.avalonchat.domain.profile.repository.ProfileRepository;
@@ -19,7 +20,6 @@ import com.avalon.avalonchat.domain.user.domain.User;
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
 import com.avalon.avalonchat.global.configuration.jwt.JwtTokenService;
 import com.avalon.avalonchat.global.error.exception.BadRequestException;
-import com.avalon.avalonchat.global.error.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +32,7 @@ public class LoginServiceImpl implements LoginService {
 
 	private final UserRepository userRepository;
 	private final ProfileRepository profileRepository;
+	private final RefreshTokenRepository refreshTokenRepository;
 	private final GetProfileIdService getProfileIdService;
 	private final JwtTokenService tokenService;
 	private final PasswordEncoder passwordEncoder;
@@ -41,7 +42,7 @@ public class LoginServiceImpl implements LoginService {
 	public LoginResponse login(LoginRequest request) {
 		// 1. check user exists
 		User findUser = userRepository.findByEmail(request.getEmail())
-			.orElseThrow(() -> new NotFoundException("login-failed.email", request.getEmail()));
+			.orElseThrow(() -> new BadRequestException("login-failed.email.notfound", request.getEmail()));
 
 		// 2. verify password
 		if (!passwordEncoder.matches(request.getPassword(), findUser.getPassword().getValue())) {
@@ -75,15 +76,19 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public TokenReissueResponse reissueToken(TokenReissueRequest request) {
 		// refresh token 만료여부
-		tokenService.parseClaim(request.getRefreshToken());
+		if (tokenService.isExpired(request.getRefreshToken())) {
+			throw new BadRequestException("token-reissue-failed.refresh-token.expire");
+		}
 
 		// refresh token 조회
-		RefreshToken findRefreshToken = refreshTokenService.findById(request.getRefreshToken());
+		RefreshToken findRefreshToken = refreshTokenRepository.findById(request.getRefreshToken())
+			.orElseThrow(
+				() -> new BadRequestException("token-reissue-failed.refresh-token.notfound"));
 
 		// refresh token 의 user 조회
 		User findUser = userRepository.findById(findRefreshToken.getUserId())
 			.orElseThrow(
-				() -> new NotFoundException("token-reissue-failed.userid", findRefreshToken.getUserId()));
+				() -> new BadRequestException("token-reissue-failed.userid.notfound", findRefreshToken.getUserId()));
 
 		//profile 조회
 		long profileId = getProfileIdService.getProfileIdByUserId(findRefreshToken.getUserId());
