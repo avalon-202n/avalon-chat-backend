@@ -11,6 +11,8 @@ import com.avalon.avalonchat.domain.profile.dto.ProfileAddRequest;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddResponse;
 import com.avalon.avalonchat.domain.profile.dto.ProfileDetailedGetResponse;
 import com.avalon.avalonchat.domain.profile.dto.ProfileListGetResponse;
+import com.avalon.avalonchat.domain.profile.dto.ProfileUpdateRequest;
+import com.avalon.avalonchat.domain.profile.dto.ProfileUpdateResponse;
 import com.avalon.avalonchat.domain.profile.repository.ProfileRepository;
 import com.avalon.avalonchat.domain.user.domain.User;
 import com.avalon.avalonchat.domain.user.keyvalue.KeyAuthCodeValueStore;
@@ -27,7 +29,7 @@ import lombok.RequiredArgsConstructor;
 public class ProfileServiceImpl
 	implements ProfileService, GetProfileIdService {
 
-	private final ProfileRepository repository;
+	private final ProfileRepository profileRepository;
 	private final UserRepository userRepository;
 	private final KeyAuthCodeValueStore<PhoneNumberKey> phoneNumberKeyValueStore;
 
@@ -58,7 +60,7 @@ public class ProfileServiceImpl
 		profile.addBackgroundImage(request.getBackgroundImageUrl());
 
 		// 5. save it
-		repository.save(profile);
+		profileRepository.save(profile);
 
 		// 6. return
 		return ProfileAddResponse.from(profile);
@@ -66,7 +68,7 @@ public class ProfileServiceImpl
 
 	@Override
 	public ProfileDetailedGetResponse getDetailedById(long profileId) {
-		Profile profile = repository.findById(profileId)
+		Profile profile = profileRepository.findById(profileId)
 			.orElseThrow(() -> new NotFoundException("profile", profileId));
 
 		return ProfileDetailedGetResponse.from(profile);
@@ -75,12 +77,36 @@ public class ProfileServiceImpl
 	@Override
 	public List<ProfileListGetResponse> getListById(long profileId) {
 		// find friendProfiles & return
-		return repository.findAllByMyProfileId(profileId);
+		return profileRepository.findAllByMyProfileId(profileId);
+	}
+
+	@Transactional
+	@Override
+	public ProfileUpdateResponse updateProfile(long profileId, ProfileUpdateRequest request) {
+		// 1. find profile
+		Profile profile = profileRepository.findById(profileId)
+			.orElseThrow(() -> new NotFoundException("profile", profileId));
+
+		// 2. update profile
+		profile.update(
+			request.getBio(), request.getBirthDate(), request.getNickname(), request.getPhoneNumber()
+		);
+
+		// 3. update images
+		if (request.isProfileImageAdded()) {
+			profile.addProfileImage(request.getProfileImageUrl());
+		}
+		if (request.isBackgroundImageAdded()) {
+			profile.addBackgroundImage(request.getBackgroundImageUrl());
+		}
+
+		// 4. return
+		return ProfileUpdateResponse.from(profile);
 	}
 
 	@Override
 	public long getProfileIdByUserId(long userId) {
-		return repository.findProfileIdByUserId(userId)
+		return profileRepository.findProfileIdByUserId(userId)
 			.orElseThrow(() -> new IllegalStateException("profile not found for userId :" + userId));
 	}
 }

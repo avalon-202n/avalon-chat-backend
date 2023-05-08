@@ -1,5 +1,6 @@
 package com.avalon.avalonchat.domain.profile.service;
 
+import static com.avalon.avalonchat.testsupport.DtoFixture.*;
 import static com.avalon.avalonchat.testsupport.Fixture.*;
 import static org.assertj.core.api.AssertionsForClassTypes.*;
 
@@ -20,6 +21,8 @@ import com.avalon.avalonchat.domain.profile.dto.ProfileAddRequest;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddResponse;
 import com.avalon.avalonchat.domain.profile.dto.ProfileDetailedGetResponse;
 import com.avalon.avalonchat.domain.profile.dto.ProfileListGetResponse;
+import com.avalon.avalonchat.domain.profile.dto.ProfileUpdateRequest;
+import com.avalon.avalonchat.domain.profile.dto.ProfileUpdateResponse;
 import com.avalon.avalonchat.domain.profile.repository.ProfileRepository;
 import com.avalon.avalonchat.domain.user.domain.Email;
 import com.avalon.avalonchat.domain.user.domain.Password;
@@ -204,6 +207,36 @@ class ProfileServiceImplTest extends BaseTestContainerTest {
 		assertThat(responses.get(1).getNickname()).isEqualTo("B_friend");
 		assertThat(responses.get(0).getProfileImageUrl()).isEqualTo("url2");
 		assertThat(responses.get(1).getProfileImageUrl()).isEqualTo("url4");
+	}
+
+	@Test
+	void profile_수정_성공() {
+		// given
+		User user = createUser("email@email.com", "password");
+		Profile profile = createProfile(
+			user, "bio", LocalDate.of(1999, 01, 01),
+			"nickName", "010-1234-5678"
+		);
+
+		userRepository.save(user);
+		profileRepository.save(profile);
+
+		ProfileUpdateRequest request = profileUpdateRequest(
+			LocalDate.of(1999, 01, 01),
+			"nickName",
+			"updated bio",
+			"http://profile/image/url",
+			"http://background/image/url",
+			"010-1234-5678",
+			true,
+			true
+		);
+
+		// when
+		ProfileUpdateResponse response = sut.updateProfile(profile.getId(), request);
+
+		// then
+		assertThat(response.getBio()).isNotEqualTo("bio");
 	}
 }
 

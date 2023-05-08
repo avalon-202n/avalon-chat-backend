@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -19,6 +20,8 @@ import com.avalon.avalonchat.domain.profile.dto.ProfileAddRequest;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddResponse;
 import com.avalon.avalonchat.domain.profile.dto.ProfileDetailedGetResponse;
 import com.avalon.avalonchat.domain.profile.dto.ProfileListGetResponse;
+import com.avalon.avalonchat.domain.profile.dto.ProfileUpdateRequest;
+import com.avalon.avalonchat.domain.profile.dto.ProfileUpdateResponse;
 import com.avalon.avalonchat.domain.profile.service.ProfileService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -73,5 +76,18 @@ public class ProfileController {
 		List<ProfileListGetResponse> responses = service.getListById(securityUser.getProfileId());
 		Map<String, List<ProfileListGetResponse>> body = Map.of("data", responses);
 		return body;
+	}
+
+	@Operation(
+		summary = "프로필 수정",
+		description = "인증객체의 profileId에 해당하는 프로필의 데이터를 넘겨받은 요청 dto의 데이터로 수정합니다.",
+		security = {@SecurityRequirement(name = "bearer-key")}
+	)
+	@PatchMapping
+	public ProfileUpdateResponse updateProfile(
+		@AuthenticationPrincipal SecurityUser securityUser,
+		@RequestBody ProfileUpdateRequest request
+	) {
+		return service.updateProfile(securityUser.getProfileId(), request);
 	}
 }
