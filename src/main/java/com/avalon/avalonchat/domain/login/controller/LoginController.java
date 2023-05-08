@@ -12,6 +12,8 @@ import com.avalon.avalonchat.domain.login.dto.LoginRequest;
 import com.avalon.avalonchat.domain.login.dto.LoginResponse;
 import com.avalon.avalonchat.domain.login.dto.PasswordFindRequest;
 import com.avalon.avalonchat.domain.login.dto.PasswordFindResponse;
+import com.avalon.avalonchat.domain.login.dto.TokenReissueRequest;
+import com.avalon.avalonchat.domain.login.dto.TokenReissueResponse;
 import com.avalon.avalonchat.domain.login.service.LoginService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,6 +34,14 @@ public class LoginController {
 		@RequestBody LoginRequest request
 	) {
 		return loginService.login(request);
+	}
+
+	@Operation(summary = "token 재발급")
+	@PostMapping("/token/reissue")
+	public TokenReissueResponse refreshToken(
+		@RequestBody TokenReissueRequest request
+	) {
+		return loginService.reissueToken(request);
 	}
 
 	@Operation(summary = "비밀번호 초기화")

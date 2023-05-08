@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import com.avalon.avalonchat.domain.login.service.TokenService;
 import com.avalon.avalonchat.domain.user.domain.User;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -60,7 +61,7 @@ public class JwtTokenService implements TokenService {
 	}
 
 	@Override
-	public String createRefreshToken(User user) {
+	public String createRefreshToken() {
 		long currentTime = (new Date()).getTime();
 		final Date refreshTokenExpiresIn = new Date(currentTime + refreshValidity);
 
@@ -69,5 +70,15 @@ public class JwtTokenService implements TokenService {
 			.setExpiration(refreshTokenExpiresIn)
 			.signWith(secretKey, SignatureAlgorithm.HS512)
 			.compact();
+	}
+
+	@Override
+	public boolean isExpired(String token) {
+		try {
+			parseClaim(token);
+		} catch (ExpiredJwtException e) {
+			return true;
+		}
+		return false;
 	}
 }

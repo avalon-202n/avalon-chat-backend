@@ -9,5 +9,7 @@ public interface TokenService {
 
 	String createAccessToken(User user, long profileId);
 
-	String createRefreshToken(User user);
+	String createRefreshToken();
+
+	boolean isExpired(String token);
 }

@@ -9,6 +9,10 @@ import com.avalon.avalonchat.domain.login.dto.LoginRequest;
 import com.avalon.avalonchat.domain.login.dto.LoginResponse;
 import com.avalon.avalonchat.domain.login.dto.PasswordFindRequest;
 import com.avalon.avalonchat.domain.login.dto.PasswordFindResponse;
+import com.avalon.avalonchat.domain.login.dto.TokenReissueRequest;
+import com.avalon.avalonchat.domain.login.dto.TokenReissueResponse;
+import com.avalon.avalonchat.domain.login.repository.RefreshTokenRepository;
+import com.avalon.avalonchat.domain.model.RefreshToken;
 import com.avalon.avalonchat.domain.profile.domain.Profile;
 import com.avalon.avalonchat.domain.profile.repository.ProfileRepository;
 import com.avalon.avalonchat.domain.user.domain.Password;
@@ -28,9 +32,11 @@ public class LoginServiceImpl implements LoginService {
 
 	private final UserRepository userRepository;
 	private final ProfileRepository profileRepository;
+	private final RefreshTokenRepository refreshTokenRepository;
 	private final GetProfileIdService getProfileIdService;
 	private final JwtTokenService tokenService;
 	private final PasswordEncoder passwordEncoder;
+	private final RefreshTokenService refreshTokenService;
 
 	@Override
 	public LoginResponse login(LoginRequest request) {
@@ -46,7 +52,11 @@ public class LoginServiceImpl implements LoginService {
 		// 3. jwt token create
 		long profileId = getProfileIdService.getProfileIdByUserId(findUser.getId());
 		String accessToken = tokenService.createAccessToken(findUser, profileId);
-		return new LoginResponse(findUser.getEmail(), accessToken);
+		String refreshToken = tokenService.createRefreshToken();
+
+		// 4.refreshToken save
+		refreshTokenService.save(refreshToken, findUser.getId());
+		return new LoginResponse(findUser.getEmail(), accessToken, refreshToken);
 	}
 
 	@Override
@@ -61,5 +71,35 @@ public class LoginServiceImpl implements LoginService {
 		//TODO 이메일 인증 하기
 		//TODO 비밀번호 찾기 설계필요 (임시 비밀번호 발급 & 비밀 번호 재설정)
 		return new PasswordFindResponse(Password.of("password"));
+	}
+
+	@Override
+	public TokenReissueResponse reissueToken(TokenReissueRequest request) {
+		// refresh token 만료여부
+		if (tokenService.isExpired(request.getRefreshToken())) {
+			throw new BadRequestException("token-reissue-failed.refresh-token.expire");
+		}
+
+		// refresh token 조회
+		RefreshToken findRefreshToken = refreshTokenRepository.findById(request.getRefreshToken())
+			.orElseThrow(
+				() -> new BadRequestException("token-reissue-failed.refresh-token.notfound"));
+
+		// refresh token 의 user 조회
+		User findUser = userRepository.findById(findRefreshToken.getUserId())
+			.orElseThrow(
+				() -> new BadRequestException("token-reissue-failed.userid.notfound", findRefreshToken.getUserId()));
+
+		//profile 조회
+		long profileId = getProfileIdService.getProfileIdByUserId(findRefreshToken.getUserId());
+
+		//access token & refresh token reissue
+		String accessToken = tokenService.createAccessToken(findUser, profileId);
+		String refreshToken = tokenService.createRefreshToken();
+
+		// 기존 refresh token 삭제 & 새로운 refresh token 등록
+		refreshTokenService.deleteById(findRefreshToken.getRefreshToken());
+		refreshTokenService.save(refreshToken, findUser.getId());
+		return new TokenReissueResponse(accessToken, refreshToken);
 	}
 }
