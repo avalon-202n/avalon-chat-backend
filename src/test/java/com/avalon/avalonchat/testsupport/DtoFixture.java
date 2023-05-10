@@ -92,11 +92,13 @@ public final class DtoFixture {
 		String backgroundImageUrl,
 		String phoneNumber,
 		boolean profileImageAdded,
-		boolean backgroundImageAdded
+		boolean backgroundImageAdded,
+		List<Integer> deletedProfileImageIndexes,
+		List<Integer> deletedBackgroundImageIndexes
 	) {
 		return new ProfileUpdateRequest(
-			birthDate, nickName, bio, profileImageUrl, backgroundImageUrl,
-			phoneNumber, profileImageAdded, backgroundImageAdded
+			birthDate, nickName, bio, profileImageUrl, backgroundImageUrl, phoneNumber,
+			profileImageAdded, backgroundImageAdded, deletedProfileImageIndexes, deletedBackgroundImageIndexes
 		);
 	}
 }

@@ -69,6 +69,14 @@ public class Profile extends BaseAuditingEntity {
 		backgroundImages.add(backgroundImage);
 	}
 
+	public void deleteProfileImage(int index) {
+		profileImages.remove(index);
+	}
+
+	public void deleteBackgroundImage(int index) {
+		backgroundImages.remove(index);
+	}
+
 	public void update(String bio, LocalDate birthDate, String nickname, String phoneNumber) {
 		this.bio = bio;
 		this.birthDate = birthDate;

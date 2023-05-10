@@ -229,7 +229,9 @@ class ProfileServiceImplTest extends BaseTestContainerTest {
 			"http://background/image/url",
 			"010-1234-5678",
 			true,
-			true
+			true,
+			null,
+			null
 		);
 
 		// when
@@ -237,6 +239,45 @@ class ProfileServiceImplTest extends BaseTestContainerTest {
 
 		// then
 		assertThat(response.getBio()).isNotEqualTo("bio");
+	}
+
+	@Test
+	void profile_이미지삭제_성공() {
+		// given
+		User user = createUser("email@email.com", "password");
+		Profile profile = createProfile(
+			user, "bio", LocalDate.of(1999, 01, 01),
+			"nickName", "010-1234-5678"
+		);
+
+		profile.addProfileImage("http://profile/image/url1");
+		profile.addProfileImage("http://profile/image/url2");
+		profile.addProfileImage("http://profile/image/url3");
+		profile.addProfileImage("http://profile/image/url4");
+		profile.addProfileImage("http://profile/image/url5");
+
+		userRepository.save(user);
+		profileRepository.save(profile);
+
+		ProfileUpdateRequest request = profileUpdateRequest(
+			LocalDate.of(1999, 01, 01),
+			"nickName",
+			"updated bio",
+			"http://profile/image/url6",
+			"http://background/image/url",
+			"010-1234-5678",
+			true,
+			true,
+			List.of(1, 2),
+			List.of()
+		);
+
+		// when
+		ProfileUpdateResponse response = sut.updateProfile(profile.getId(), request);
+
+		// then
+		assertThat(response.getBio()).isNotEqualTo("bio");
+		assertThat(profile.getProfileImages().size()).isEqualTo(4);
 	}
 }
 

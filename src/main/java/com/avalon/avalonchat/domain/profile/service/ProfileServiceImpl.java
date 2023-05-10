@@ -100,6 +100,11 @@ public class ProfileServiceImpl
 			profile.addBackgroundImage(request.getBackgroundImageUrl());
 		}
 
+		request.getDeletedProfileImageIndexes().stream()
+			.forEach(index -> profile.deleteProfileImage(index));
+		request.getDeletedBackgroundImageIndexes().stream()
+			.forEach(index -> profile.deleteBackgroundImage(index));
+
 		// 4. return
 		return ProfileUpdateResponse.from(profile);
 	}
