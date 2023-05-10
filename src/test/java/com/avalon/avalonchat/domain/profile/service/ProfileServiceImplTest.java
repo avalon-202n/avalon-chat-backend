@@ -230,8 +230,8 @@ class ProfileServiceImplTest extends BaseTestContainerTest {
 			"010-1234-5678",
 			true,
 			true,
-			null,
-			null
+			List.of(),
+			List.of()
 		);
 
 		// when
