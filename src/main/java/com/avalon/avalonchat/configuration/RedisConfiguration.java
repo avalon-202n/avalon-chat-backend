@@ -21,7 +21,7 @@ import com.avalon.avalonchat.infra.redis.RedisEmailKeyAuthCodeValueStore;
 import com.avalon.avalonchat.infra.redis.RedisPhoneNumberKeyAuthCodeValueStore;
 
 @Configuration
-public class KeyValueStoreConfiguration {
+public class RedisConfiguration {
 
 	private static void checkNotNullForSerializer(Object target, String name) {
 		if (target == null) {

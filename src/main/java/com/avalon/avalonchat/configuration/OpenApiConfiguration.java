@@ -5,7 +5,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.avalon.avalonchat.configuration.openapi.CustomSchemas;
+import com.avalon.avalonchat.configuration.swagger.CustomSchemas;
 import com.avalon.avalonchat.domain.user.domain.Email;
 
 import io.swagger.v3.oas.models.Components;

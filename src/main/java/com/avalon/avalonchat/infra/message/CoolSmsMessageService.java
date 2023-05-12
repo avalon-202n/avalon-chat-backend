@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import net.nurigo.sdk.message.model.Message;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 
-import com.avalon.avalonchat.configuration.message.CoolSmsProperties;
+import com.avalon.avalonchat.configuration.nurigo.NurigoProperties;
 import com.avalon.avalonchat.domain.user.service.MessageService;
 
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class CoolSmsMessageService implements MessageService {
 	private final DefaultMessageService coolSms;
-	private final CoolSmsProperties properties;
+	private final NurigoProperties properties;
 
 	@Override
 	public void sendAuthenticationCode(String toNumber, String code) {
