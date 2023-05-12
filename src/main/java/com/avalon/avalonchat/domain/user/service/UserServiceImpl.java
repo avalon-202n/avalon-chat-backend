@@ -7,9 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.avalon.avalonchat.domain.user.domain.Email;
 import com.avalon.avalonchat.domain.user.domain.User;
-import com.avalon.avalonchat.domain.user.dto.EmailAuthenticationCheckRequest;
-import com.avalon.avalonchat.domain.user.dto.EmailAuthenticationCheckResponse;
-import com.avalon.avalonchat.domain.user.dto.EmailAuthenticationSendRequest;
 import com.avalon.avalonchat.domain.user.dto.EmailDuplicatedCheckRequest;
 import com.avalon.avalonchat.domain.user.dto.EmailDuplicatedCheckResponse;
 import com.avalon.avalonchat.domain.user.dto.PhoneNumberAuthenticationCheckRequest;
@@ -17,7 +14,6 @@ import com.avalon.avalonchat.domain.user.dto.PhoneNumberAuthenticationCheckRespo
 import com.avalon.avalonchat.domain.user.dto.PhoneNumberAuthenticationSendRequest;
 import com.avalon.avalonchat.domain.user.dto.SignUpRequest;
 import com.avalon.avalonchat.domain.user.dto.SignUpResponse;
-import com.avalon.avalonchat.domain.user.keyvalue.EmailKey;
 import com.avalon.avalonchat.domain.user.keyvalue.KeyAuthCodeValueStore;
 import com.avalon.avalonchat.domain.user.keyvalue.PhoneNumberKey;
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
@@ -32,7 +28,6 @@ public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final MessageService messageService;
-	private final KeyAuthCodeValueStore<EmailKey> emailKeyValueStore;
 	private final KeyAuthCodeValueStore<PhoneNumberKey> phoneNumberKeyValueStore;
 
 	@Transactional
@@ -67,16 +62,6 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public void sendEmailAuthentication(EmailAuthenticationSendRequest request) {
-	}
-
-	@Override
-	public EmailAuthenticationCheckResponse checkEmailAuthentication(EmailAuthenticationCheckRequest request) {
-		boolean exist = false;
-		return new EmailAuthenticationCheckResponse(exist);
-	}
-
-	@Override
 	public void sendPhoneNumberAuthentication(PhoneNumberAuthenticationSendRequest request) {
 		// 1. get phone number and certification code
 		String phoneNumber = request.getPhoneNumber().replaceAll("-", "").trim();
@@ -96,11 +81,14 @@ public class UserServiceImpl implements UserService {
 	public PhoneNumberAuthenticationCheckResponse checkPhoneNumberAuthentication(
 		PhoneNumberAuthenticationCheckRequest request
 	) {
-		// 1. get key
-		PhoneNumberKey phoneNumberKey = PhoneNumberKey.fromString(request.getPhoneNumber());
+		// 1. get phone number
+		String phoneNumber = request.getPhoneNumber().replaceAll("-", "").trim();
 
 		// 2. check authenticated
-		boolean authenticated = phoneNumberKeyValueStore.getAndPutIfAuthenticated(phoneNumberKey);
+		boolean authenticated = phoneNumberKeyValueStore.checkKeyValueMatches(
+			PhoneNumberKey.fromString(phoneNumber),
+			request.getCertificationCode()
+		);
 
 		// 3. return
 		return new PhoneNumberAuthenticationCheckResponse(authenticated);

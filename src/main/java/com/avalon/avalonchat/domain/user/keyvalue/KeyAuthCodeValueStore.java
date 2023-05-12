@@ -13,11 +13,13 @@ public interface KeyAuthCodeValueStore<K> extends KeyValueStore<K, AuthCodeValue
 		return authCodeValue != null && authCodeValue.isAuthenticated();
 	}
 
-	default boolean getAndPutIfAuthenticated(K key) {
-		boolean authenticated = isAuthenticated(key);
-		if (authenticated) {
+	default boolean checkKeyValueMatches(K key, String authCodeValue) {
+		AuthCodeValue gotAuthCodeValue = get(key);
+		boolean checked = gotAuthCodeValue != null && gotAuthCodeValue.matches(authCodeValue);
+		if (checked) {
+			// do authenticate
 			put(key, AuthCodeValue.ofAuthenticated());
 		}
-		return authenticated;
+		return checked;
 	}
 }

@@ -19,4 +19,9 @@ public class EmailKey {
 	public static EmailKey fromString(String string) {
 		return new EmailKey(Email.of(string));
 	}
+
+	@Override
+	public String toString() {
+		return PREFIX + email;
+	}
 }

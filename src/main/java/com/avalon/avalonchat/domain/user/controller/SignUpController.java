@@ -8,9 +8,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.avalon.avalonchat.domain.user.dto.EmailAuthenticationCheckRequest;
-import com.avalon.avalonchat.domain.user.dto.EmailAuthenticationCheckResponse;
-import com.avalon.avalonchat.domain.user.dto.EmailAuthenticationSendRequest;
 import com.avalon.avalonchat.domain.user.dto.EmailDuplicatedCheckRequest;
 import com.avalon.avalonchat.domain.user.dto.EmailDuplicatedCheckResponse;
 import com.avalon.avalonchat.domain.user.dto.PhoneNumberAuthenticationCheckRequest;
@@ -51,23 +48,6 @@ public class SignUpController {
 		@RequestBody EmailDuplicatedCheckRequest request
 	) {
 		return userService.checkEmailDuplicated(request);
-	}
-
-	@Operation(summary = "이메일 인증번호 발송")
-	@PostMapping("/email/authenticate/send")
-	public ResponseEntity<Void> emailAuthenticationSend(
-		@RequestBody EmailAuthenticationSendRequest request
-	) {
-		userService.sendEmailAuthentication(request);
-		return noContent();
-	}
-
-	@Operation(summary = "이메일 인증번호 확인")
-	@PostMapping("/email/authenticate/check")
-	public EmailAuthenticationCheckResponse emailAuthenticationCheck(
-		@RequestBody EmailAuthenticationCheckRequest request
-	) {
-		return userService.checkEmailAuthentication(request);
 	}
 
 	@Operation(summary = "핸드폰 인증번호 발송")

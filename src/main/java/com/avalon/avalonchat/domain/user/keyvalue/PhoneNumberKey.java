@@ -14,4 +14,9 @@ public class PhoneNumberKey {
 	public static PhoneNumberKey fromString(String key) {
 		return new PhoneNumberKey(key);
 	}
+
+	@Override
+	public String toString() {
+		return PREFIX + key;
+	}
 }
