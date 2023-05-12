@@ -9,7 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.avalon.avalonchat.core.model.BaseAuditingEntity;
+import com.avalon.avalonchat.global.model.BaseAuditingEntity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

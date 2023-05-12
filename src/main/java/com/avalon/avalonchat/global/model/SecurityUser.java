@@ -1,4 +1,4 @@
-package com.avalon.avalonchat.core.model;
+package com.avalon.avalonchat.global.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

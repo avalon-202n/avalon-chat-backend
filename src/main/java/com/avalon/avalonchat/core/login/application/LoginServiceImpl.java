@@ -12,13 +12,13 @@ import com.avalon.avalonchat.core.login.dto.PasswordFindResponse;
 import com.avalon.avalonchat.core.login.dto.TokenReissueRequest;
 import com.avalon.avalonchat.core.login.dto.TokenReissueResponse;
 import com.avalon.avalonchat.core.login.repository.RefreshTokenRepository;
-import com.avalon.avalonchat.core.model.RefreshToken;
 import com.avalon.avalonchat.core.profile.domain.Profile;
 import com.avalon.avalonchat.core.profile.domain.ProfileRepository;
 import com.avalon.avalonchat.core.user.domain.Password;
 import com.avalon.avalonchat.core.user.domain.User;
 import com.avalon.avalonchat.core.user.domain.UserRepository;
 import com.avalon.avalonchat.global.error.exception.BadRequestException;
+import com.avalon.avalonchat.global.model.RefreshToken;
 import com.avalon.avalonchat.infra.jwt.JwtTokenService;
 
 import lombok.RequiredArgsConstructor;

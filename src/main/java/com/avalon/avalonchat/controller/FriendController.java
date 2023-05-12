@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.avalon.avalonchat.core.friend.application.FriendService;
 import com.avalon.avalonchat.core.friend.dto.FriendAddRequest;
 import com.avalon.avalonchat.core.friend.dto.FriendAddResponse;
 import com.avalon.avalonchat.core.friend.dto.FriendStatusUpdateRequest;
 import com.avalon.avalonchat.core.friend.dto.FriendStatusUpdateResponse;
-import com.avalon.avalonchat.core.friend.application.FriendService;
-import com.avalon.avalonchat.core.model.SecurityUser;
+import com.avalon.avalonchat.global.model.SecurityUser;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

@@ -11,8 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
-import com.avalon.avalonchat.core.model.BaseAuditingEntity;
 import com.avalon.avalonchat.core.profile.domain.Profile;
+import com.avalon.avalonchat.global.model.BaseAuditingEntity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

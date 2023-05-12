@@ -7,7 +7,7 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import com.avalon.avalonchat.core.model.BaseAuditingEntity;
+import com.avalon.avalonchat.global.model.BaseAuditingEntity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

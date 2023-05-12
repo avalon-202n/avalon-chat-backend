@@ -3,7 +3,7 @@ package com.avalon.avalonchat.core.login.application;
 import org.springframework.stereotype.Service;
 
 import com.avalon.avalonchat.core.login.repository.RefreshTokenRepository;
-import com.avalon.avalonchat.core.model.RefreshToken;
+import com.avalon.avalonchat.global.model.RefreshToken;
 
 import lombok.RequiredArgsConstructor;
 

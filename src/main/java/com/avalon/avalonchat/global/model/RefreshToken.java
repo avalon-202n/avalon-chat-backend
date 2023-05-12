@@ -1,4 +1,4 @@
-package com.avalon.avalonchat.core.model;
+package com.avalon.avalonchat.global.model;
 
 import static com.avalon.avalonchat.global.util.Preconditions.*;
 
