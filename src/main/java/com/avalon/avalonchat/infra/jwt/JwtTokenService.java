@@ -1,12 +1,10 @@
-package com.avalon.avalonchat.configuration.jwt;
+package com.avalon.avalonchat.infra.jwt;
 
 import java.security.Key;
 import java.util.Date;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
+import com.avalon.avalonchat.configuration.jwt.JwtProperties;
 import com.avalon.avalonchat.domain.login.service.TokenService;
 import com.avalon.avalonchat.domain.user.domain.User;
 
@@ -15,14 +13,11 @@ import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * JwtTokenService
  * Jwt Token 생성 및 검증을 담당한다.
  */
-@Slf4j
-@Component
 public class JwtTokenService implements TokenService {
 
 	private final JwtParser jwtParser;
@@ -30,8 +25,7 @@ public class JwtTokenService implements TokenService {
 	private long refreshValidity;
 	private Key secretKey;
 
-	@Autowired
-	public JwtTokenService(JwtConfigProperties properties) {
+	public JwtTokenService(JwtProperties properties) {
 		this.accessValidity = properties.getAccessValidity();
 		this.refreshValidity = properties.getRefreshValidity();
 		this.secretKey = Keys.hmacShaKeyFor(properties.getSecret().getBytes());

@@ -6,18 +6,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.avalon.avalonchat.configuration.jwt.JwtConfigProperties;
+import com.avalon.avalonchat.configuration.jwt.JwtProperties;
 
 @SpringBootTest
-class JwtConfigPropertiesTest {
+class JwtPropertiesTest {
 
 	@Autowired
-	JwtConfigProperties jwtConfigProperties;
+	JwtProperties jwtProperties;
 
 	@Test
 	void jwt_프로퍼티_조회_성공() {
-		assertThat(jwtConfigProperties.getAccessValidity()).isNotEqualTo(0);
-		assertThat(jwtConfigProperties.getRefreshValidity()).isNotEqualTo(0);
-		assertThat(jwtConfigProperties.getSecret()).isNotNull();
+		assertThat(jwtProperties.getAccessValidity()).isNotEqualTo(0);
+		assertThat(jwtProperties.getRefreshValidity()).isNotEqualTo(0);
+		assertThat(jwtProperties.getSecret()).isNotNull();
 	}
 }

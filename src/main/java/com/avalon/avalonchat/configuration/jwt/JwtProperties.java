@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @ConstructorBinding
 @ConfigurationProperties(prefix = "jwt")
-public class JwtConfigProperties {
+public class JwtProperties {
 
 	// access token validity in millis
 	private final int accessValidity;

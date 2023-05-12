@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
 
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
-	private final MessageService messageService;
+	private final SmsMessageService smsMessageService;
 	private final KeyAuthCodeValueStore<PhoneNumberKey> phoneNumberKeyValueStore;
 
 	@Transactional
@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
 		String certificationCode = RandomStringUtils.randomNumeric(6);
 
 		// 2. send certification code
-		messageService.sendAuthenticationCode(phoneNumber, certificationCode);
+		smsMessageService.sendAuthenticationCode(phoneNumber, certificationCode);
 
 		// 3. put it to key-value store
 		phoneNumberKeyValueStore.put(

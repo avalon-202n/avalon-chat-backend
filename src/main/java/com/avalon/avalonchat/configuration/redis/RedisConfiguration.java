@@ -1,4 +1,4 @@
-package com.avalon.avalonchat.configuration;
+package com.avalon.avalonchat.configuration.redis;
 
 import static java.nio.charset.StandardCharsets.*;
 
@@ -20,7 +20,7 @@ import com.avalon.avalonchat.domain.user.keyvalue.PhoneNumberKey;
 import com.avalon.avalonchat.infra.redis.RedisEmailKeyAuthCodeValueStore;
 import com.avalon.avalonchat.infra.redis.RedisPhoneNumberKeyAuthCodeValueStore;
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public class RedisConfiguration {
 
 	private static void checkNotNullForSerializer(Object target, String name) {

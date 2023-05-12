@@ -28,7 +28,7 @@ import com.avalon.avalonchat.domain.user.dto.PhoneNumberAuthenticationCheckReque
 import com.avalon.avalonchat.domain.user.keyvalue.KeyAuthCodeValueStore;
 import com.avalon.avalonchat.domain.user.keyvalue.PhoneNumberKey;
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
-import com.avalon.avalonchat.domain.user.service.MessageService;
+import com.avalon.avalonchat.domain.user.service.SmsMessageService;
 import com.avalon.avalonchat.domain.user.service.UserService;
 import com.avalon.avalonchat.global.error.exception.BadRequestException;
 import com.avalon.avalonchat.testsupport.base.BaseTestContainerTest;
@@ -47,7 +47,7 @@ class ProfileServiceImplTest extends BaseTestContainerTest {
 	private ProfileRepository profileRepository;
 
 	@Autowired
-	private MessageService messageService;
+	private SmsMessageService smsMessageService;
 
 	@Autowired
 	private UserService userService;
@@ -65,7 +65,7 @@ class ProfileServiceImplTest extends BaseTestContainerTest {
 		String certificationCode = RandomStringUtils.randomNumeric(6);
 		String toPhoneNumber = "01055110625";
 
-		messageService.sendAuthenticationCode(toPhoneNumber, certificationCode);
+		smsMessageService.sendAuthenticationCode(toPhoneNumber, certificationCode);
 		phoneNumberAuthKeyValueStore.put(
 			PhoneNumberKey.fromString(toPhoneNumber),
 			certificationCode
@@ -105,7 +105,7 @@ class ProfileServiceImplTest extends BaseTestContainerTest {
 		String certificationCode = RandomStringUtils.randomNumeric(6);
 		String toPhoneNumber = "01055110625";
 
-		messageService.sendAuthenticationCode(toPhoneNumber, certificationCode);
+		smsMessageService.sendAuthenticationCode(toPhoneNumber, certificationCode);
 		phoneNumberAuthKeyValueStore.put(
 			PhoneNumberKey.fromString(toPhoneNumber),
 			certificationCode

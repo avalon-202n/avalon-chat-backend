@@ -28,7 +28,7 @@ class UserServiceImplTest extends BaseTestContainerTest {
 	@Autowired
 	private UserServiceImpl sut;
 	@Autowired
-	private MessageService messageService;
+	private SmsMessageService smsMessageService;
 
 	@Autowired
 	private KeyAuthCodeValueStore<PhoneNumberKey> phoneNumberAuthKeyValueStore;
@@ -84,7 +84,7 @@ class UserServiceImplTest extends BaseTestContainerTest {
 		String certificationCode = RandomStringUtils.randomNumeric(6);
 		String toPhoneNumber = "01055110625";
 
-		messageService.sendAuthenticationCode(toPhoneNumber, certificationCode);
+		smsMessageService.sendAuthenticationCode(toPhoneNumber, certificationCode);
 		phoneNumberAuthKeyValueStore.put(
 			PhoneNumberKey.fromString(toPhoneNumber),
 			certificationCode

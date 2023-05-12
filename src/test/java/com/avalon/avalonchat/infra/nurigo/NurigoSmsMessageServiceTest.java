@@ -1,4 +1,4 @@
-package com.avalon.avalonchat.infra.message;
+package com.avalon.avalonchat.infra.nurigo;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Disabled;
@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class CoolSmsMessageServiceTest {
+class NurigoSmsMessageServiceTest {
 	@Autowired
-	private CoolSmsMessageService messageService;
+	private NurigoSmsMessageService messageService;
 
 	@Test
 	@Disabled

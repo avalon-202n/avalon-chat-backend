@@ -1,4 +1,4 @@
-package com.avalon.avalonchat.infra.message.configuration;
+package com.avalon.avalonchat.infra.nurigo.configuration;
 
 import static org.assertj.core.api.AssertionsForClassTypes.*;
 
