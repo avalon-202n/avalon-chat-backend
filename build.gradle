@@ -85,6 +85,8 @@ jib {
         image = "$System.env.IMAGE_NAME"
     }
     container {
-        "-Dspring.profiles.active=" + "$System.env.PROFILE"
+        jvmFlags = [
+            "-Dspring.profiles.active=" + "$System.env.PROFILE"
+        ]
     }
 }
