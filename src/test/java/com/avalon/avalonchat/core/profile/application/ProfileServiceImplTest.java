@@ -14,22 +14,22 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.avalon.avalonchat.core.friend.domain.Friend;
-import com.avalon.avalonchat.core.friend.repository.FriendRepository;
+import com.avalon.avalonchat.core.friend.domain.FriendRepository;
 import com.avalon.avalonchat.core.profile.domain.Profile;
+import com.avalon.avalonchat.core.profile.domain.ProfileRepository;
 import com.avalon.avalonchat.core.profile.dto.ProfileAddRequest;
 import com.avalon.avalonchat.core.profile.dto.ProfileAddResponse;
 import com.avalon.avalonchat.core.profile.dto.ProfileDetailedGetResponse;
 import com.avalon.avalonchat.core.profile.dto.ProfileListGetResponse;
-import com.avalon.avalonchat.core.profile.repository.ProfileRepository;
+import com.avalon.avalonchat.core.user.application.SmsMessageService;
+import com.avalon.avalonchat.core.user.application.UserService;
 import com.avalon.avalonchat.core.user.domain.Email;
 import com.avalon.avalonchat.core.user.domain.Password;
 import com.avalon.avalonchat.core.user.domain.User;
+import com.avalon.avalonchat.core.user.domain.UserRepository;
 import com.avalon.avalonchat.core.user.dto.PhoneNumberAuthenticationCheckRequest;
 import com.avalon.avalonchat.core.user.keyvalue.KeyAuthCodeValueStore;
 import com.avalon.avalonchat.core.user.keyvalue.PhoneNumberKey;
-import com.avalon.avalonchat.core.user.repository.UserRepository;
-import com.avalon.avalonchat.core.user.application.SmsMessageService;
-import com.avalon.avalonchat.core.user.application.UserService;
 import com.avalon.avalonchat.global.error.exception.BadRequestException;
 import com.avalon.avalonchat.testsupport.base.BaseTestContainerTest;
 

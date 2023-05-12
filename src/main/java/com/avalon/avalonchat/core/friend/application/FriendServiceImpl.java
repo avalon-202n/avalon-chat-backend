@@ -7,13 +7,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.avalon.avalonchat.core.friend.domain.Friend;
+import com.avalon.avalonchat.core.friend.domain.FriendRepository;
 import com.avalon.avalonchat.core.friend.dto.FriendAddRequest;
 import com.avalon.avalonchat.core.friend.dto.FriendAddResponse;
 import com.avalon.avalonchat.core.friend.dto.FriendStatusUpdateRequest;
 import com.avalon.avalonchat.core.friend.dto.FriendStatusUpdateResponse;
-import com.avalon.avalonchat.core.friend.repository.FriendRepository;
 import com.avalon.avalonchat.core.profile.domain.Profile;
-import com.avalon.avalonchat.core.profile.repository.ProfileRepository;
+import com.avalon.avalonchat.core.profile.domain.ProfileRepository;
 import com.avalon.avalonchat.global.error.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;

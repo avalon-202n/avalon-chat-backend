@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.avalon.avalonchat.core.user.domain.Email;
 import com.avalon.avalonchat.core.user.domain.User;
+import com.avalon.avalonchat.core.user.domain.UserRepository;
 import com.avalon.avalonchat.core.user.dto.EmailDuplicatedCheckRequest;
 import com.avalon.avalonchat.core.user.dto.EmailDuplicatedCheckResponse;
 import com.avalon.avalonchat.core.user.dto.PhoneNumberAuthenticationCheckRequest;
@@ -16,7 +17,6 @@ import com.avalon.avalonchat.core.user.dto.SignUpRequest;
 import com.avalon.avalonchat.core.user.dto.SignUpResponse;
 import com.avalon.avalonchat.core.user.keyvalue.KeyAuthCodeValueStore;
 import com.avalon.avalonchat.core.user.keyvalue.PhoneNumberKey;
-import com.avalon.avalonchat.core.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 

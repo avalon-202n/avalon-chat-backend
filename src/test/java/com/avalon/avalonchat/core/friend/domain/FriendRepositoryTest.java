@@ -1,4 +1,4 @@
-package com.avalon.avalonchat.core.friend.repository;
+package com.avalon.avalonchat.core.friend.domain;
 
 import static org.assertj.core.api.AssertionsForClassTypes.*;
 
@@ -11,14 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.avalon.avalonchat.core.friend.domain.Friend;
 import com.avalon.avalonchat.core.friend.dto.FriendAddResponse;
 import com.avalon.avalonchat.core.profile.domain.Profile;
-import com.avalon.avalonchat.core.profile.repository.ProfileRepository;
+import com.avalon.avalonchat.core.profile.domain.ProfileRepository;
 import com.avalon.avalonchat.core.user.domain.Email;
 import com.avalon.avalonchat.core.user.domain.Password;
 import com.avalon.avalonchat.core.user.domain.User;
-import com.avalon.avalonchat.core.user.repository.UserRepository;
+import com.avalon.avalonchat.core.user.domain.UserRepository;
 
 @DataJpaTest
 @Transactional

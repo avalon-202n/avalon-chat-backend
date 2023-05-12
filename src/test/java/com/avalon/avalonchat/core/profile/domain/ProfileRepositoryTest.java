@@ -1,4 +1,4 @@
-package com.avalon.avalonchat.core.profile.repository;
+package com.avalon.avalonchat.core.profile.domain;
 
 import static com.avalon.avalonchat.testsupport.Fixture.*;
 import static java.time.LocalDate.*;
@@ -15,15 +15,12 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.avalon.avalonchat.core.friend.domain.Friend;
-import com.avalon.avalonchat.core.friend.repository.FriendRepository;
-import com.avalon.avalonchat.core.profile.domain.BackgroundImage;
-import com.avalon.avalonchat.core.profile.domain.Profile;
-import com.avalon.avalonchat.core.profile.domain.ProfileImage;
+import com.avalon.avalonchat.core.friend.domain.FriendRepository;
 import com.avalon.avalonchat.core.profile.dto.ProfileListGetResponse;
 import com.avalon.avalonchat.core.user.domain.Email;
 import com.avalon.avalonchat.core.user.domain.Password;
 import com.avalon.avalonchat.core.user.domain.User;
-import com.avalon.avalonchat.core.user.repository.UserRepository;
+import com.avalon.avalonchat.core.user.domain.UserRepository;
 
 @Transactional
 @DataJpaTest

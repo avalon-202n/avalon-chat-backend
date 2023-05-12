@@ -7,15 +7,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.avalon.avalonchat.core.login.application.GetProfileIdService;
 import com.avalon.avalonchat.core.profile.domain.Profile;
+import com.avalon.avalonchat.core.profile.domain.ProfileRepository;
 import com.avalon.avalonchat.core.profile.dto.ProfileAddRequest;
 import com.avalon.avalonchat.core.profile.dto.ProfileAddResponse;
 import com.avalon.avalonchat.core.profile.dto.ProfileDetailedGetResponse;
 import com.avalon.avalonchat.core.profile.dto.ProfileListGetResponse;
-import com.avalon.avalonchat.core.profile.repository.ProfileRepository;
 import com.avalon.avalonchat.core.user.domain.User;
+import com.avalon.avalonchat.core.user.domain.UserRepository;
 import com.avalon.avalonchat.core.user.keyvalue.KeyAuthCodeValueStore;
 import com.avalon.avalonchat.core.user.keyvalue.PhoneNumberKey;
-import com.avalon.avalonchat.core.user.repository.UserRepository;
 import com.avalon.avalonchat.global.error.exception.BadRequestException;
 import com.avalon.avalonchat.global.error.exception.NotFoundException;
 
