@@ -7,22 +7,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.avalon.avalonchat.core.user.keyvalue.AuthCodeValue;
-import com.avalon.avalonchat.core.user.keyvalue.PhoneNumberKey;
+import com.avalon.avalonchat.core.user.application.keyvalue.AuthCodeValue;
+import com.avalon.avalonchat.core.user.application.keyvalue.PhoneNumberKey;
 import com.avalon.avalonchat.testsupport.base.BaseTestContainerTest;
 
 @Transactional
 @SpringBootTest
-class RedisPhoneNumberKeyAuthCodeValueStoreTest extends BaseTestContainerTest {
+class RedisPhoneNumberAuthCodeStoreTest extends BaseTestContainerTest {
 
 	@Autowired
-	private RedisPhoneNumberKeyAuthCodeValueStore sut;
+	private RedisPhoneNumberAuthCodeStore sut;
 
 	@Test
 	void get_set() {
 		// given
 		PhoneNumberKey key = PhoneNumberKey.fromString("01012345678");
-		String value = "cert-code";
+		AuthCodeValue value = AuthCodeValue.ofUnauthenticated("cert-code");
 
 		// when
 		sut.put(key, value);
@@ -31,7 +31,7 @@ class RedisPhoneNumberKeyAuthCodeValueStoreTest extends BaseTestContainerTest {
 
 		// then
 		assertThat(authCodeValue.isAuthenticated()).isFalse();
-		assertThat(authCodeValue.matches(value)).isTrue();
+		assertThat(authCodeValue.matches("cert-code")).isTrue();
 		assertThat(nullCodeValue).isNull();
 	}
 }

@@ -21,15 +21,16 @@ import com.avalon.avalonchat.core.profile.dto.ProfileAddRequest;
 import com.avalon.avalonchat.core.profile.dto.ProfileAddResponse;
 import com.avalon.avalonchat.core.profile.dto.ProfileDetailedGetResponse;
 import com.avalon.avalonchat.core.profile.dto.ProfileListGetResponse;
+import com.avalon.avalonchat.core.user.application.PhoneNumberAuthCodeStore;
 import com.avalon.avalonchat.core.user.application.SmsMessageService;
 import com.avalon.avalonchat.core.user.application.UserService;
+import com.avalon.avalonchat.core.user.application.keyvalue.AuthCodeValue;
+import com.avalon.avalonchat.core.user.application.keyvalue.PhoneNumberKey;
 import com.avalon.avalonchat.core.user.domain.Email;
 import com.avalon.avalonchat.core.user.domain.Password;
 import com.avalon.avalonchat.core.user.domain.User;
 import com.avalon.avalonchat.core.user.domain.UserRepository;
 import com.avalon.avalonchat.core.user.dto.PhoneNumberAuthenticationCheckRequest;
-import com.avalon.avalonchat.core.user.keyvalue.KeyAuthCodeValueStore;
-import com.avalon.avalonchat.core.user.keyvalue.PhoneNumberKey;
 import com.avalon.avalonchat.global.error.exception.BadRequestException;
 import com.avalon.avalonchat.testsupport.base.BaseTestContainerTest;
 
@@ -53,7 +54,7 @@ class ProfileServiceImplTest extends BaseTestContainerTest {
 	private UserService userService;
 
 	@Autowired
-	private KeyAuthCodeValueStore<PhoneNumberKey> phoneNumberAuthKeyValueStore;
+	private PhoneNumberAuthCodeStore phoneNumberAuthKeyValueStore;
 
 	@Autowired
 	private FriendRepository friendRepository;
@@ -68,7 +69,7 @@ class ProfileServiceImplTest extends BaseTestContainerTest {
 		smsMessageService.sendAuthenticationCode(toPhoneNumber, certificationCode);
 		phoneNumberAuthKeyValueStore.put(
 			PhoneNumberKey.fromString(toPhoneNumber),
-			certificationCode
+			AuthCodeValue.ofUnauthenticated(certificationCode)
 		);
 		userService.checkPhoneNumberAuthentication(
 			new PhoneNumberAuthenticationCheckRequest(toPhoneNumber, certificationCode)
@@ -108,7 +109,7 @@ class ProfileServiceImplTest extends BaseTestContainerTest {
 		smsMessageService.sendAuthenticationCode(toPhoneNumber, certificationCode);
 		phoneNumberAuthKeyValueStore.put(
 			PhoneNumberKey.fromString(toPhoneNumber),
-			certificationCode
+			AuthCodeValue.ofUnauthenticated(certificationCode)
 		);
 
 		// given - ready for the request

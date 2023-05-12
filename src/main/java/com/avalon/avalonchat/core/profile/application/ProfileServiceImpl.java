@@ -12,10 +12,10 @@ import com.avalon.avalonchat.core.profile.dto.ProfileAddRequest;
 import com.avalon.avalonchat.core.profile.dto.ProfileAddResponse;
 import com.avalon.avalonchat.core.profile.dto.ProfileDetailedGetResponse;
 import com.avalon.avalonchat.core.profile.dto.ProfileListGetResponse;
+import com.avalon.avalonchat.core.user.application.PhoneNumberAuthCodeStore;
+import com.avalon.avalonchat.core.user.application.keyvalue.PhoneNumberKey;
 import com.avalon.avalonchat.core.user.domain.User;
 import com.avalon.avalonchat.core.user.domain.UserRepository;
-import com.avalon.avalonchat.core.user.keyvalue.KeyAuthCodeValueStore;
-import com.avalon.avalonchat.core.user.keyvalue.PhoneNumberKey;
 import com.avalon.avalonchat.global.error.exception.BadRequestException;
 import com.avalon.avalonchat.global.error.exception.NotFoundException;
 
@@ -29,7 +29,7 @@ public class ProfileServiceImpl
 
 	private final ProfileRepository repository;
 	private final UserRepository userRepository;
-	private final KeyAuthCodeValueStore<PhoneNumberKey> phoneNumberKeyValueStore;
+	private final PhoneNumberAuthCodeStore phoneNumberKeyValueStore;
 
 	@Transactional
 	@Override

@@ -13,12 +13,10 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.SerializationException;
 
-import com.avalon.avalonchat.core.user.keyvalue.AuthCodeValue;
-import com.avalon.avalonchat.core.user.keyvalue.EmailKey;
-import com.avalon.avalonchat.core.user.keyvalue.KeyAuthCodeValueStore;
-import com.avalon.avalonchat.core.user.keyvalue.PhoneNumberKey;
-import com.avalon.avalonchat.infra.redis.RedisEmailKeyAuthCodeValueStore;
-import com.avalon.avalonchat.infra.redis.RedisPhoneNumberKeyAuthCodeValueStore;
+import com.avalon.avalonchat.core.user.application.PhoneNumberAuthCodeStore;
+import com.avalon.avalonchat.core.user.application.keyvalue.AuthCodeValue;
+import com.avalon.avalonchat.core.user.application.keyvalue.PhoneNumberKey;
+import com.avalon.avalonchat.infra.redis.RedisPhoneNumberAuthCodeStore;
 
 @Configuration(proxyBeanMethods = false)
 public class RedisConfiguration {
@@ -40,39 +38,14 @@ public class RedisConfiguration {
 	}
 
 	@Bean
-	public KeyAuthCodeValueStore<EmailKey> emailAuthCodeStore(RedisConnectionFactory connectionFactory) {
-		RedisTemplate<EmailKey, AuthCodeValue> redisTemplate = new RedisTemplate<>();
-		redisTemplate.setConnectionFactory(connectionFactory);
-		redisTemplate.setKeySerializer(new EmailKeySerializer());
-		redisTemplate.setValueSerializer(new AuthCodeValueSerializer());
-		redisTemplate.afterPropertiesSet();
-		return new RedisEmailKeyAuthCodeValueStore(redisTemplate);
-	}
-
-	@Bean
-	public KeyAuthCodeValueStore<PhoneNumberKey> phoneNumberAuthCodeStore(RedisConnectionFactory connectionFactory) {
+	public PhoneNumberAuthCodeStore phoneNumberAuthCodeStore(RedisConnectionFactory connectionFactory) {
 		RedisTemplate<PhoneNumberKey, AuthCodeValue> redisTemplate = new RedisTemplate<>();
 		redisTemplate.setConnectionFactory(connectionFactory);
 		redisTemplate.setKeySerializer(new PhoneNumberKeySerializer());
 		redisTemplate.setValueSerializer(new AuthCodeValueSerializer());
 		redisTemplate.setEnableTransactionSupport(false);
 		redisTemplate.afterPropertiesSet();
-		return new RedisPhoneNumberKeyAuthCodeValueStore(redisTemplate);
-	}
-
-	private static class EmailKeySerializer implements RedisSerializer<EmailKey> {
-
-		@Override
-		public byte[] serialize(EmailKey emailKey) throws SerializationException {
-			checkNotNullForSerializer(emailKey, "emailKey");
-			return emailKey.toString().getBytes(UTF_8);
-		}
-
-		@Override
-		public EmailKey deserialize(byte[] bytes) throws SerializationException {
-			checkNotNullForSerializer(bytes, "bytes");
-			return EmailKey.fromString(new String(bytes, UTF_8));
-		}
+		return new RedisPhoneNumberAuthCodeStore(redisTemplate);
 	}
 
 	private static class PhoneNumberKeySerializer implements RedisSerializer<PhoneNumberKey> {

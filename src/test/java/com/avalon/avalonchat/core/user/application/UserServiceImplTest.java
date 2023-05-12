@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.avalon.avalonchat.core.user.application.keyvalue.AuthCodeValue;
+import com.avalon.avalonchat.core.user.application.keyvalue.PhoneNumberKey;
 import com.avalon.avalonchat.core.user.domain.Email;
 import com.avalon.avalonchat.core.user.dto.EmailDuplicatedCheckRequest;
 import com.avalon.avalonchat.core.user.dto.EmailDuplicatedCheckResponse;
@@ -16,9 +18,6 @@ import com.avalon.avalonchat.core.user.dto.PhoneNumberAuthenticationCheckRespons
 import com.avalon.avalonchat.core.user.dto.PhoneNumberAuthenticationSendRequest;
 import com.avalon.avalonchat.core.user.dto.SignUpRequest;
 import com.avalon.avalonchat.core.user.dto.SignUpResponse;
-import com.avalon.avalonchat.core.user.keyvalue.AuthCodeValue;
-import com.avalon.avalonchat.core.user.keyvalue.KeyAuthCodeValueStore;
-import com.avalon.avalonchat.core.user.keyvalue.PhoneNumberKey;
 import com.avalon.avalonchat.testsupport.DtoFixture;
 import com.avalon.avalonchat.testsupport.base.BaseTestContainerTest;
 
@@ -31,7 +30,7 @@ class UserServiceImplTest extends BaseTestContainerTest {
 	private SmsMessageService smsMessageService;
 
 	@Autowired
-	private KeyAuthCodeValueStore<PhoneNumberKey> phoneNumberAuthKeyValueStore;
+	private PhoneNumberAuthCodeStore phoneNumberAuthKeyValueStore;
 
 	@Test
 	void 회원가입_성공() {
@@ -87,7 +86,7 @@ class UserServiceImplTest extends BaseTestContainerTest {
 		smsMessageService.sendAuthenticationCode(toPhoneNumber, certificationCode);
 		phoneNumberAuthKeyValueStore.put(
 			PhoneNumberKey.fromString(toPhoneNumber),
-			certificationCode
+			AuthCodeValue.ofUnauthenticated(certificationCode)
 		);
 
 		PhoneNumberAuthenticationCheckRequest request

@@ -5,6 +5,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.avalon.avalonchat.core.user.application.keyvalue.AuthCodeValue;
+import com.avalon.avalonchat.core.user.application.keyvalue.PhoneNumberKey;
 import com.avalon.avalonchat.core.user.domain.Email;
 import com.avalon.avalonchat.core.user.domain.User;
 import com.avalon.avalonchat.core.user.domain.UserRepository;
@@ -15,8 +17,6 @@ import com.avalon.avalonchat.core.user.dto.PhoneNumberAuthenticationCheckRespons
 import com.avalon.avalonchat.core.user.dto.PhoneNumberAuthenticationSendRequest;
 import com.avalon.avalonchat.core.user.dto.SignUpRequest;
 import com.avalon.avalonchat.core.user.dto.SignUpResponse;
-import com.avalon.avalonchat.core.user.keyvalue.KeyAuthCodeValueStore;
-import com.avalon.avalonchat.core.user.keyvalue.PhoneNumberKey;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final SmsMessageService smsMessageService;
-	private final KeyAuthCodeValueStore<PhoneNumberKey> phoneNumberKeyValueStore;
+	private final PhoneNumberAuthCodeStore phoneNumberKeyValueStore;
 
 	@Transactional
 	@Override
@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
 		// 3. put it to key-value store
 		phoneNumberKeyValueStore.put(
 			PhoneNumberKey.fromString(phoneNumber),
-			certificationCode
+			AuthCodeValue.ofUnauthenticated(certificationCode)
 		);
 	}
 
