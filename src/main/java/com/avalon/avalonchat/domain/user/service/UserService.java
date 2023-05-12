@@ -1,8 +1,5 @@
 package com.avalon.avalonchat.domain.user.service;
 
-import com.avalon.avalonchat.domain.user.dto.EmailAuthenticationCheckRequest;
-import com.avalon.avalonchat.domain.user.dto.EmailAuthenticationCheckResponse;
-import com.avalon.avalonchat.domain.user.dto.EmailAuthenticationSendRequest;
 import com.avalon.avalonchat.domain.user.dto.EmailDuplicatedCheckRequest;
 import com.avalon.avalonchat.domain.user.dto.EmailDuplicatedCheckResponse;
 import com.avalon.avalonchat.domain.user.dto.PhoneNumberAuthenticationCheckRequest;
@@ -16,10 +13,6 @@ public interface UserService {
 	SignUpResponse signUp(SignUpRequest signUpRequest);
 
 	EmailDuplicatedCheckResponse checkEmailDuplicated(EmailDuplicatedCheckRequest request);
-
-	void sendEmailAuthentication(EmailAuthenticationSendRequest request);
-
-	EmailAuthenticationCheckResponse checkEmailAuthentication(EmailAuthenticationCheckRequest request);
 
 	void sendPhoneNumberAuthentication(PhoneNumberAuthenticationSendRequest request);
 
