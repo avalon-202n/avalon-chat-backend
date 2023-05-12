@@ -1,12 +1,12 @@
-package com.avalon.avalonchat.global.configuration;
+package com.avalon.avalonchat.configuration;
 
 import org.springdoc.core.SpringDocUtils;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.avalon.avalonchat.configuration.openapi.CustomSchemas;
 import com.avalon.avalonchat.domain.user.domain.Email;
-import com.avalon.avalonchat.global.configuration.openapi.CustomSchemas;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;

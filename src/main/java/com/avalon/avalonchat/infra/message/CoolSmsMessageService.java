@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import net.nurigo.sdk.message.model.Message;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 
+import com.avalon.avalonchat.configuration.message.CoolSmsProperties;
 import com.avalon.avalonchat.domain.user.service.MessageService;
-import com.avalon.avalonchat.global.configuration.message.CoolSmsProperties;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

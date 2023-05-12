@@ -1,4 +1,4 @@
-package com.avalon.avalonchat.global.configuration;
+package com.avalon.avalonchat.configuration;
 
 import java.io.IOException;
 

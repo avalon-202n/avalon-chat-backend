@@ -1,4 +1,4 @@
-package com.avalon.avalonchat.global.configuration;
+package com.avalon.avalonchat.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import net.nurigo.sdk.NurigoApp;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 
-import com.avalon.avalonchat.global.configuration.message.CoolSmsProperties;
+import com.avalon.avalonchat.configuration.message.CoolSmsProperties;
 
 import lombok.RequiredArgsConstructor;
 

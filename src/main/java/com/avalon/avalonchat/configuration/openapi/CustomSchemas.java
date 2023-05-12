@@ -1,4 +1,4 @@
-package com.avalon.avalonchat.global.configuration.openapi;
+package com.avalon.avalonchat.configuration.openapi;
 
 import io.swagger.v3.oas.models.media.EmailSchema;
 import io.swagger.v3.oas.models.media.Schema;

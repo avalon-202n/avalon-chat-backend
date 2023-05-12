@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.avalon.avalonchat.global.configuration.message.CoolSmsProperties;
+import com.avalon.avalonchat.configuration.message.CoolSmsProperties;
 
 @SpringBootTest
 class CoolSmsPropertiesTest {

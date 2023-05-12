@@ -1,4 +1,4 @@
-package com.avalon.avalonchat.global.configuration.jwt;
+package com.avalon.avalonchat.configuration.jwt;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;

@@ -1,4 +1,4 @@
-package com.avalon.avalonchat.global.configuration.jwt;
+package com.avalon.avalonchat.configuration.jwt;
 
 import java.security.Key;
 import java.util.Date;

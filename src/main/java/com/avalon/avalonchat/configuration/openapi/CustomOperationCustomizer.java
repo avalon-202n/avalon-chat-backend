@@ -1,4 +1,4 @@
-package com.avalon.avalonchat.global.configuration.openapi;
+package com.avalon.avalonchat.configuration.openapi;
 
 import java.util.Set;
 

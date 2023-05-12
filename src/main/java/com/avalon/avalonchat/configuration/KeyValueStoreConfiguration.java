@@ -1,4 +1,4 @@
-package com.avalon.avalonchat.global.configuration;
+package com.avalon.avalonchat.configuration;
 
 import static java.nio.charset.StandardCharsets.*;
 
