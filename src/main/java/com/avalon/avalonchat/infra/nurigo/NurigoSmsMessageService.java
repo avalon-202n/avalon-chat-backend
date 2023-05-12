@@ -5,7 +5,7 @@ import net.nurigo.sdk.message.model.Message;
 import net.nurigo.sdk.message.service.DefaultMessageService;
 
 import com.avalon.avalonchat.configuration.nurigo.NurigoProperties;
-import com.avalon.avalonchat.domain.user.service.SmsMessageService;
+import com.avalon.avalonchat.core.user.application.SmsMessageService;
 
 public class NurigoSmsMessageService implements SmsMessageService {
 

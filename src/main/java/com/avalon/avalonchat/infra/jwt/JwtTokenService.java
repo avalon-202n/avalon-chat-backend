@@ -5,8 +5,8 @@ import java.util.Date;
 import java.util.Map;
 
 import com.avalon.avalonchat.configuration.jwt.JwtProperties;
-import com.avalon.avalonchat.domain.login.service.TokenService;
-import com.avalon.avalonchat.domain.user.domain.User;
+import com.avalon.avalonchat.core.login.application.TokenService;
+import com.avalon.avalonchat.core.user.domain.User;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtParser;

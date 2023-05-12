@@ -12,7 +12,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.avalon.avalonchat.domain.model.SecurityUser;
+import com.avalon.avalonchat.core.model.SecurityUser;
 import com.avalon.avalonchat.infra.jwt.JwtTokenService;
 
 import lombok.RequiredArgsConstructor;

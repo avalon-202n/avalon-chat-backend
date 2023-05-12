@@ -13,10 +13,10 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.SerializationException;
 
-import com.avalon.avalonchat.domain.user.keyvalue.AuthCodeValue;
-import com.avalon.avalonchat.domain.user.keyvalue.EmailKey;
-import com.avalon.avalonchat.domain.user.keyvalue.KeyAuthCodeValueStore;
-import com.avalon.avalonchat.domain.user.keyvalue.PhoneNumberKey;
+import com.avalon.avalonchat.core.user.keyvalue.AuthCodeValue;
+import com.avalon.avalonchat.core.user.keyvalue.EmailKey;
+import com.avalon.avalonchat.core.user.keyvalue.KeyAuthCodeValueStore;
+import com.avalon.avalonchat.core.user.keyvalue.PhoneNumberKey;
 import com.avalon.avalonchat.infra.redis.RedisEmailKeyAuthCodeValueStore;
 import com.avalon.avalonchat.infra.redis.RedisPhoneNumberKeyAuthCodeValueStore;
 

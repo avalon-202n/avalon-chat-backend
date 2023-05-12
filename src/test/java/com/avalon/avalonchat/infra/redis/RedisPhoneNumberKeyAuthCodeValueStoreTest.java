@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.avalon.avalonchat.domain.user.keyvalue.AuthCodeValue;
-import com.avalon.avalonchat.domain.user.keyvalue.PhoneNumberKey;
+import com.avalon.avalonchat.core.user.keyvalue.AuthCodeValue;
+import com.avalon.avalonchat.core.user.keyvalue.PhoneNumberKey;
 import com.avalon.avalonchat.testsupport.base.BaseTestContainerTest;
 
 @Transactional

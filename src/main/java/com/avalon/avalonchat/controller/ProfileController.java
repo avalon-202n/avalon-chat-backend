@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.avalon.avalonchat.domain.model.SecurityUser;
-import com.avalon.avalonchat.domain.profile.dto.ProfileAddRequest;
-import com.avalon.avalonchat.domain.profile.dto.ProfileAddResponse;
-import com.avalon.avalonchat.domain.profile.dto.ProfileDetailedGetResponse;
-import com.avalon.avalonchat.domain.profile.dto.ProfileListGetResponse;
-import com.avalon.avalonchat.domain.profile.service.ProfileService;
+import com.avalon.avalonchat.core.model.SecurityUser;
+import com.avalon.avalonchat.core.profile.dto.ProfileAddRequest;
+import com.avalon.avalonchat.core.profile.dto.ProfileAddResponse;
+import com.avalon.avalonchat.core.profile.dto.ProfileDetailedGetResponse;
+import com.avalon.avalonchat.core.profile.dto.ProfileListGetResponse;
+import com.avalon.avalonchat.core.profile.application.ProfileService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;

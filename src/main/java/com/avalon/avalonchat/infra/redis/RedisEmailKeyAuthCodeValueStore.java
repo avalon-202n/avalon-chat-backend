@@ -5,9 +5,9 @@ import java.time.Duration;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 
-import com.avalon.avalonchat.domain.user.keyvalue.AuthCodeValue;
-import com.avalon.avalonchat.domain.user.keyvalue.EmailKey;
-import com.avalon.avalonchat.domain.user.keyvalue.KeyAuthCodeValueStore;
+import com.avalon.avalonchat.core.user.keyvalue.AuthCodeValue;
+import com.avalon.avalonchat.core.user.keyvalue.EmailKey;
+import com.avalon.avalonchat.core.user.keyvalue.KeyAuthCodeValueStore;
 
 public class RedisEmailKeyAuthCodeValueStore implements KeyAuthCodeValueStore<EmailKey> {
 

@@ -7,14 +7,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.avalon.avalonchat.domain.login.dto.EmailFindResponse;
-import com.avalon.avalonchat.domain.login.dto.LoginRequest;
-import com.avalon.avalonchat.domain.login.dto.LoginResponse;
-import com.avalon.avalonchat.domain.login.dto.PasswordFindRequest;
-import com.avalon.avalonchat.domain.login.dto.PasswordFindResponse;
-import com.avalon.avalonchat.domain.login.dto.TokenReissueRequest;
-import com.avalon.avalonchat.domain.login.dto.TokenReissueResponse;
-import com.avalon.avalonchat.domain.login.service.LoginService;
+import com.avalon.avalonchat.core.login.dto.EmailFindResponse;
+import com.avalon.avalonchat.core.login.dto.LoginRequest;
+import com.avalon.avalonchat.core.login.dto.LoginResponse;
+import com.avalon.avalonchat.core.login.dto.PasswordFindRequest;
+import com.avalon.avalonchat.core.login.dto.PasswordFindResponse;
+import com.avalon.avalonchat.core.login.dto.TokenReissueRequest;
+import com.avalon.avalonchat.core.login.dto.TokenReissueResponse;
+import com.avalon.avalonchat.core.login.application.LoginService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

@@ -3,7 +3,7 @@ package com.avalon.avalonchat.configuration.jwt;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.authority.AuthorityUtils;
 
-import com.avalon.avalonchat.domain.model.SecurityUser;
+import com.avalon.avalonchat.core.model.SecurityUser;
 
 public class Jwt extends AbstractAuthenticationToken {
 
