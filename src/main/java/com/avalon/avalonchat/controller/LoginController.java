@@ -1,4 +1,4 @@
-package com.avalon.avalonchat.domain.login.controller;
+package com.avalon.avalonchat.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;

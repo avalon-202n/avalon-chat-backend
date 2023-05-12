@@ -1,4 +1,4 @@
-package com.avalon.avalonchat.domain.user.controller;
+package com.avalon.avalonchat.controller;
 
 import static com.avalon.avalonchat.global.util.ResponseEntityUtil.*;
 
