@@ -130,22 +130,6 @@ class ProfileServiceImplTest extends BaseTestContainerTest {
 	}
 
 	@Test
-	void userId_로_profileId_조회_성공() {
-		//given
-		User user = createUser("hello@world.com", "password");
-		User savedUser = userRepository.save(user);
-
-		Profile profile = createProfile(user, "hi there", LocalDate.of(1997, 8, 21), "haha", "01055110625");
-		Profile savedProfile = profileRepository.save(profile);
-
-		//when
-		long foundProfileId = sut.getProfileIdByUserId(savedUser.getId());
-
-		//then
-		assertThat(foundProfileId).isEqualTo(savedProfile.getId());
-	}
-
-	@Test
 	void profileId_로_profile_상세_조회_성공() {
 		//given
 		User user = createUser("hello@world.com", "password");

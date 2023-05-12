@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.avalon.avalonchat.core.login.application.GetProfileIdService;
 import com.avalon.avalonchat.core.profile.domain.Profile;
 import com.avalon.avalonchat.core.profile.domain.ProfileRepository;
 import com.avalon.avalonchat.core.profile.dto.ProfileAddRequest;
@@ -24,8 +23,7 @@ import lombok.RequiredArgsConstructor;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
-public class ProfileServiceImpl
-	implements ProfileService, GetProfileIdService {
+public class ProfileServiceImpl implements ProfileService {
 
 	private final ProfileRepository repository;
 	private final UserRepository userRepository;
@@ -76,11 +74,5 @@ public class ProfileServiceImpl
 	public List<ProfileListGetResponse> getListById(long profileId) {
 		// find friendProfiles & return
 		return repository.findAllByMyProfileId(profileId);
-	}
-
-	@Override
-	public long getProfileIdByUserId(long userId) {
-		return repository.findProfileIdByUserId(userId)
-			.orElseThrow(() -> new IllegalStateException("profile not found for userId :" + userId));
 	}
 }

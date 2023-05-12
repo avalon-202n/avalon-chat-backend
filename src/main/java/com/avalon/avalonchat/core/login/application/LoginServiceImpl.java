@@ -18,6 +18,7 @@ import com.avalon.avalonchat.core.user.domain.Password;
 import com.avalon.avalonchat.core.user.domain.User;
 import com.avalon.avalonchat.core.user.domain.UserRepository;
 import com.avalon.avalonchat.global.error.exception.BadRequestException;
+import com.avalon.avalonchat.global.error.exception.NotFoundException;
 import com.avalon.avalonchat.global.model.RefreshToken;
 import com.avalon.avalonchat.infra.jwt.JwtTokenService;
 
@@ -33,7 +34,6 @@ public class LoginServiceImpl implements LoginService {
 	private final UserRepository userRepository;
 	private final ProfileRepository profileRepository;
 	private final RefreshTokenRepository refreshTokenRepository;
-	private final GetProfileIdService getProfileIdService;
 	private final JwtTokenService tokenService;
 	private final PasswordEncoder passwordEncoder;
 	private final RefreshTokenService refreshTokenService;
@@ -50,7 +50,8 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		// 3. jwt token create
-		long profileId = getProfileIdService.getProfileIdByUserId(findUser.getId());
+		long profileId = profileRepository.findProfileIdByUserId(findUser.getId())
+			.orElseThrow(() -> new NotFoundException("profile", " userId = " + findUser.getId()));
 		String accessToken = tokenService.createAccessToken(findUser, profileId);
 		String refreshToken = tokenService.createRefreshToken();
 
@@ -82,8 +83,7 @@ public class LoginServiceImpl implements LoginService {
 
 		// refresh token 조회
 		RefreshToken findRefreshToken = refreshTokenRepository.findById(request.getRefreshToken())
-			.orElseThrow(
-				() -> new BadRequestException("token-reissue-failed.refresh-token.notfound"));
+			.orElseThrow(() -> new BadRequestException("token-reissue-failed.refresh-token.notfound"));
 
 		// refresh token 의 user 조회
 		User findUser = userRepository.findById(findRefreshToken.getUserId())
@@ -91,7 +91,8 @@ public class LoginServiceImpl implements LoginService {
 				() -> new BadRequestException("token-reissue-failed.userid.notfound", findRefreshToken.getUserId()));
 
 		//profile 조회
-		long profileId = getProfileIdService.getProfileIdByUserId(findRefreshToken.getUserId());
+		long profileId = profileRepository.findProfileIdByUserId(findUser.getId())
+			.orElseThrow(() -> new NotFoundException("profile", " userId = " + findUser.getId()));
 
 		//access token & refresh token reissue
 		String accessToken = tokenService.createAccessToken(findUser, profileId);
