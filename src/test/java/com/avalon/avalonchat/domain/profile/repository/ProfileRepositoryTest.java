@@ -7,8 +7,6 @@ import static org.assertj.core.api.Assertions.*;
 import java.time.LocalDate;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -16,20 +14,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.avalon.avalonchat.domain.friend.domain.Friend;
 import com.avalon.avalonchat.domain.friend.repository.FriendRepository;
-import com.avalon.avalonchat.domain.profile.domain.BackgroundImage;
 import com.avalon.avalonchat.domain.profile.domain.Profile;
-import com.avalon.avalonchat.domain.profile.domain.ProfileImage;
 import com.avalon.avalonchat.domain.profile.dto.ProfileListGetResponse;
-import com.avalon.avalonchat.domain.user.domain.Email;
-import com.avalon.avalonchat.domain.user.domain.Password;
 import com.avalon.avalonchat.domain.user.domain.User;
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
 
 @Transactional
 @DataJpaTest
 class ProfileRepositoryTest {
-	@Autowired
-	private EntityManager em;
 	@Autowired
 	private ProfileRepository sut;
 	@Autowired
@@ -40,34 +32,33 @@ class ProfileRepositoryTest {
 	@Test
 	void profile_영속성_저장성공() {
 		//given
-		User user = new User(Email.of("email@gmail.com"), Password.of("password"));
-		userRepository.save(user);
+		User user = createUser();
+		Profile profile = createProfile(
+			user,
+			"bio",
+			LocalDate.of(2023, 4, 20),
+			"nickname",
+			"010-1234-5678"
+		);
 
-		String bio = "bio";
-		LocalDate birthDate = now();
-		String nickname = "nickname";
-		String phoneNumber = "01055110625";
+		profile.addProfileImage("http://profile/image/url");
+		profile.addBackgroundImage("http://background/image/url");
 
-		Profile profile = new Profile(user, bio, birthDate, nickname, phoneNumber);
+		// when
+		sut.save(profile);
 
-		//when & then
-		profile.addProfileImage("storage/url/profile_image.png");
-		profile.addBackgroundImage("storage/url/background_image.png");
-		ProfileImage profileImage = profile.getProfileImages().get(0);
-		BackgroundImage backgroundImage = profile.getBackgroundImages().get(0);
+		// then
+		assertThat(profile.getUser()).isEqualTo(user);
+		assertThat(profile.getBio()).isEqualTo("bio");
+		assertThat(profile.getBirthDate()).isEqualTo(LocalDate.of(2023, 4, 20));
+		assertThat(profile.getNickname()).isEqualTo("nickname");
+		assertThat(profile.getPhoneNumber()).isEqualTo("010-1234-5678");
+		assertThat(profile.getLatestProfileImageUrl()).isEqualTo("http://profile/image/url");
 
-		em.persist(profile);
-		assertThat(em.contains(profile)).isTrue();
-		assertThat(em.contains(profileImage)).isTrue();
-		assertThat(em.contains(backgroundImage)).isTrue();
-
-		em.flush();
-		em.clear();
-		ProfileImage savedProfileImage = em.find(ProfileImage.class, profileImage.getId());
-		BackgroundImage savedBackgroundImage = em.find(BackgroundImage.class, backgroundImage.getId());
-
-		assertThat(savedProfileImage.getUrl()).isEqualTo(profile.getProfileImages().get(0).getUrl());
-		assertThat(savedBackgroundImage.getUrl()).isEqualTo(profile.getBackgroundImages().get(0).getUrl());
+		assertThat(profile.getProfileImages()).hasSize(1);
+		assertThat(profile.getBackgroundImages()).hasSize(1);
+		assertThat(profile.getProfileImages().get(0).getUrl()).isEqualTo("http://profile/image/url");
+		assertThat(profile.getBackgroundImages().get(0).getUrl()).isEqualTo("http://background/image/url");
 	}
 
 	@Test
@@ -76,62 +67,66 @@ class ProfileRepositoryTest {
 		User user1 = userRepository.save(createUser("email@gmail1.com", "password1"));
 		User user2 = userRepository.save(createUser("email@gmail2.com", "password2"));
 
-		Profile profile1 = sut.save(new Profile(user1, "bio1", now(), "nickname1", "010-1234-5678"));
-		Profile profile2 = sut.save(new Profile(user2, "bio2", now(), "nickname2", "010-8765-4321"));
+		Profile profile1 = sut.save(
+			createProfile(user1, "bio1", now(), "nickname1", "010-1234-5678"));
+		Profile profile2 = sut.save(
+			createProfile(user2, "bio2", now(), "nickname2", "010-1234-1234"));
 
 		// when
-		List<Profile> foundProfiles = sut.findAllByPhoneNumberIn(List.of("010-1234-5678", "010-8765-4321"));
+		List<Profile> foundProfiles = sut.findAllByPhoneNumberIn(List.of("010-1234-5678", "010-1234-1234"));
 
 		// then
 		assertThat(foundProfiles).containsExactlyInAnyOrder(profile1, profile2);
 	}
 
 	@Test
-	void myProfileId로_friendProfiles_조회성공() {
-		//given - ready for users
+	void findAllByMyProfileId_조회성공() {
+		//given
 		User myUser = createUser("myUser@world.com", "myUserPassword");
 		User friendUser1 = createUser("friendUser1@world.com", "friendUser1");
 		User friendUser2 = createUser("friendUser2@world.com", "friendUser2");
-		userRepository.save(myUser);
-		userRepository.save(friendUser1);
-		userRepository.save(friendUser2);
+		userRepository.saveAll(List.of(myUser, friendUser1, friendUser2));
 
-		// given - ready for profiles
 		Profile myProfile = createProfile(
-			myUser, "I'm myUser", of(1997, 8, 21), ",my", "01012345678"
+			myUser, "I'm myUser", of(1997, 8, 21),
+			",my", "01012345678"
 		);
 		Profile friendProfile1 = createProfile(
-			friendUser1, "I'm friend1", of(1998, 9, 22), "A_friend", "01012123434"
+			friendUser1, "I'm friend1", of(1998, 9, 22),
+			"A_friend", "01012123434"
 		);
 		Profile friendProfile2 = createProfile(
-			friendUser2, "I'm friend2", of(1999, 10, 23), "B_friend", "01011112222"
+			friendUser2, "I'm friend2", of(1999, 10, 23),
+			"B_friend", "01011112222"
 		);
 		friendProfile1.addProfileImage("url1");
 		friendProfile1.addProfileImage("url2");
 		friendProfile2.addProfileImage("url3");
 		friendProfile2.addProfileImage("url4");
-		Profile savedMyProfile = sut.save(myProfile);
-		sut.save(friendProfile1);
-		sut.save(friendProfile2);
+		sut.saveAll(List.of(myProfile, friendProfile1, friendProfile2));
 
-		// given - ready for friends
-		Friend friend1 = new Friend(myProfile, friendProfile1);
-		Friend friend2 = new Friend(myProfile, friendProfile2);
-		friendRepository.save(friend1);
-		friendRepository.save(friend2);
+		Friend friend1 = createFriend(myProfile, friendProfile1);
+		Friend friend2 = createFriend(myProfile, friendProfile2);
+		friendRepository.saveAll(List.of(friend1, friend2));
 
 		// when
-		List<ProfileListGetResponse> friendProfiles = sut.findAllByMyProfileId(savedMyProfile.getId());
+		List<ProfileListGetResponse> foundFriendProfiles = sut.findAllByMyProfileId(myProfile.getId());
 
 		// then
-		assertThat(friendProfiles.get(0).getProfileImageUrl()).isEqualTo("url2");
-		assertThat(friendProfiles.get(1).getProfileImageUrl()).isEqualTo("url4");
+		assertThat(foundFriendProfiles.get(0).getNickname()).isEqualTo(friendProfile1.getNickname());
+		assertThat(foundFriendProfiles.get(0).getBio()).isEqualTo(friendProfile1.getBio());
+		assertThat(foundFriendProfiles.get(0).getProfileImageUrl())
+			.isEqualTo(friendProfile1.getLatestProfileImageUrl());
+		assertThat(foundFriendProfiles.get(1).getNickname()).isEqualTo(friendProfile2.getNickname());
+		assertThat(foundFriendProfiles.get(1).getBio()).isEqualTo(friendProfile2.getBio());
+		assertThat(foundFriendProfiles.get(1).getProfileImageUrl())
+			.isEqualTo(friendProfile2.getLatestProfileImageUrl());
 	}
 
 	@Test
-	void latestProfileImageUrl_조회성공() {
+	void findLatestProfileImageUrl_조회성공() {
 		// given
-		User user = createUser("test@email.com", "passw0rd");
+		User user = createUser();
 		Profile profile = createProfile(user);
 
 		profile.addProfileImage("http://profile/image/url1");
@@ -148,5 +143,41 @@ class ProfileRepositoryTest {
 
 		// then
 		assertThat(optionalLatestProfileImageUrl).isEqualTo("http://profile/image/url5");
+	}
+
+	@Test
+	void findAllFriendPhoneNumbersByMyProfileId_조회성공() {
+		// given
+		User myUser = createUser("myUser@world.com", "myUserPassword");
+		User friendUser1 = createUser("friendUser1@world.com", "friendUser1");
+		User friendUser2 = createUser("friendUser2@world.com", "friendUser2");
+		userRepository.saveAll(List.of(myUser, friendUser1, friendUser2));
+
+		Profile myProfile = createProfile(
+			myUser, "I'm myUser", of(1997, 8, 21),
+			",my", "01012345678"
+		);
+		Profile friendProfile1 = createProfile(
+			friendUser1, "I'm friend1", of(1998, 9, 22),
+			"A_friend", "01012123434"
+		);
+		Profile friendProfile2 = createProfile(
+			friendUser2, "I'm friend2", of(1999, 10, 23),
+			"B_friend", "01011112222"
+		);
+		sut.saveAll(List.of(myProfile, friendProfile1, friendProfile2));
+
+		Friend friend1 = createFriend(myProfile, friendProfile1);
+		Friend friend2 = createFriend(myProfile, friendProfile2);
+		friendRepository.saveAll(List.of(friend1, friend2));
+
+		// when
+		List<String> foundFriendPhoneNumbers = sut.findAllFriendPhoneNumbersByMyProfileId(myProfile.getId());
+
+		// then
+		assertThat(foundFriendPhoneNumbers.get(0))
+			.isIn(friendProfile1.getPhoneNumber(), friendProfile2.getPhoneNumber());
+		assertThat(foundFriendPhoneNumbers.get(1))
+			.isIn(friendProfile1.getPhoneNumber(), friendProfile2.getPhoneNumber());
 	}
 }

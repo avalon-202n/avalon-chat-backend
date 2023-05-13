@@ -23,11 +23,4 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
 		+ "INNER JOIN f.friendProfile fp "
 		+ "WHERE f.id IN :friendIds")
 	List<FriendAddResponse> findAllByFriendIds(@Param("friendIds") List<Long> friendIds);
-
-	@Query("SELECT fp.phoneNumber "
-		+ "FROM Friend f "
-		+ "INNER JOIN f.friendProfile fp "
-		+ "INNER JOIN f.myProfile mp "
-		+ "WHERE mp.id = :myProfileId")
-	List<String> findAllFriendPhoneNumbersByMyProfileId(@Param("myProfileId") long myProfileId);
 }

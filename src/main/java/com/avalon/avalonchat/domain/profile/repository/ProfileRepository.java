@@ -41,4 +41,11 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
 			+ "AND pi.createdAt = (SELECT MAX(i.createdAt) FROM ProfileImage i WHERE i.profile.id = :profileId)"
 	)
 	Optional<String> findLatestProfileImageUrl(@Param("profileId") long profileId);
+
+	@Query("SELECT fp.phoneNumber "
+		+ "FROM Friend f "
+		+ "INNER JOIN f.friendProfile fp "
+		+ "INNER JOIN f.myProfile mp "
+		+ "WHERE mp.id = :myProfileId")
+	List<String> findAllFriendPhoneNumbersByMyProfileId(@Param("myProfileId") long myProfileId);
 }

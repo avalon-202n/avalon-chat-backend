@@ -1,10 +1,11 @@
 package com.avalon.avalonchat.domain.friend.service;
 
+import static com.avalon.avalonchat.testsupport.DtoFixture.*;
+import static com.avalon.avalonchat.testsupport.Fixture.*;
 import static java.time.LocalDate.*;
-import static org.assertj.core.api.AssertionsForClassTypes.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -25,8 +26,6 @@ import com.avalon.avalonchat.domain.user.domain.Email;
 import com.avalon.avalonchat.domain.user.domain.Password;
 import com.avalon.avalonchat.domain.user.domain.User;
 import com.avalon.avalonchat.domain.user.repository.UserRepository;
-import com.avalon.avalonchat.testsupport.DtoFixture;
-import com.avalon.avalonchat.testsupport.Fixture;
 
 @Transactional
 @SpringBootTest
@@ -115,46 +114,44 @@ class FriendServiceImplTest {
 
 	@Test
 	@Transactional
-	void 친구추가_성공() {
+	void 이미친구인번호를제외하고_친구추가_성공() {
 		// given
-		User myUser = Fixture.createUser("myemail@email.com", "password");
-		Profile myProfile = Fixture.createProfile(
+		User myUser = createUser("myemail@email.com", "password");
+		Profile myProfile = createProfile(
 			myUser, "my bio", LocalDate.of(1999, 01, 01),
 			"myNickname", "010-1234-5678"
 		);
 
-		User friendUser = Fixture.createUser("friendemail@email.com", "password");
-		Profile friendProfile = Fixture.createProfile(
-			friendUser, "friend bio", LocalDate.of(2000, 02, 02),
-			"friendNickname", "010-1111-2222"
+		User friendUser1 = createUser("friendemail1@email.com", "password");
+		Profile friendProfile1 = createProfile(
+			friendUser1, "friend bio1", LocalDate.of(2000, 02, 02),
+			"friendNickname1", "010-1111-2222"
 		);
 
-		User friendUser2 = Fixture.createUser("friendemail2@email.com", "password");
-		Profile friendProfile2 = Fixture.createProfile(
-			friendUser2, "friend bio", LocalDate.of(2000, 02, 02),
-			"friendNickname", "010-1212-3434"
+		User friendUser2 = createUser("friendemail2@email.com", "password");
+		Profile friendProfile2 = createProfile(
+			friendUser2, "friend bio2", LocalDate.of(2000, 03, 03),
+			"friendNickname2", "010-1212-3434"
 		);
 
-		userRepository.save(myUser);
-		userRepository.save(friendUser);
-		userRepository.save(friendUser2);
-		profileRepository.save(myProfile);
-		profileRepository.save(friendProfile);
-		profileRepository.save(friendProfile2);
+		userRepository.saveAll(List.of(myUser, friendUser1, friendUser2));
+		profileRepository.saveAll(List.of(myProfile, friendProfile1, friendProfile2));
 
-		Friend friend = Fixture.createFriend(myProfile, friendProfile);
+		Friend friend = createFriend(myProfile, friendProfile1);
 		friendRepository.save(friend);
 
-		List<String> phoneNumbers = new ArrayList<>();
-		phoneNumbers.add(friendProfile.getPhoneNumber());
-		phoneNumbers.add(friendProfile2.getPhoneNumber());
-		FriendAddRequest request = DtoFixture.friendAddRequest(phoneNumbers);
+		FriendAddRequest request
+			= friendAddRequest(List.of(friendProfile1.getPhoneNumber(), friendProfile2.getPhoneNumber()));
 
 		// when
 		List<FriendAddResponse> responses = sut.addFriend(myProfile.getId(), request);
 
 		// then
-		assertThat(responses.size()).isEqualTo(1);
+		assertThat(responses).hasSize(1);
 		assertThat(responses.get(0).getFriendProfileId()).isEqualTo(friendProfile2.getId());
+		assertThat(responses.get(0).getNickname()).isEqualTo(friendProfile2.getNickname());
+		assertThat(responses.get(0).getBio()).isEqualTo(friendProfile2.getBio());
+		assertThat(responses.get(0).getProfileImage()).isEqualTo(friendProfile2.getLatestProfileImageUrl());
+		assertThat(responses.get(0).getStatus()).isEqualTo(Status.NORMAL);
 	}
 }

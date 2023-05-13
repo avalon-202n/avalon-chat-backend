@@ -33,7 +33,7 @@ public class FriendServiceImpl implements FriendService {
 		Profile myProfile = profileRepository.findById(profileId)
 			.orElseThrow(() -> new NotFoundException("profile", profileId));
 
-		List<String> friendPhoneNumbers = friendRepository.findAllFriendPhoneNumbersByMyProfileId(myProfile.getId());
+		List<String> friendPhoneNumbers = profileRepository.findAllFriendPhoneNumbersByMyProfileId(myProfile.getId());
 
 		List<Friend> friends = profileRepository.findAllByPhoneNumberIn(request.getPhoneNumbers()).stream()
 			.filter(profile -> !friendPhoneNumbers.contains(profile.getPhoneNumber()))
