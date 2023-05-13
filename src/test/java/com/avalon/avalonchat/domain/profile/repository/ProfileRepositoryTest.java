@@ -127,4 +127,26 @@ class ProfileRepositoryTest {
 		assertThat(friendProfiles.get(0).getProfileImageUrl()).isEqualTo("url2");
 		assertThat(friendProfiles.get(1).getProfileImageUrl()).isEqualTo("url4");
 	}
+
+	@Test
+	void latestProfileImageUrl_조회성공() {
+		// given
+		User user = createUser("test@email.com", "passw0rd");
+		Profile profile = createProfile(user);
+
+		profile.addProfileImage("http://profile/image/url1");
+		profile.addProfileImage("http://profile/image/url2");
+		profile.addProfileImage("http://profile/image/url3");
+		profile.addProfileImage("http://profile/image/url4");
+		profile.addProfileImage("http://profile/image/url5");
+
+		userRepository.save(user);
+		sut.save(profile);
+
+		// when
+		String optionalLatestProfileImageUrl = sut.findLatestProfileImageUrl(profile.getId()).get();
+
+		// then
+		assertThat(optionalLatestProfileImageUrl).isEqualTo("http://profile/image/url5");
+	}
 }

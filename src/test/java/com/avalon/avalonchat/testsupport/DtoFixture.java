@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.avalon.avalonchat.domain.friend.dto.FriendAddRequest;
 import com.avalon.avalonchat.domain.login.dto.LoginRequest;
+import com.avalon.avalonchat.domain.profile.dto.BackgroundImageDeleteRequest;
+import com.avalon.avalonchat.domain.profile.dto.ProfileImageDeleteRequest;
 import com.avalon.avalonchat.domain.profile.dto.ProfileUpdateRequest;
 import com.avalon.avalonchat.domain.user.domain.Email;
 import com.avalon.avalonchat.domain.user.domain.Password;
@@ -96,6 +98,18 @@ public final class DtoFixture {
 		return new ProfileUpdateRequest(
 			birthDate, nickName, bio, profileImageUrl, backgroundImageUrl, phoneNumber
 		);
+	}
+
+	public static ProfileImageDeleteRequest profileImageDeleteRequest(
+		List<String> deletedProfileImageUrls
+	) {
+		return new ProfileImageDeleteRequest(deletedProfileImageUrls);
+	}
+
+	public static BackgroundImageDeleteRequest backgroundImageDeleteRequest(
+		List<String> deletedBackgroundImageUrls
+	) {
+		return new BackgroundImageDeleteRequest(deletedBackgroundImageUrls);
 	}
 	/* Profile Package DTO End */
 }

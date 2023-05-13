@@ -3,9 +3,15 @@ package com.avalon.avalonchat.domain.profile.dto;
 import java.util.List;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class BackgroundImageDeleteRequest {
 
-	@Schema(description = "삭제할 배경 이미지 인덱스 리스트", example = "[1, 2, ...]")
-	private List<Integer> deletedBackgroundImageIndexes;
+	@Schema(description = "삭제할 배경 이미지 url 리스트", example = "url1, url2, ...")
+	private List<String> deletedBackgroundImageUrls;
 }

@@ -1,6 +1,7 @@
 package com.avalon.avalonchat.domain.profile.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -8,9 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.avalon.avalonchat.domain.login.service.GetProfileIdService;
 import com.avalon.avalonchat.domain.profile.domain.Profile;
+import com.avalon.avalonchat.domain.profile.dto.BackgroundImageDeleteRequest;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddRequest;
 import com.avalon.avalonchat.domain.profile.dto.ProfileAddResponse;
 import com.avalon.avalonchat.domain.profile.dto.ProfileDetailedGetResponse;
+import com.avalon.avalonchat.domain.profile.dto.ProfileImageDeleteRequest;
 import com.avalon.avalonchat.domain.profile.dto.ProfileListGetResponse;
 import com.avalon.avalonchat.domain.profile.dto.ProfileUpdateRequest;
 import com.avalon.avalonchat.domain.profile.dto.ProfileUpdateResponse;
@@ -103,6 +106,51 @@ public class ProfileServiceImpl
 
 		// 4. return
 		return ProfileUpdateResponse.from(profile);
+	}
+
+	@Transactional
+	@Override
+	public void deleteProfileImage(long profileId, ProfileImageDeleteRequest request) {
+		// 1. find profile
+		Profile profile = profileRepository.findById(profileId)
+			.orElseThrow(() -> new NotFoundException("profile", profileId));
+
+		// 2. validation
+		if (request.getDeletedProfileImageUrls().size() == 0) {
+			throw new BadRequestException("profileImageDelete-failed.empty-parameter");
+		}
+		if (request.getDeletedProfileImageUrls().size() > profile.getProfileImages().size()) {
+			throw new BadRequestException("profileImageDelete-failed.index-out-of-range");
+		}
+
+		// 3. delete profileImages
+		profile.deleteProfileImage(request.getDeletedProfileImageUrls());
+
+		// 4. update latestProfileImageUrl
+		Optional<String> optionalLatestProfileImageUrl = profileRepository.findLatestProfileImageUrl(profileId);
+		if (optionalLatestProfileImageUrl.isPresent()) {
+			profile.updateLatestProfileImageUrl(optionalLatestProfileImageUrl.get());
+		} else {
+			profile.updateLatestProfileImageUrl(null);
+		}
+	}
+
+	@Override
+	public void deleteBackgroundImage(long profileId, BackgroundImageDeleteRequest request) {
+		// 1. find profile
+		Profile profile = profileRepository.findById(profileId)
+			.orElseThrow(() -> new NotFoundException("profile", profileId));
+
+		// 2. validation
+		if (request.getDeletedBackgroundImageUrls().size() == 0) {
+			throw new BadRequestException("backgroundImageDelete-failed.empty-parameter");
+		}
+		if (request.getDeletedBackgroundImageUrls().size() > profile.getBackgroundImages().size()) {
+			throw new BadRequestException("backgroundImageDelete-failed.index-out-of-range");
+		}
+
+		// 3. delete backgroundImages
+		profile.deleteBackgroundImage(request.getDeletedBackgroundImageUrls());
 	}
 
 	@Override

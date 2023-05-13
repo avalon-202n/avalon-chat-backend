@@ -32,4 +32,13 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
 			+ "WHERE p.id IN (SELECT f.friendProfile.id FROM Friend f WHERE f.myProfile.id = :myProfileId) "
 			+ "ORDER BY p.nickname")
 	List<ProfileListGetResponse> findAllByMyProfileId(@Param("myProfileId") long myProfileId);
+
+	@Query(
+		"SELECT pi.url "
+			+ "FROM Profile p "
+			+ "INNER JOIN p.profileImages pi "
+			+ "WHERE p.id = :profileId "
+			+ "AND pi.createdAt = (SELECT MAX(i.createdAt) FROM ProfileImage i WHERE i.profile.id = :profileId)"
+	)
+	Optional<String> findLatestProfileImageUrl(@Param("profileId") long profileId);
 }
