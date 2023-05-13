@@ -210,14 +210,16 @@ class ProfileServiceImplTest extends BaseTestContainerTest {
 	}
 
 	@Test
-	void profile_수정_성공() {
+	void profile_이미지포함_수정성공() {
 		// given
 		User user = createUser("email@email.com", "password");
 		Profile profile = createProfile(
-			user, "bio", LocalDate.of(1999, 01, 01),
-			"nickName", "010-1234-5678"
+			user,
+			"bio",
+			LocalDate.of(1999, 01, 01),
+			"nickName",
+			"010-1234-5678"
 		);
-
 		userRepository.save(user);
 		profileRepository.save(profile);
 
@@ -227,57 +229,60 @@ class ProfileServiceImplTest extends BaseTestContainerTest {
 			"updated bio",
 			"http://profile/image/url",
 			"http://background/image/url",
-			"010-1234-5678",
-			true,
-			true,
-			List.of(),
-			List.of()
+			"010-1234-5678"
 		);
 
 		// when
 		ProfileUpdateResponse response = sut.updateProfile(profile.getId(), request);
 
 		// then
+		assertThat(response.getBirthDate()).isEqualTo(LocalDate.of(1999, 01, 01));
+		assertThat(response.getNickname()).isEqualTo("nickName");
 		assertThat(response.getBio()).isNotEqualTo("bio");
+		assertThat(response.getBio()).isEqualTo("updated bio");
+		assertThat(response.getPhoneNumber()).isEqualTo("010-1234-5678");
+
+		assertThat(response.getProfileImageUrl()).isEqualTo("http://profile/image/url");
+		assertThat(response.getBackgroundImageUrls().get(0)).isEqualTo("http://background/image/url");
 	}
 
 	@Test
-	void profile_이미지삭제_성공() {
+	void profile_이미지제외_수정성공() {
 		// given
 		User user = createUser("email@email.com", "password");
 		Profile profile = createProfile(
-			user, "bio", LocalDate.of(1999, 01, 01),
-			"nickName", "010-1234-5678"
+			user,
+			"bio",
+			LocalDate.of(1999, 01, 01),
+			"nickName",
+			"010-1234-5678"
 		);
-
-		profile.addProfileImage("http://profile/image/url1");
-		profile.addProfileImage("http://profile/image/url2");
-		profile.addProfileImage("http://profile/image/url3");
-		profile.addProfileImage("http://profile/image/url4");
-		profile.addProfileImage("http://profile/image/url5");
-
 		userRepository.save(user);
 		profileRepository.save(profile);
 
 		ProfileUpdateRequest request = profileUpdateRequest(
-			LocalDate.of(1999, 01, 01),
-			"nickName",
-			"updated bio",
-			"http://profile/image/url6",
-			"http://background/image/url",
-			"010-1234-5678",
-			true,
-			true,
-			List.of(1, 2),
-			List.of()
+			LocalDate.of(1999, 02, 02),
+			"updated nickName",
+			"bio",
+			"",
+			null,
+			"010-1234-1234"
 		);
 
 		// when
 		ProfileUpdateResponse response = sut.updateProfile(profile.getId(), request);
 
 		// then
-		assertThat(response.getBio()).isNotEqualTo("bio");
-		assertThat(profile.getProfileImages().size()).isEqualTo(4);
+		assertThat(response.getBirthDate()).isNotEqualTo(LocalDate.of(1999, 01, 01));
+		assertThat(response.getBirthDate()).isEqualTo(LocalDate.of(1999, 02, 02));
+		assertThat(response.getNickname()).isNotEqualTo("nickName");
+		assertThat(response.getNickname()).isEqualTo("updated nickName");
+		assertThat(response.getBio()).isEqualTo("bio");
+		assertThat(response.getPhoneNumber()).isNotEqualTo("010-1234-5678");
+		assertThat(response.getPhoneNumber()).isEqualTo("010-1234-1234");
+
+		assertThat(response.getProfileImageUrl()).isNull();
+		assertThat(response.getBackgroundImageUrls().size()).isEqualTo(0);
 	}
 }
 

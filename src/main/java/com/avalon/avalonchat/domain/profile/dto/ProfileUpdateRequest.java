@@ -1,7 +1,6 @@
 package com.avalon.avalonchat.domain.profile.dto;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
@@ -35,16 +34,4 @@ public class ProfileUpdateRequest {
 	@NotNull
 	@Schema(description = "핸드폰 번호", example = "010-1234-5678")
 	private String phoneNumber;
-
-	@Schema(description = "프로필 이미지 추가 여부", example = "true/false")
-	private boolean profileImageAdded;
-
-	@Schema(description = "배경 이미지 추가 여부", example = "true/false")
-	private boolean backgroundImageAdded;
-
-	@Schema(description = "삭제할 프로필 이미지 인덱스 리스트", example = "[1, 2, ...]")
-	private List<Integer> deletedProfileImageIndexes;
-
-	@Schema(description = "삭제할 배경 이미지 인덱스 리스트", example = "[1, 2, ...]")
-	private List<Integer> deletedBackgroundImageIndexes;
 }

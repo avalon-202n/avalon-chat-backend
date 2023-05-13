@@ -84,21 +84,18 @@ public final class DtoFixture {
 		return new FriendAddRequest(phoneNumbers);
 	}
 
+	/* Profile Package DTO Start */
 	public static ProfileUpdateRequest profileUpdateRequest(
 		LocalDate birthDate,
 		String nickName,
 		String bio,
 		String profileImageUrl,
 		String backgroundImageUrl,
-		String phoneNumber,
-		boolean profileImageAdded,
-		boolean backgroundImageAdded,
-		List<Integer> deletedProfileImageIndexes,
-		List<Integer> deletedBackgroundImageIndexes
+		String phoneNumber
 	) {
 		return new ProfileUpdateRequest(
-			birthDate, nickName, bio, profileImageUrl, backgroundImageUrl, phoneNumber,
-			profileImageAdded, backgroundImageAdded, deletedProfileImageIndexes, deletedBackgroundImageIndexes
+			birthDate, nickName, bio, profileImageUrl, backgroundImageUrl, phoneNumber
 		);
 	}
+	/* Profile Package DTO End */
 }

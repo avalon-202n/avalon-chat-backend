@@ -2,6 +2,7 @@ package com.avalon.avalonchat.domain.profile.service;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -92,18 +93,13 @@ public class ProfileServiceImpl
 			request.getBio(), request.getBirthDate(), request.getNickname(), request.getPhoneNumber()
 		);
 
-		// 3. update images
-		if (request.isProfileImageAdded()) {
+		// 3. update images if not null or empty
+		if (!StringUtils.isEmpty(request.getProfileImageUrl())) {
 			profile.addProfileImage(request.getProfileImageUrl());
 		}
-		if (request.isBackgroundImageAdded()) {
+		if (!StringUtils.isEmpty(request.getBackgroundImageUrl())) {
 			profile.addBackgroundImage(request.getBackgroundImageUrl());
 		}
-
-		request.getDeletedProfileImageIndexes().stream()
-			.forEach(index -> profile.deleteProfileImage(index));
-		request.getDeletedBackgroundImageIndexes().stream()
-			.forEach(index -> profile.deleteBackgroundImage(index));
 
 		// 4. return
 		return ProfileUpdateResponse.from(profile);
