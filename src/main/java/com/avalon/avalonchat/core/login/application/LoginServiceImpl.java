@@ -1,5 +1,8 @@
 package com.avalon.avalonchat.core.login.application;
 
+import com.avalon.avalonchat.core.user.application.PhoneNumberAuthCodeStore;
+import com.avalon.avalonchat.core.user.application.keyvalue.AuthCodeValue;
+import com.avalon.avalonchat.core.user.application.keyvalue.PhoneNumberKey;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +40,7 @@ public class LoginServiceImpl implements LoginService {
 	private final JwtTokenService tokenService;
 	private final PasswordEncoder passwordEncoder;
 	private final RefreshTokenService refreshTokenService;
+	private final PhoneNumberAuthCodeStore phoneNumberAuthCodeStore;
 
 	@Override
 	public LoginResponse login(LoginRequest request) {
@@ -62,6 +66,15 @@ public class LoginServiceImpl implements LoginService {
 
 	@Override
 	public EmailFindResponse findEmailByPhoneNumber(String phoneNumber) {
+		// 1. check authenticate phoneNumber
+		PhoneNumberKey phoneNumberKey = PhoneNumberKey.fromString(phoneNumber);
+		AuthCodeValue authCodeValue = phoneNumberAuthCodeStore.get(phoneNumberKey);
+
+		if(!authCodeValue.isAuthenticated()) {
+			throw new BadRequestException("phonenumber.no-auth", phoneNumber);
+		}
+
+		// 2. find email
 		Profile findProfile = profileRepository.findByPhoneNumber(phoneNumber)
 			.orElseThrow(() -> new BadRequestException("email-find.phoneNumber.notfound"));
 		return new EmailFindResponse(findProfile.getUser().getEmail());
