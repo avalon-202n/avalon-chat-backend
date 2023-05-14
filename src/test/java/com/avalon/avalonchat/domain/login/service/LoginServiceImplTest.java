@@ -2,6 +2,9 @@ package com.avalon.avalonchat.domain.login.service;
 
 import static org.assertj.core.api.AssertionsForClassTypes.*;
 
+import com.avalon.avalonchat.domain.user.keyvalue.AuthCodeValue;
+import com.avalon.avalonchat.domain.user.keyvalue.PhoneNumberKey;
+import com.avalon.avalonchat.infra.redis.RedisPhoneNumberKeyAuthCodeValueStore;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -37,6 +40,9 @@ public class LoginServiceImplTest {
 
 	@Autowired
 	private ProfileRepository profileRepository;
+
+	@Autowired
+	private RedisPhoneNumberKeyAuthCodeValueStore redisPhoneNumberKeyAuthCodeValueStore;
 
 	@Disabled("회원가입 프로세스에 대한 정리 필요")
 	@Test
@@ -84,9 +90,14 @@ public class LoginServiceImplTest {
 		Profile profile = Fixture.createProfile(user);
 		profileRepository.save(profile);
 
+		PhoneNumberKey key = PhoneNumberKey.fromString(profile.getPhoneNumber());
+		String authCode = "cert-code";
+
+		redisPhoneNumberKeyAuthCodeValueStore.put(key, authCode);
+		redisPhoneNumberKeyAuthCodeValueStore.checkKeyValueMatches(key, "-----");
+
 		//when
-		String phoneNumber = "01012345678";
-		EmailFindResponse emailFindResponse = sut.findEmailByPhoneNumber(phoneNumber);
+		EmailFindResponse emailFindResponse = sut.findEmailByPhoneNumber(profile.getPhoneNumber());
 
 		//then
 		assertThat(emailFindResponse.getEmail().getValue()).isEqualTo("avalon@e.com");
@@ -94,11 +105,21 @@ public class LoginServiceImplTest {
 
 	@Test
 	void 전화번호로_이메일_찾기_실패() {
-		//when
-		String phoneNumber = "01012345678";
+		//given
+		User user = Fixture.createUser();
+		userRepository.save(user);
+
+		Profile profile = Fixture.createProfile(user);
+		profileRepository.save(profile);
+
+		PhoneNumberKey key = PhoneNumberKey.fromString(profile.getPhoneNumber());
+		String authCode = "cert-code";
+
+		redisPhoneNumberKeyAuthCodeValueStore.put(key, authCode);
+		redisPhoneNumberKeyAuthCodeValueStore.checkKeyValueMatches(key, "wrong-cert-code");
 
 		//then
 		assertThatExceptionOfType(RuntimeException.class)
-			.isThrownBy(() -> sut.findEmailByPhoneNumber(phoneNumber));
+			.isThrownBy(() -> sut.findEmailByPhoneNumber(profile.getPhoneNumber()));
 	}
 }
