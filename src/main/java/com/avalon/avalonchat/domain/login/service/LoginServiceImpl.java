@@ -61,8 +61,18 @@ public class LoginServiceImpl implements LoginService {
 
 	@Override
 	public EmailFindResponse findEmailByPhoneNumber(String phoneNumber) {
+		// 1. check authenticate phoneNumber
+		PhoneNumberKey phoneNumberKey = PhoneNumberKey.fromString(phoneNumber);
+		AuthCodeValue authCodeValue = redisPhoneNumberKeyAuthCodeValueStore.get(phoneNumberKey);
+
+		if(!authCodeValue.isAuthenticated()) {
+			throw new BadRequestException("phonenumber.no-auth", phoneNumber);
+		}
+
+		// 2. find email
 		Profile findProfile = profileRepository.findByPhoneNumber(phoneNumber)
 			.orElseThrow(() -> new BadRequestException("email-find.phoneNumber.notfound"));
+
 		return new EmailFindResponse(findProfile.getUser().getEmail());
 	}
 
