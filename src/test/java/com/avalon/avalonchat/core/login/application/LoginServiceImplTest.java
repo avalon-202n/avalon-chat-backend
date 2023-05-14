@@ -2,9 +2,6 @@ package com.avalon.avalonchat.core.login.application;
 
 import static org.assertj.core.api.AssertionsForClassTypes.*;
 
-import com.avalon.avalonchat.core.user.application.PhoneNumberAuthCodeStore;
-import com.avalon.avalonchat.core.user.application.keyvalue.AuthCodeValue;
-import com.avalon.avalonchat.core.user.application.keyvalue.PhoneNumberKey;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -18,7 +15,10 @@ import com.avalon.avalonchat.core.login.dto.LoginRequest;
 import com.avalon.avalonchat.core.login.dto.LoginResponse;
 import com.avalon.avalonchat.core.profile.domain.Profile;
 import com.avalon.avalonchat.core.profile.domain.ProfileRepository;
+import com.avalon.avalonchat.core.user.application.PhoneNumberAuthCodeStore;
 import com.avalon.avalonchat.core.user.application.UserServiceImpl;
+import com.avalon.avalonchat.core.user.application.keyvalue.AuthCodeValue;
+import com.avalon.avalonchat.core.user.application.keyvalue.PhoneNumberKey;
 import com.avalon.avalonchat.core.user.domain.User;
 import com.avalon.avalonchat.core.user.domain.UserRepository;
 import com.avalon.avalonchat.core.user.dto.SignUpRequest;
@@ -30,19 +30,15 @@ import com.avalon.avalonchat.testsupport.Fixture;
 @SpringBootTest
 public class LoginServiceImplTest {
 	@Autowired
+	PhoneNumberAuthCodeStore phoneNumberKeyValueStore;
+	@Autowired
 	private LoginServiceImpl sut;
-
 	@Autowired
 	private UserServiceImpl userServiceImpl;
-
 	@Autowired
 	private UserRepository userRepository;
-
 	@Autowired
 	private ProfileRepository profileRepository;
-
-	@Autowired
-	PhoneNumberAuthCodeStore phoneNumberKeyValueStore;
 
 	@Disabled("회원가입 프로세스에 대한 정리 필요")
 	@Test

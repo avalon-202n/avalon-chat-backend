@@ -1,8 +1,5 @@
 package com.avalon.avalonchat.core.login.application;
 
-import com.avalon.avalonchat.core.user.application.PhoneNumberAuthCodeStore;
-import com.avalon.avalonchat.core.user.application.keyvalue.AuthCodeValue;
-import com.avalon.avalonchat.core.user.application.keyvalue.PhoneNumberKey;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +14,9 @@ import com.avalon.avalonchat.core.login.dto.TokenReissueResponse;
 import com.avalon.avalonchat.core.login.repository.RefreshTokenRepository;
 import com.avalon.avalonchat.core.profile.domain.Profile;
 import com.avalon.avalonchat.core.profile.domain.ProfileRepository;
+import com.avalon.avalonchat.core.user.application.PhoneNumberAuthCodeStore;
+import com.avalon.avalonchat.core.user.application.keyvalue.AuthCodeValue;
+import com.avalon.avalonchat.core.user.application.keyvalue.PhoneNumberKey;
 import com.avalon.avalonchat.core.user.domain.Password;
 import com.avalon.avalonchat.core.user.domain.User;
 import com.avalon.avalonchat.core.user.domain.UserRepository;
@@ -70,7 +70,7 @@ public class LoginServiceImpl implements LoginService {
 		PhoneNumberKey phoneNumberKey = PhoneNumberKey.fromString(phoneNumber);
 		AuthCodeValue authCodeValue = phoneNumberAuthCodeStore.get(phoneNumberKey);
 
-		if(!authCodeValue.isAuthenticated()) {
+		if (!authCodeValue.isAuthenticated()) {
 			throw new BadRequestException("phonenumber.no-auth", phoneNumber);
 		}
 
