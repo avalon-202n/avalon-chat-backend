@@ -94,7 +94,7 @@ public class LoginServiceImplTest {
 		String authCode = "cert-code";
 
 		redisPhoneNumberKeyAuthCodeValueStore.put(key, authCode);
-		redisPhoneNumberKeyAuthCodeValueStore.checkKeyValueMatches(key, "-----");
+		redisPhoneNumberKeyAuthCodeValueStore.checkKeyValueMatches(key, authCode);
 
 		//when
 		EmailFindResponse emailFindResponse = sut.findEmailByPhoneNumber(profile.getPhoneNumber());
