@@ -2,6 +2,7 @@ package com.avalon.avalonchat.testsupport;
 
 import java.time.LocalDate;
 
+import com.avalon.avalonchat.core.friend.domain.Friend;
 import com.avalon.avalonchat.core.profile.domain.Profile;
 import com.avalon.avalonchat.core.user.domain.Email;
 import com.avalon.avalonchat.core.user.domain.Password;
@@ -44,5 +45,9 @@ public final class Fixture {
 			nickname,
 			phoneNumber
 		);
+	}
+
+	public static Friend createFriend(Profile myProfile, Profile friendProfile) {
+		return new Friend(myProfile, friendProfile);
 	}
 }
