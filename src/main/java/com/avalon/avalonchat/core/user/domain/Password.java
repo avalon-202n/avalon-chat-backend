@@ -3,8 +3,6 @@ package com.avalon.avalonchat.core.user.domain;
 import static com.avalon.avalonchat.global.util.Preconditions.*;
 import static lombok.AccessLevel.*;
 
-import java.util.function.Function;
-
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.PrePersist;
@@ -23,7 +21,7 @@ public class Password {
 	public static final int MAX_LENGTH = 16;
 
 	@Setter
-	private static Function<String, String> encodingFunction;
+	private static Encoder encoder;
 
 	@Column(name = "password", nullable = false)
 	private String value;
@@ -38,8 +36,18 @@ public class Password {
 		return new Password(value);
 	}
 
+	public boolean matches(Password encodedPassword) {
+		return encoder.matches(this.value, encodedPassword.value);
+	}
+
 	@PrePersist
 	private void encodePassword() {
-		this.value = encodingFunction.apply(this.value);
+		this.value = encoder.encode(this.value);
+	}
+
+	public interface Encoder {
+		String encode(String rawPassword);
+
+		boolean matches(String rawPassword, String encodedPassword);
 	}
 }

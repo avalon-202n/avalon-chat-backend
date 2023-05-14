@@ -21,15 +21,22 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration(proxyBeanMethods = false)
 public class WebSecurityConfiguration {
 
-	static PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
 	static {
-		Password.setEncodingFunction(passwordEncoder::encode);
-	}
+		PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		// set encoder as simple delegator of BCryptPasswordEncoder
+		Password.setEncoder(
+			new Password.Encoder() {
+				@Override
+				public String encode(String rawPassword) {
+					return passwordEncoder.encode(rawPassword);
+				}
 
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return passwordEncoder;
+				@Override
+				public boolean matches(String rawPassword, String encodedPassword) {
+					return passwordEncoder.matches(rawPassword, encodedPassword);
+				}
+			}
+		);
 	}
 
 	@Bean

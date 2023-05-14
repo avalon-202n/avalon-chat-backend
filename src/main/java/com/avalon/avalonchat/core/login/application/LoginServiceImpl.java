@@ -1,6 +1,5 @@
 package com.avalon.avalonchat.core.login.application;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +34,6 @@ public class LoginServiceImpl implements LoginService {
 	private final ProfileRepository profileRepository;
 	private final RefreshTokenRepository refreshTokenRepository;
 	private final JwtTokenService tokenService;
-	private final PasswordEncoder passwordEncoder;
 	private final RefreshTokenService refreshTokenService;
 
 	@Override
@@ -45,7 +43,7 @@ public class LoginServiceImpl implements LoginService {
 			.orElseThrow(() -> new BadRequestException("login-failed.email.notfound", request.getEmail()));
 
 		// 2. verify password
-		if (!passwordEncoder.matches(request.getPassword(), findUser.getPassword().getValue())) {
+		if (!request.getPassword().matches(findUser.getPassword())) {
 			throw new BadRequestException("login-failed.password.mismatch");
 		}
 
