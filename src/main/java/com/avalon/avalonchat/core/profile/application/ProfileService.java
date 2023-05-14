@@ -1,4 +1,4 @@
-package com.avalon.avalonchat.domain.profile.service;
+package com.avalon.avalonchat.core.profile.application;
 
 import java.util.List;
 
