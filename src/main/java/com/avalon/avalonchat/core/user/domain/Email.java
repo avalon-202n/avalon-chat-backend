@@ -1,4 +1,4 @@
-package com.avalon.avalonchat.domain.user.domain;
+package com.avalon.avalonchat.core.user.domain;
 
 import static com.avalon.avalonchat.global.util.Preconditions.*;
 import static lombok.AccessLevel.*;

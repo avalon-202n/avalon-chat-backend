@@ -1,4 +1,4 @@
-package com.avalon.avalonchat.domain.model;
+package com.avalon.avalonchat.global.model;
 
 import java.time.LocalDateTime;
 

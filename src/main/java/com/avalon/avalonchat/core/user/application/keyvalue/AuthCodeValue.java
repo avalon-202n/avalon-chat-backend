@@ -1,4 +1,4 @@
-package com.avalon.avalonchat.domain.user.keyvalue;
+package com.avalon.avalonchat.core.user.application.keyvalue;
 
 import static lombok.AccessLevel.*;
 

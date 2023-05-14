@@ -1,4 +1,4 @@
-package com.avalon.avalonchat.domain.chat.domain;
+package com.avalon.avalonchat.core.chat.domain;
 
 import org.springframework.data.repository.CrudRepository;
 

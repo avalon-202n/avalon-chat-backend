@@ -1,4 +1,4 @@
-package com.avalon.avalonchat.domain.profile.domain;
+package com.avalon.avalonchat.core.profile.domain;
 
 import static org.assertj.core.api.AssertionsForClassTypes.*;
 
@@ -6,9 +6,9 @@ import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
 
-import com.avalon.avalonchat.domain.user.domain.Email;
-import com.avalon.avalonchat.domain.user.domain.Password;
-import com.avalon.avalonchat.domain.user.domain.User;
+import com.avalon.avalonchat.core.user.domain.Email;
+import com.avalon.avalonchat.core.user.domain.Password;
+import com.avalon.avalonchat.core.user.domain.User;
 
 class BackgroundImageTest {
 

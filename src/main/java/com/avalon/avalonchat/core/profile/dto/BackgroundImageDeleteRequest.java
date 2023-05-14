@@ -1,4 +1,4 @@
-package com.avalon.avalonchat.domain.profile.dto;
+package com.avalon.avalonchat.core.profile.dto;
 
 import java.util.List;
 

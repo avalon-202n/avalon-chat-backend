@@ -1,4 +1,4 @@
-package com.avalon.avalonchat.global.configuration.security;
+package com.avalon.avalonchat.configuration.security;
 
 import java.io.IOException;
 import java.io.OutputStream;

@@ -1,4 +1,4 @@
-package com.avalon.avalonchat.domain.profile.domain;
+package com.avalon.avalonchat.core.profile.domain;
 
 import static com.avalon.avalonchat.global.util.Preconditions.*;
 import static javax.persistence.FetchType.*;
@@ -9,7 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.avalon.avalonchat.domain.model.BaseAuditingEntity;
+import com.avalon.avalonchat.global.model.BaseAuditingEntity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

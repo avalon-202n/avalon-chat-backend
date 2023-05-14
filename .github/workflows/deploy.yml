@@ -10,6 +10,8 @@ jobs:
     environment: dev
     env:
       IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/${{ secrets.GCP_APP_NAME }}
+      PROFILE: dev
+
     steps:
       - name: Checkout to github with submodule
         uses: actions/checkout@v3
@@ -51,4 +53,12 @@ jobs:
           arguments: jib
 
       - name: Deploy Docker image
-        run: gcloud run deploy ${{ secrets.GCP_PROJECT_ID }} --image $IMAGE_NAME --region asia-northeast3 --platform managed
+        run: |
+          gcloud run deploy ${{ secrets.GCP_PROJECT_ID }} \
+          --image $IMAGE_NAME \
+          --platform managed \
+          --allow-unauthenticated \
+          --region asia-northeast3 \
+          --vpc-connector connector-dev \
+
+
