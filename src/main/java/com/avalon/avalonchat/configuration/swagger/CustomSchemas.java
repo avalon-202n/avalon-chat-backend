@@ -1,6 +1,7 @@
 package com.avalon.avalonchat.configuration.swagger;
 
 import io.swagger.v3.oas.models.media.EmailSchema;
+import io.swagger.v3.oas.models.media.PasswordSchema;
 import io.swagger.v3.oas.models.media.Schema;
 import lombok.NoArgsConstructor;
 
@@ -19,6 +20,12 @@ public final class CustomSchemas {
 		.description("이메일 - validated by RFC 5322")
 		.maxLength(64)
 		.example("hello@gmail.com")
+		.nullable(false);
+
+	public static final Schema<String> PASSWORD_SCHEMA = new PasswordSchema()
+		.description("비밀번호")
+		.maxLength(32)
+		.example("password")
 		.nullable(false);
 
 }

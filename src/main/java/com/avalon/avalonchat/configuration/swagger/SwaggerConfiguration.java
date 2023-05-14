@@ -1,11 +1,11 @@
 package com.avalon.avalonchat.configuration.swagger;
 
 import org.springdoc.core.SpringDocUtils;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.avalon.avalonchat.core.user.domain.Email;
+import com.avalon.avalonchat.core.user.domain.Password;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -14,6 +14,12 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 
 @Configuration(proxyBeanMethods = false)
 public class SwaggerConfiguration {
+
+	static {
+		SpringDocUtils config = SpringDocUtils.getConfig();
+		config.replaceWithSchema(Email.class, CustomSchemas.EMAIL_SCHEMA);
+		config.replaceWithSchema(Password.class, CustomSchemas.PASSWORD_SCHEMA);
+	}
 
 	@Bean
 	public OpenAPI openApi() {
@@ -31,12 +37,5 @@ public class SwaggerConfiguration {
 		return new OpenAPI()
 			.info(info)
 			.components(components);
-	}
-
-	@Bean
-	public ApplicationRunner applyCustomConfigurations() {
-		return args -> {
-			SpringDocUtils.getConfig().replaceWithSchema(Email.class, CustomSchemas.EMAIL_SCHEMA);
-		};
 	}
 }
