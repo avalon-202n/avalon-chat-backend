@@ -2,10 +2,10 @@ package com.avalon.avalonchat.testsupport;
 
 import java.time.LocalDate;
 
-import com.avalon.avalonchat.domain.profile.domain.Profile;
-import com.avalon.avalonchat.domain.user.domain.Email;
-import com.avalon.avalonchat.domain.user.domain.Password;
-import com.avalon.avalonchat.domain.user.domain.User;
+import com.avalon.avalonchat.core.profile.domain.Profile;
+import com.avalon.avalonchat.core.user.domain.Email;
+import com.avalon.avalonchat.core.user.domain.Password;
+import com.avalon.avalonchat.core.user.domain.User;
 
 public final class Fixture {
 

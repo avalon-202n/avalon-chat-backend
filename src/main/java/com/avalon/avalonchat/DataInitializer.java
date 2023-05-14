@@ -7,15 +7,15 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import com.avalon.avalonchat.domain.chat.domain.ChatMessageRepository;
-import com.avalon.avalonchat.domain.friend.domain.Friend;
-import com.avalon.avalonchat.domain.friend.repository.FriendRepository;
-import com.avalon.avalonchat.domain.profile.domain.Profile;
-import com.avalon.avalonchat.domain.profile.repository.ProfileRepository;
-import com.avalon.avalonchat.domain.user.domain.Email;
-import com.avalon.avalonchat.domain.user.domain.Password;
-import com.avalon.avalonchat.domain.user.domain.User;
-import com.avalon.avalonchat.domain.user.repository.UserRepository;
+import com.avalon.avalonchat.core.chat.domain.ChatMessageRepository;
+import com.avalon.avalonchat.core.friend.domain.Friend;
+import com.avalon.avalonchat.core.friend.domain.FriendRepository;
+import com.avalon.avalonchat.core.profile.domain.Profile;
+import com.avalon.avalonchat.core.profile.domain.ProfileRepository;
+import com.avalon.avalonchat.core.user.domain.Email;
+import com.avalon.avalonchat.core.user.domain.Password;
+import com.avalon.avalonchat.core.user.domain.User;
+import com.avalon.avalonchat.core.user.domain.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 

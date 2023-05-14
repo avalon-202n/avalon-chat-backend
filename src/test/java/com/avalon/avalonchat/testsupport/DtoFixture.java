@@ -1,18 +1,18 @@
 package com.avalon.avalonchat.testsupport;
 
-import com.avalon.avalonchat.domain.login.dto.LoginRequest;
-import com.avalon.avalonchat.domain.user.domain.Email;
-import com.avalon.avalonchat.domain.user.domain.Password;
-import com.avalon.avalonchat.domain.user.dto.EmailAuthenticationCheckRequest;
-import com.avalon.avalonchat.domain.user.dto.EmailAuthenticationCheckResponse;
-import com.avalon.avalonchat.domain.user.dto.EmailAuthenticationSendRequest;
-import com.avalon.avalonchat.domain.user.dto.EmailDuplicatedCheckRequest;
-import com.avalon.avalonchat.domain.user.dto.EmailDuplicatedCheckResponse;
-import com.avalon.avalonchat.domain.user.dto.PhoneNumberAuthenticationCheckRequest;
-import com.avalon.avalonchat.domain.user.dto.PhoneNumberAuthenticationCheckResponse;
-import com.avalon.avalonchat.domain.user.dto.PhoneNumberAuthenticationSendRequest;
-import com.avalon.avalonchat.domain.user.dto.SignUpRequest;
-import com.avalon.avalonchat.domain.user.dto.SignUpResponse;
+import com.avalon.avalonchat.core.login.dto.LoginRequest;
+import com.avalon.avalonchat.core.user.domain.Email;
+import com.avalon.avalonchat.core.user.domain.Password;
+import com.avalon.avalonchat.core.user.dto.EmailAuthenticationCheckRequest;
+import com.avalon.avalonchat.core.user.dto.EmailAuthenticationCheckResponse;
+import com.avalon.avalonchat.core.user.dto.EmailAuthenticationSendRequest;
+import com.avalon.avalonchat.core.user.dto.EmailDuplicatedCheckRequest;
+import com.avalon.avalonchat.core.user.dto.EmailDuplicatedCheckResponse;
+import com.avalon.avalonchat.core.user.dto.PhoneNumberAuthenticationCheckRequest;
+import com.avalon.avalonchat.core.user.dto.PhoneNumberAuthenticationCheckResponse;
+import com.avalon.avalonchat.core.user.dto.PhoneNumberAuthenticationSendRequest;
+import com.avalon.avalonchat.core.user.dto.SignUpRequest;
+import com.avalon.avalonchat.core.user.dto.SignUpResponse;
 
 public final class DtoFixture {
 
