@@ -1,7 +1,6 @@
 package com.avalon.avalonchat.core.user.application;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +25,6 @@ import lombok.RequiredArgsConstructor;
 public class UserServiceImpl implements UserService {
 
 	private final UserRepository userRepository;
-	private final PasswordEncoder passwordEncoder;
 	private final SmsMessageService smsMessageService;
 	private final PhoneNumberAuthCodeStore phoneNumberKeyValueStore;
 
@@ -38,12 +36,6 @@ public class UserServiceImpl implements UserService {
 			signUpRequest.getEmail(),
 			signUpRequest.getPassword()
 		);
-
-		//password encode
-		String encryptedPassword = passwordEncoder.encode(signUpRequest.getPassword().getValue());
-		user.setEncryptedPassword(encryptedPassword);
-
-		// TODO - check email authenticated via redis
 
 		// save user
 		User savedUser = userRepository.save(user);
