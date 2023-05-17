@@ -10,10 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.avalon.avalonchat.global.model.RefreshToken;
-import com.avalon.avalonchat.testsupport.base.BaseTestContainerTest;
 
 @SpringBootTest
-public class RefreshTokenRepositoryTest extends BaseTestContainerTest {
+public class RefreshTokenRepositoryTest {
 	@Autowired
 	private RefreshTokenRepository sut;
 

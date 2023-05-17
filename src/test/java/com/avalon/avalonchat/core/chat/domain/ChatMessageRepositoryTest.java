@@ -9,10 +9,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.avalon.avalonchat.testsupport.base.BaseTestContainerTest;
 
 @SpringBootTest
-class ChatMessageRepositoryTest extends BaseTestContainerTest {
+class ChatMessageRepositoryTest {
 
 	@Autowired
 	private ChatMessageRepository sut;

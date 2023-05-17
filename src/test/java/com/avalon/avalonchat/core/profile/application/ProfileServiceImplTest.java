@@ -39,11 +39,10 @@ import com.avalon.avalonchat.core.user.domain.User;
 import com.avalon.avalonchat.core.user.domain.UserRepository;
 import com.avalon.avalonchat.core.user.dto.PhoneNumberAuthenticationCheckRequest;
 import com.avalon.avalonchat.global.error.exception.BadRequestException;
-import com.avalon.avalonchat.testsupport.base.BaseTestContainerTest;
 
 @Transactional
 @SpringBootTest
-class ProfileServiceImplTest extends BaseTestContainerTest {
+class ProfileServiceImplTest {
 
 	@Autowired
 	private ProfileServiceImpl sut;
