@@ -44,9 +44,6 @@ jobs:
       - name: Configure Docker
         run: gcloud auth configure-docker --quiet
 
-      - name: Build the stack
-        run: docker-compose up -d
-
       - name: Execute Jib - Docker build & Push
         uses: gradle/gradle-build-action@v2.2.1
         with:
@@ -58,7 +55,4 @@ jobs:
           --image $IMAGE_NAME \
           --platform managed \
           --allow-unauthenticated \
-          --region asia-northeast3 \
-          --vpc-connector connector-dev \
-
-
+          --region asia-northeast3
