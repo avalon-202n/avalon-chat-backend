@@ -4,10 +4,8 @@ import static java.time.LocalDate.*;
 
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import com.avalon.avalonchat.core.chat.domain.ChatMessageRepository;
 import com.avalon.avalonchat.core.friend.domain.Friend;
 import com.avalon.avalonchat.core.friend.domain.FriendRepository;
 import com.avalon.avalonchat.core.profile.domain.Profile;
@@ -26,8 +24,6 @@ public class DataInitializer implements ApplicationRunner {
 	private final UserRepository userRepository;
 	private final ProfileRepository profileRepository;
 	private final FriendRepository friendRepository;
-	private final ChatMessageRepository chatMessageRepository;
-	private final PasswordEncoder passwordEncoder;
 
 	/**
 	 * initializing scenario
@@ -41,18 +37,9 @@ public class DataInitializer implements ApplicationRunner {
 	 */
 	@Override
 	public void run(ApplicationArguments args) {
-		// 잘못된 사용방식이지만 사용함 FIXME!
-		Password password1 = Password.of("fixme fixme");
-		password1.setEncryptedPassword(passwordEncoder.encode("password1"));
-		User user1 = userRepository.save(new User(Email.of("user111@gmail.com"), password1));
-
-		Password password2 = Password.of("fixme fixme");
-		password2.setEncryptedPassword(passwordEncoder.encode("password2"));
-		User user2 = userRepository.save(new User(Email.of("user222@gmail.com"), password2));
-
-		Password password3 = Password.of("fixme fixme");
-		password3.setEncryptedPassword(passwordEncoder.encode("password3"));
-		User user3 = userRepository.save(new User(Email.of("user333@gmail.com"), password3));
+		User user1 = userRepository.save(new User(Email.of("user111@gmail.com"), Password.of("password1")));
+		User user2 = userRepository.save(new User(Email.of("user222@gmail.com"), Password.of("password2")));
+		User user3 = userRepository.save(new User(Email.of("user333@gmail.com"), Password.of("password3")));
 
 		Profile profile1 = profileRepository.save(new Profile(user1, "bio1", now(), "user1", "010-1111-1111"));
 		Profile profile2 = profileRepository.save(new Profile(user2, "bio2", now(), "user2", "010-2222-2222"));

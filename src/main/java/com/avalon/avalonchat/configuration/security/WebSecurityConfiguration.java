@@ -11,6 +11,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.avalon.avalonchat.configuration.jwt.JwtAuthenticationFilter;
+import com.avalon.avalonchat.core.user.domain.Password;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,9 +21,22 @@ import lombok.extern.slf4j.Slf4j;
 @Configuration(proxyBeanMethods = false)
 public class WebSecurityConfiguration {
 
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
+	static {
+		PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		// set encoder as simple delegator of BCryptPasswordEncoder
+		Password.setEncoder(
+			new Password.Encoder() {
+				@Override
+				public String encode(String rawPassword) {
+					return passwordEncoder.encode(rawPassword);
+				}
+
+				@Override
+				public boolean matches(String rawPassword, String encodedPassword) {
+					return passwordEncoder.matches(rawPassword, encodedPassword);
+				}
+			}
+		);
 	}
 
 	@Bean

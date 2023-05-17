@@ -77,7 +77,7 @@ public final class DtoFixture {
 	public static LoginRequest loginRequest(String email, String password) {
 		return new LoginRequest(
 			Email.of(email),
-			password
+			Password.of(password)
 		);
 	}
 	/* Login Package DTO End */
