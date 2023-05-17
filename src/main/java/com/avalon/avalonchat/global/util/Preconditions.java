@@ -2,6 +2,8 @@ package com.avalon.avalonchat.global.util;
 
 import java.util.regex.Pattern;
 
+import org.springframework.data.redis.serializer.SerializationException;
+
 import com.avalon.avalonchat.global.error.exception.InputValidationException;
 
 import lombok.NoArgsConstructor;
@@ -12,6 +14,12 @@ public final class Preconditions {
 	public static void checkNotNull(Object value, String message) {
 		if (value == null) {
 			throw new NullPointerException(message);
+		}
+	}
+
+	public static void checkNotNullForSerializer(Object target, String name) {
+		if (target == null) {
+			throw new SerializationException(name + " cannot be null");
 		}
 	}
 
