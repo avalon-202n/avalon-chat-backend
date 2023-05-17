@@ -9,11 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.avalon.avalonchat.core.user.application.keyvalue.AuthCodeValue;
 import com.avalon.avalonchat.core.user.application.keyvalue.PhoneNumberKey;
-import com.avalon.avalonchat.testsupport.base.BaseTestContainerTest;
 
 @Transactional
 @SpringBootTest
-class RedisPhoneNumberAuthCodeStoreTest extends BaseTestContainerTest {
+class RedisPhoneNumberAuthCodeStoreTest {
 
 	@Autowired
 	private RedisPhoneNumberAuthCodeStore sut;

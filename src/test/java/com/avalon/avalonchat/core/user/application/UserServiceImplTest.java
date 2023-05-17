@@ -19,10 +19,9 @@ import com.avalon.avalonchat.core.user.dto.PhoneNumberAuthenticationSendRequest;
 import com.avalon.avalonchat.core.user.dto.SignUpRequest;
 import com.avalon.avalonchat.core.user.dto.SignUpResponse;
 import com.avalon.avalonchat.testsupport.DtoFixture;
-import com.avalon.avalonchat.testsupport.base.BaseTestContainerTest;
 
 @SpringBootTest
-class UserServiceImplTest extends BaseTestContainerTest {
+class UserServiceImplTest {
 
 	@Autowired
 	private UserServiceImpl sut;

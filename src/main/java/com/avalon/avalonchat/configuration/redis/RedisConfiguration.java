@@ -1,12 +1,15 @@
 package com.avalon.avalonchat.configuration.redis;
 
+import static com.avalon.avalonchat.global.util.Preconditions.*;
 import static java.nio.charset.StandardCharsets.*;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.connection.RedisPassword;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -18,14 +21,12 @@ import com.avalon.avalonchat.core.user.application.keyvalue.AuthCodeValue;
 import com.avalon.avalonchat.core.user.application.keyvalue.PhoneNumberKey;
 import com.avalon.avalonchat.infra.redis.RedisPhoneNumberAuthCodeStore;
 
+import redis.embedded.RedisServer;
+
 @Configuration(proxyBeanMethods = false)
 public class RedisConfiguration {
 
-	private static void checkNotNullForSerializer(Object target, String name) {
-		if (target == null) {
-			throw new SerializationException(name + " cannot be null");
-		}
-	}
+
 
 	@Bean
 	public RedisConnectionFactory redisConnectionFactory(RedisProperties properties) {
@@ -33,7 +34,6 @@ public class RedisConfiguration {
 			properties.getHost(),
 			properties.getPort()
 		);
-		configuration.setPassword(RedisPassword.of(properties.getPassword()));
 		return new LettuceConnectionFactory(configuration);
 	}
 
@@ -73,6 +73,26 @@ public class RedisConfiguration {
 		@Override
 		public AuthCodeValue deserialize(byte[] bytes) throws SerializationException {
 			return bytes == null ? null : AuthCodeValue.fromString(new String(bytes, UTF_8));
+		}
+	}
+
+	@Configuration(proxyBeanMethods = false)
+	static class EmbeddedRedisConfiguration {
+
+		private final RedisServer redisServer;
+
+		public EmbeddedRedisConfiguration(RedisProperties redisProperties) {
+			this.redisServer = new RedisServer(redisProperties.getPort());
+		}
+
+		@PostConstruct
+		public void postConstruct() {
+			redisServer.start();
+		}
+
+		@PreDestroy
+		public void preDestroy() {
+			redisServer.stop();
 		}
 	}
 }
