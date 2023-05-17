@@ -1,9 +1,12 @@
 package com.avalon.avalonchat.core.profile.application;
 
+import static com.avalon.avalonchat.testsupport.DtoFixture.*;
 import static com.avalon.avalonchat.testsupport.Fixture.*;
-import static org.assertj.core.api.AssertionsForClassTypes.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -17,10 +20,14 @@ import com.avalon.avalonchat.core.friend.domain.Friend;
 import com.avalon.avalonchat.core.friend.domain.FriendRepository;
 import com.avalon.avalonchat.core.profile.domain.Profile;
 import com.avalon.avalonchat.core.profile.domain.ProfileRepository;
+import com.avalon.avalonchat.core.profile.dto.BackgroundImageDeleteRequest;
 import com.avalon.avalonchat.core.profile.dto.ProfileAddRequest;
 import com.avalon.avalonchat.core.profile.dto.ProfileAddResponse;
 import com.avalon.avalonchat.core.profile.dto.ProfileDetailedGetResponse;
+import com.avalon.avalonchat.core.profile.dto.ProfileImageDeleteRequest;
 import com.avalon.avalonchat.core.profile.dto.ProfileListGetResponse;
+import com.avalon.avalonchat.core.profile.dto.ProfileUpdateRequest;
+import com.avalon.avalonchat.core.profile.dto.ProfileUpdateResponse;
 import com.avalon.avalonchat.core.user.application.PhoneNumberAuthCodeStore;
 import com.avalon.avalonchat.core.user.application.SmsMessageService;
 import com.avalon.avalonchat.core.user.application.UserService;
@@ -189,6 +196,225 @@ class ProfileServiceImplTest extends BaseTestContainerTest {
 		assertThat(responses.get(1).getNickname()).isEqualTo("B_friend");
 		assertThat(responses.get(0).getProfileImageUrl()).isEqualTo("url2");
 		assertThat(responses.get(1).getProfileImageUrl()).isEqualTo("url4");
+	}
+
+	@Test
+	void profile_이미지포함_수정성공() {
+		// given
+		User user = createUser("email@email.com", "password");
+		Profile profile = createProfile(
+			user,
+			"bio",
+			LocalDate.of(1999, 01, 01),
+			"nickName",
+			"010-1234-5678"
+		);
+		userRepository.save(user);
+		profileRepository.save(profile);
+
+		ProfileUpdateRequest request = profileUpdateRequest(
+			LocalDate.of(1999, 01, 01),
+			"nickName",
+			"updated bio",
+			"http://profile/image/url",
+			"http://background/image/url",
+			"010-1234-5678"
+		);
+
+		// when
+		ProfileUpdateResponse response = sut.updateProfile(profile.getId(), request);
+
+		// then
+		assertThat(response.getBirthDate()).isEqualTo(LocalDate.of(1999, 01, 01));
+		assertThat(response.getNickname()).isEqualTo("nickName");
+		assertThat(response.getBio()).isNotEqualTo("bio");
+		assertThat(response.getBio()).isEqualTo("updated bio");
+		assertThat(response.getPhoneNumber()).isEqualTo("010-1234-5678");
+
+		assertThat(response.getProfileImageUrl()).isEqualTo("http://profile/image/url");
+		assertThat(response.getBackgroundImageUrls().get(0)).isEqualTo("http://background/image/url");
+	}
+
+	@Test
+	void profile_이미지제외_수정성공() {
+		// given
+		User user = createUser("email@email.com", "password");
+		Profile profile = createProfile(
+			user,
+			"bio",
+			LocalDate.of(1999, 01, 01),
+			"nickName",
+			"010-1234-5678"
+		);
+		userRepository.save(user);
+		profileRepository.save(profile);
+
+		ProfileUpdateRequest request = profileUpdateRequest(
+			LocalDate.of(1999, 02, 02),
+			"updated nickName",
+			"bio",
+			"",
+			null,
+			"010-1234-1234"
+		);
+
+		// when
+		ProfileUpdateResponse response = sut.updateProfile(profile.getId(), request);
+
+		// then
+		assertThat(response.getBirthDate()).isNotEqualTo(LocalDate.of(1999, 01, 01));
+		assertThat(response.getBirthDate()).isEqualTo(LocalDate.of(1999, 02, 02));
+		assertThat(response.getNickname()).isNotEqualTo("nickName");
+		assertThat(response.getNickname()).isEqualTo("updated nickName");
+		assertThat(response.getBio()).isEqualTo("bio");
+		assertThat(response.getPhoneNumber()).isNotEqualTo("010-1234-5678");
+		assertThat(response.getPhoneNumber()).isEqualTo("010-1234-1234");
+
+		assertThat(response.getProfileImageUrl()).isNull();
+		assertThat(response.getBackgroundImageUrls()).hasSize(0);
+	}
+
+	@Test
+	void profileImage_몇개남기고_삭제성공() {
+		// given
+		User user = createUser("test@email.com", "passw0rd");
+		Profile profile = createProfile(user);
+
+		profile.addProfileImage("http://profile/image/url1");
+		profile.addProfileImage("http://profile/image/url2");
+		profile.addProfileImage("http://profile/image/url3");
+		profile.addProfileImage("http://profile/image/url4");
+		profile.addProfileImage("http://profile/image/url5");
+
+		userRepository.save(user);
+		profileRepository.save(profile);
+
+		List<String> deletedProfileImageUrls = new ArrayList<>();
+		deletedProfileImageUrls.add("http://profile/image/url1");
+		deletedProfileImageUrls.add("http://profile/image/url2");
+		deletedProfileImageUrls.add("http://profile/image/url5");
+
+		ProfileImageDeleteRequest request = profileImageDeleteRequest(deletedProfileImageUrls);
+
+		// when
+		sut.deleteProfileImage(profile.getId(), request);
+
+		// then
+		assertThat(profile.getLatestProfileImageUrl()).isEqualTo("http://profile/image/url4");
+		assertThat(profile.getProfileImages()).hasSize(2);
+		assertThat(profile.getProfileImages().get(0).getUrl()).isEqualTo("http://profile/image/url3");
+		assertThat(profile.getProfileImages().get(1).getUrl()).isEqualTo("http://profile/image/url4");
+	}
+
+	@Test
+	void profileImage_하나도안남기고_삭제성공() {
+		// given
+		User user = createUser("test@email.com", "passw0rd");
+		Profile profile = createProfile(user);
+
+		profile.addProfileImage("http://profile/image/url1");
+		profile.addProfileImage("http://profile/image/url2");
+		profile.addProfileImage("http://profile/image/url3");
+		profile.addProfileImage("http://profile/image/url4");
+		profile.addProfileImage("http://profile/image/url5");
+
+		userRepository.save(user);
+		profileRepository.save(profile);
+
+		List<String> deletedProfileImageUrls = new ArrayList<>();
+		deletedProfileImageUrls.add("http://profile/image/url1");
+		deletedProfileImageUrls.add("http://profile/image/url2");
+		deletedProfileImageUrls.add("http://profile/image/url3");
+		deletedProfileImageUrls.add("http://profile/image/url4");
+		deletedProfileImageUrls.add("http://profile/image/url5");
+
+		ProfileImageDeleteRequest request = profileImageDeleteRequest(deletedProfileImageUrls);
+
+		// when
+		sut.deleteProfileImage(profile.getId(), request);
+
+		// then
+		assertThat(profile.getLatestProfileImageUrl()).isNull();
+		assertThat(profile.getProfileImages()).hasSize(0);
+	}
+
+	@Test
+	void 삭제할프로필이미지_범위넘침_예외발생() {
+		// given
+		User user = createUser("test@email.com", "passw0rd");
+		Profile profile = createProfile(user);
+
+		profile.addProfileImage("http://profile/image/url1");
+		profile.addProfileImage("http://profile/image/url2");
+		profile.addProfileImage("http://profile/image/url3");
+
+		userRepository.save(user);
+		profileRepository.save(profile);
+
+		List<String> deletedProfileImageUrls = new ArrayList<>();
+		deletedProfileImageUrls.add("http://profile/image/url1");
+		deletedProfileImageUrls.add("http://profile/image/url2");
+		deletedProfileImageUrls.add("http://profile/image/url3");
+		deletedProfileImageUrls.add("http://profile/image/url4");
+		deletedProfileImageUrls.add("http://profile/image/url5");
+
+		ProfileImageDeleteRequest request = profileImageDeleteRequest(deletedProfileImageUrls);
+
+		// when then
+		assertThatExceptionOfType(BadRequestException.class)
+			.isThrownBy(() -> sut.deleteProfileImage(profile.getId(), request));
+	}
+
+	@Test
+	void 삭제할프로필이미지_비어있음_예외발생() {
+		// given
+		User user = createUser("test@email.com", "passw0rd");
+		Profile profile = createProfile(user);
+
+		profile.addProfileImage("http://profile/image/url1");
+		profile.addProfileImage("http://profile/image/url2");
+		profile.addProfileImage("http://profile/image/url3");
+
+		userRepository.save(user);
+		profileRepository.save(profile);
+
+		List<String> deletedProfileImageUrls = new ArrayList<>();
+		ProfileImageDeleteRequest request = profileImageDeleteRequest(deletedProfileImageUrls);
+
+		// when then
+		assertThatExceptionOfType(BadRequestException.class)
+			.isThrownBy(() -> sut.deleteProfileImage(profile.getId(), request));
+	}
+
+	@Test
+	void backgroundImage_삭제성공() {
+		// given
+		User user = createUser("test@email.com", "passw0rd");
+		Profile profile = createProfile(user);
+
+		profile.addBackgroundImage("http://background/image/url1");
+		profile.addBackgroundImage("http://background/image/url2");
+		profile.addBackgroundImage("http://background/image/url3");
+		profile.addBackgroundImage("http://background/image/url4");
+		profile.addBackgroundImage("http://background/image/url5");
+
+		userRepository.save(user);
+		profileRepository.save(profile);
+
+		List<String> deletedBackgroundImageUrls = new ArrayList<>();
+		deletedBackgroundImageUrls.add("http://background/image/url1");
+		deletedBackgroundImageUrls.add("http://background/image/url2");
+		deletedBackgroundImageUrls.add("http://background/image/url5");
+
+		BackgroundImageDeleteRequest request = backgroundImageDeleteRequest(deletedBackgroundImageUrls);
+
+		// when
+		sut.deleteBackgroundImage(profile.getId(), request);
+
+		// then
+		assertThat(profile.getBackgroundImages()).hasSize(2);
+		assertThat(profile.getBackgroundImages().get(0).getUrl()).isEqualTo("http://background/image/url3");
+		assertThat(profile.getBackgroundImages().get(1).getUrl()).isEqualTo("http://background/image/url4");
 	}
 }
 

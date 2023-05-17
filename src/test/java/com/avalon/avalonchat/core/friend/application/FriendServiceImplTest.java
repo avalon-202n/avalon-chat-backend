@@ -1,7 +1,9 @@
 package com.avalon.avalonchat.core.friend.application;
 
+import static com.avalon.avalonchat.testsupport.DtoFixture.*;
+import static com.avalon.avalonchat.testsupport.Fixture.*;
 import static java.time.LocalDate.*;
-import static org.assertj.core.api.AssertionsForClassTypes.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -39,7 +41,7 @@ class FriendServiceImplTest {
 
 	@Test
 	@Transactional
-	void 친구추가_성공() {
+	void 친구추가_성공1() {
 		// given
 		FriendAddRequest request = new FriendAddRequest(List.of("010-1234-5678", "010-8765-4321"));
 
@@ -108,5 +110,48 @@ class FriendServiceImplTest {
 
 		// then
 		assertThat(response.getStatus()).isEqualTo(Status.BLOCKED);
+	}
+
+	@Test
+	@Transactional
+	void 이미친구인번호를제외하고_친구추가_성공() {
+		// given
+		User myUser = createUser("myemail@email.com", "password");
+		Profile myProfile = createProfile(
+			myUser, "my bio", LocalDate.of(1999, 01, 01),
+			"myNickname", "010-1234-5678"
+		);
+
+		User friendUser1 = createUser("friendemail1@email.com", "password");
+		Profile friendProfile1 = createProfile(
+			friendUser1, "friend bio1", LocalDate.of(2000, 02, 02),
+			"friendNickname1", "010-1111-2222"
+		);
+
+		User friendUser2 = createUser("friendemail2@email.com", "password");
+		Profile friendProfile2 = createProfile(
+			friendUser2, "friend bio2", LocalDate.of(2000, 03, 03),
+			"friendNickname2", "010-1212-3434"
+		);
+
+		userRepository.saveAll(List.of(myUser, friendUser1, friendUser2));
+		profileRepository.saveAll(List.of(myProfile, friendProfile1, friendProfile2));
+
+		Friend friend = createFriend(myProfile, friendProfile1);
+		friendRepository.save(friend);
+
+		FriendAddRequest request
+			= friendAddRequest(List.of(friendProfile1.getPhoneNumber(), friendProfile2.getPhoneNumber()));
+
+		// when
+		List<FriendAddResponse> responses = sut.addFriend(myProfile.getId(), request);
+
+		// then
+		assertThat(responses).hasSize(1);
+		assertThat(responses.get(0).getFriendProfileId()).isEqualTo(friendProfile2.getId());
+		assertThat(responses.get(0).getNickname()).isEqualTo(friendProfile2.getNickname());
+		assertThat(responses.get(0).getBio()).isEqualTo(friendProfile2.getBio());
+		assertThat(responses.get(0).getProfileImage()).isEqualTo(friendProfile2.getLatestProfileImageUrl());
+		assertThat(responses.get(0).getStatus()).isEqualTo(Status.NORMAL);
 	}
 }

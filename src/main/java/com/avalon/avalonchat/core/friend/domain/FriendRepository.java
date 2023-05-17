@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.avalon.avalonchat.core.friend.dto.FriendAddResponse;
-import com.avalon.avalonchat.core.profile.domain.Profile;
 
 public interface FriendRepository extends JpaRepository<Friend, Long> {
 	Optional<Friend> findByMyProfileIdAndFriendProfileId(long myProfileId, long friendProfileId);
@@ -23,6 +22,4 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
 		+ "INNER JOIN f.friendProfile fp "
 		+ "WHERE f.id IN :friendIds")
 	List<FriendAddResponse> findAllByFriendIds(@Param("friendIds") List<Long> friendIds);
-
-	boolean existsByMyProfileAndFriendProfile(Profile myProfile, Profile friendProfile);
 }

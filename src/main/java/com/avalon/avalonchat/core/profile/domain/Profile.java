@@ -7,6 +7,7 @@ import static lombok.AccessLevel.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -59,7 +60,7 @@ public class Profile extends BaseAuditingEntity {
 	}
 
 	public void addProfileImage(String profileImageUrl) {
-		this.latestProfileImageUrl = profileImageUrl;
+		updateLatestProfileImageUrl(profileImageUrl);
 		ProfileImage profileImage = new ProfileImage(this, profileImageUrl);
 		profileImages.add(profileImage);
 	}
@@ -67,5 +68,32 @@ public class Profile extends BaseAuditingEntity {
 	public void addBackgroundImage(String backgroundImageUrl) {
 		BackgroundImage backgroundImage = new BackgroundImage(this, backgroundImageUrl);
 		backgroundImages.add(backgroundImage);
+	}
+
+	public void updateLatestProfileImageUrl(String latestProfileImageUrl) {
+		this.latestProfileImageUrl = latestProfileImageUrl;
+	}
+
+	public void deleteProfileImage(List<String> deleteProfileImageUrls) {
+		List<ProfileImage> deleteImages = profileImages.stream()
+			.filter(profileImage -> deleteProfileImageUrls.contains(profileImage.getUrl()))
+			.collect(Collectors.toList());
+
+		profileImages.removeAll(deleteImages);
+	}
+
+	public void deleteBackgroundImage(List<String> deleteBackgroundImageUrls) {
+		List<BackgroundImage> deleteImages = backgroundImages.stream()
+			.filter(backgroundImage -> deleteBackgroundImageUrls.contains(backgroundImage.getUrl()))
+			.collect(Collectors.toList());
+
+		backgroundImages.removeAll(deleteImages);
+	}
+
+	public void update(String bio, LocalDate birthDate, String nickname, String phoneNumber) {
+		this.bio = bio;
+		this.birthDate = birthDate;
+		this.nickname = nickname;
+		this.phoneNumber = phoneNumber;
 	}
 }

@@ -1,6 +1,13 @@
 package com.avalon.avalonchat.testsupport;
 
+import java.time.LocalDate;
+import java.util.List;
+
+import com.avalon.avalonchat.core.friend.dto.FriendAddRequest;
 import com.avalon.avalonchat.core.login.dto.LoginRequest;
+import com.avalon.avalonchat.core.profile.dto.BackgroundImageDeleteRequest;
+import com.avalon.avalonchat.core.profile.dto.ProfileImageDeleteRequest;
+import com.avalon.avalonchat.core.profile.dto.ProfileUpdateRequest;
 import com.avalon.avalonchat.core.user.domain.Email;
 import com.avalon.avalonchat.core.user.domain.Password;
 import com.avalon.avalonchat.core.user.dto.EmailAuthenticationCheckRequest;
@@ -74,4 +81,35 @@ public final class DtoFixture {
 		);
 	}
 	/* Login Package DTO End */
+
+	public static FriendAddRequest friendAddRequest(List<String> phoneNumbers) {
+		return new FriendAddRequest(phoneNumbers);
+	}
+
+	/* Profile Package DTO Start */
+	public static ProfileUpdateRequest profileUpdateRequest(
+		LocalDate birthDate,
+		String nickName,
+		String bio,
+		String profileImageUrl,
+		String backgroundImageUrl,
+		String phoneNumber
+	) {
+		return new ProfileUpdateRequest(
+			birthDate, nickName, bio, profileImageUrl, backgroundImageUrl, phoneNumber
+		);
+	}
+
+	public static ProfileImageDeleteRequest profileImageDeleteRequest(
+		List<String> deletedProfileImageUrls
+	) {
+		return new ProfileImageDeleteRequest(deletedProfileImageUrls);
+	}
+
+	public static BackgroundImageDeleteRequest backgroundImageDeleteRequest(
+		List<String> deletedBackgroundImageUrls
+	) {
+		return new BackgroundImageDeleteRequest(deletedBackgroundImageUrls);
+	}
+	/* Profile Package DTO End */
 }
