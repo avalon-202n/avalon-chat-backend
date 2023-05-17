@@ -54,5 +54,4 @@ jobs:
           gcloud run deploy ${{ secrets.GCP_PROJECT_ID }} \
           --image $IMAGE_NAME \
           --platform managed \
-          --allow-unauthenticated \
           --region asia-northeast3
