@@ -15,7 +15,10 @@ import com.avalon.avalonchat.core.login.dto.LoginRequest;
 import com.avalon.avalonchat.core.login.dto.LoginResponse;
 import com.avalon.avalonchat.core.profile.domain.Profile;
 import com.avalon.avalonchat.core.profile.domain.ProfileRepository;
+import com.avalon.avalonchat.core.user.application.PhoneNumberAuthCodeStore;
 import com.avalon.avalonchat.core.user.application.UserServiceImpl;
+import com.avalon.avalonchat.core.user.application.keyvalue.AuthCodeValue;
+import com.avalon.avalonchat.core.user.application.keyvalue.PhoneNumberKey;
 import com.avalon.avalonchat.core.user.domain.User;
 import com.avalon.avalonchat.core.user.domain.UserRepository;
 import com.avalon.avalonchat.core.user.dto.SignUpRequest;
@@ -27,14 +30,13 @@ import com.avalon.avalonchat.testsupport.Fixture;
 @SpringBootTest
 public class LoginServiceImplTest {
 	@Autowired
+	PhoneNumberAuthCodeStore phoneNumberKeyValueStore;
+	@Autowired
 	private LoginServiceImpl sut;
-
 	@Autowired
 	private UserServiceImpl userServiceImpl;
-
 	@Autowired
 	private UserRepository userRepository;
-
 	@Autowired
 	private ProfileRepository profileRepository;
 
@@ -84,9 +86,15 @@ public class LoginServiceImplTest {
 		Profile profile = Fixture.createProfile(user);
 		profileRepository.save(profile);
 
+		String authCode = "cert-code";
+		PhoneNumberKey key = PhoneNumberKey.fromString(profile.getPhoneNumber());
+		AuthCodeValue authCodeValue = AuthCodeValue.fromString(authCode);
+
+		phoneNumberKeyValueStore.put(key, authCodeValue);
+		phoneNumberKeyValueStore.checkKeyValueMatches(key, authCode);
+
 		//when
-		String phoneNumber = "01012345678";
-		EmailFindResponse emailFindResponse = sut.findEmailByPhoneNumber(phoneNumber);
+		EmailFindResponse emailFindResponse = sut.findEmailByPhoneNumber(profile.getPhoneNumber());
 
 		//then
 		assertThat(emailFindResponse.getEmail().getValue()).isEqualTo("avalon@e.com");
@@ -94,11 +102,21 @@ public class LoginServiceImplTest {
 
 	@Test
 	void 전화번호로_이메일_찾기_실패() {
-		//when
-		String phoneNumber = "01012345678";
+		//given
+		User user = Fixture.createUser();
+		userRepository.save(user);
 
-		//then
+		Profile profile = Fixture.createProfile(user);
+		profileRepository.save(profile);
+
+		String authCode = "cert-code";
+		PhoneNumberKey key = PhoneNumberKey.fromString(profile.getPhoneNumber());
+		AuthCodeValue authCodeValue = AuthCodeValue.fromString(authCode);
+
+		phoneNumberKeyValueStore.put(key, authCodeValue);
+
+		//when & then
 		assertThatExceptionOfType(RuntimeException.class)
-			.isThrownBy(() -> sut.findEmailByPhoneNumber(phoneNumber));
+			.isThrownBy(() -> sut.findEmailByPhoneNumber(profile.getPhoneNumber()));
 	}
 }
