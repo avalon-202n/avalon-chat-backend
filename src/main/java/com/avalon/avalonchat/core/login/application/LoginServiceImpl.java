@@ -13,6 +13,9 @@ import com.avalon.avalonchat.core.login.dto.TokenReissueResponse;
 import com.avalon.avalonchat.core.login.repository.RefreshTokenRepository;
 import com.avalon.avalonchat.core.profile.domain.Profile;
 import com.avalon.avalonchat.core.profile.domain.ProfileRepository;
+import com.avalon.avalonchat.core.user.application.PhoneNumberAuthCodeStore;
+import com.avalon.avalonchat.core.user.application.keyvalue.AuthCodeValue;
+import com.avalon.avalonchat.core.user.application.keyvalue.PhoneNumberKey;
 import com.avalon.avalonchat.core.user.domain.Password;
 import com.avalon.avalonchat.core.user.domain.User;
 import com.avalon.avalonchat.core.user.domain.UserRepository;
@@ -35,6 +38,7 @@ public class LoginServiceImpl implements LoginService {
 	private final RefreshTokenRepository refreshTokenRepository;
 	private final JwtTokenService tokenService;
 	private final RefreshTokenService refreshTokenService;
+	private final PhoneNumberAuthCodeStore phoneNumberAuthCodeStore;
 
 	@Override
 	public LoginResponse login(LoginRequest request) {
@@ -60,6 +64,15 @@ public class LoginServiceImpl implements LoginService {
 
 	@Override
 	public EmailFindResponse findEmailByPhoneNumber(String phoneNumber) {
+		// 1. check authenticate phoneNumber
+		PhoneNumberKey phoneNumberKey = PhoneNumberKey.fromString(phoneNumber);
+		AuthCodeValue authCodeValue = phoneNumberAuthCodeStore.get(phoneNumberKey);
+
+		if (!authCodeValue.isAuthenticated()) {
+			throw new BadRequestException("phonenumber.no-auth", phoneNumber);
+		}
+
+		// 2. find email
 		Profile findProfile = profileRepository.findByPhoneNumber(phoneNumber)
 			.orElseThrow(() -> new BadRequestException("email-find.phoneNumber.notfound"));
 		return new EmailFindResponse(findProfile.getUser().getEmail());
