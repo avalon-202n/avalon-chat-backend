@@ -121,7 +121,7 @@ public class LoginServiceImpl implements LoginService {
 	}
 
 	@Override
-	public void sendPhoneNumberAuthentication(PhoneNumberAuthenticationSendRequest request) {
+	public void sendFindEmailPhoneNumberAuthentication(PhoneNumberAuthenticationSendRequest request) {
 		// 1. get phone number and certification code
 		String phoneNumber = request.getPhoneNumber().replaceAll("-", "").trim();
 		String certificationCode = RandomStringUtils.randomNumeric(6);
@@ -137,7 +137,7 @@ public class LoginServiceImpl implements LoginService {
 	}
 
 	@Override
-	public PhoneNumberAuthenticationCheckResponse checkPhoneNumberAuthentication(
+	public PhoneNumberAuthenticationCheckResponse checkFindEmailPhoneNumberAuthentication(
 		PhoneNumberAuthenticationCheckRequest request) {
 		// 1. get phone number
 		String phoneNumber = request.getPhoneNumber().replaceAll("-", "").trim();

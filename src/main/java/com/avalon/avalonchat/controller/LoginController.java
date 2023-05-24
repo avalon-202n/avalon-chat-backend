@@ -71,7 +71,7 @@ public class LoginController {
 	public ResponseEntity<Void> phoneNumberAuthenticationSendForFindingEmail(
 		@RequestBody PhoneNumberAuthenticationSendRequest request
 	) {
-		loginService.sendPhoneNumberAuthentication(request);
+		loginService.sendFindEmailPhoneNumberAuthentication(request);
 		return noContent();
 	}
 
@@ -80,6 +80,6 @@ public class LoginController {
 	public PhoneNumberAuthenticationCheckResponse phoneNumberAuthenticationCheckForFindingEmail(
 		@RequestBody PhoneNumberAuthenticationCheckRequest request
 	) {
-		return loginService.checkPhoneNumberAuthentication(request);
+		return loginService.checkFindEmailPhoneNumberAuthentication(request);
 	}
 }

@@ -15,14 +15,14 @@ public interface LoginService {
 
 	LoginResponse login(LoginRequest request);
 
-	EmailFindResponse findEmailByPhoneNumber(String request);
+	EmailFindResponse findEmailByPhoneNumber(String phoneNumber);
 
 	PasswordFindResponse resetPassword(PasswordFindRequest request);
 
 	TokenReissueResponse reissueToken(TokenReissueRequest request);
 
-	void sendPhoneNumberAuthentication(PhoneNumberAuthenticationSendRequest request);
+	void sendFindEmailPhoneNumberAuthentication(PhoneNumberAuthenticationSendRequest request);
 
-	PhoneNumberAuthenticationCheckResponse checkPhoneNumberAuthentication(
+	PhoneNumberAuthenticationCheckResponse checkFindEmailPhoneNumberAuthentication(
 		PhoneNumberAuthenticationCheckRequest request);
 }
