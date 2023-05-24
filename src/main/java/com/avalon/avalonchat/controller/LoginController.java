@@ -52,10 +52,10 @@ public class LoginController {
 		return loginService.resetPassword(request);
 	}
 
-	@Operation(summary = "아이디 찾기")
+	@Operation(summary = "이메일 찾기")
 	@GetMapping("/email")
 	public EmailFindResponse findEmail(
-		@RequestParam(value = "phone_number", required = true) String phoneNumber
+		@RequestParam(value = "phone_number") String phoneNumber
 	) {
 		return loginService.findEmailByPhoneNumber(phoneNumber);
 	}
