@@ -1,10 +1,8 @@
 package com.avalon.avalonchat.core.user.application.keyvalue;
 
-import static lombok.AccessLevel.*;
-
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor(access = PRIVATE)
+@RequiredArgsConstructor
 public class PhoneNumberKey {
 
 	private static final String PREFIX = "PHONENUMBER::";
