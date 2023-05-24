@@ -1,8 +1,5 @@
 package com.avalon.avalonchat.controller;
 
-import static com.avalon.avalonchat.global.util.ResponseEntityUtil.*;
-
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,9 +15,6 @@ import com.avalon.avalonchat.core.login.dto.PasswordFindRequest;
 import com.avalon.avalonchat.core.login.dto.PasswordFindResponse;
 import com.avalon.avalonchat.core.login.dto.TokenReissueRequest;
 import com.avalon.avalonchat.core.login.dto.TokenReissueResponse;
-import com.avalon.avalonchat.core.user.dto.PhoneNumberAuthenticationCheckRequest;
-import com.avalon.avalonchat.core.user.dto.PhoneNumberAuthenticationCheckResponse;
-import com.avalon.avalonchat.core.user.dto.PhoneNumberAuthenticationSendRequest;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -64,22 +58,5 @@ public class LoginController {
 		@RequestParam(value = "phone_number", required = true) String phoneNumber
 	) {
 		return loginService.findEmailByPhoneNumber(phoneNumber);
-	}
-
-	@Operation(summary = "이메일 찾기 핸드폰 인증번호 발송")
-	@PostMapping("/email/phonenumber/authenticate/send")
-	public ResponseEntity<Void> phoneNumberAuthenticationSendForFindingEmail(
-		@RequestBody PhoneNumberAuthenticationSendRequest request
-	) {
-		loginService.sendPhoneNumberAuthentication(request);
-		return noContent();
-	}
-
-	@Operation(summary = "이메일 찾기 핸드폰 인증번호 확인")
-	@PostMapping("/email/phonenumber/authenticate/check")
-	public PhoneNumberAuthenticationCheckResponse phoneNumberAuthenticationCheck(
-		@RequestBody PhoneNumberAuthenticationCheckRequest request
-	) {
-		return loginService.checkPhoneNumberAuthentication(request);
 	}
 }
