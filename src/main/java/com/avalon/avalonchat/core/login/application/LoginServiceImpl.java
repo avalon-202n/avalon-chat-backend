@@ -1,5 +1,6 @@
 package com.avalon.avalonchat.core.login.application;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,10 +15,16 @@ import com.avalon.avalonchat.core.login.repository.RefreshTokenRepository;
 import com.avalon.avalonchat.core.profile.domain.Profile;
 import com.avalon.avalonchat.core.profile.domain.ProfileRepository;
 import com.avalon.avalonchat.core.user.application.PhoneNumberAuthCodeStore;
+import com.avalon.avalonchat.core.user.application.SmsMessageService;
+import com.avalon.avalonchat.core.user.application.keyvalue.AuthCodeValue;
+import com.avalon.avalonchat.core.user.application.keyvalue.EmailFindKey;
 import com.avalon.avalonchat.core.user.application.keyvalue.PhoneNumberKey;
 import com.avalon.avalonchat.core.user.domain.Password;
 import com.avalon.avalonchat.core.user.domain.User;
 import com.avalon.avalonchat.core.user.domain.UserRepository;
+import com.avalon.avalonchat.core.user.dto.PhoneNumberAuthenticationCheckRequest;
+import com.avalon.avalonchat.core.user.dto.PhoneNumberAuthenticationCheckResponse;
+import com.avalon.avalonchat.core.user.dto.PhoneNumberAuthenticationSendRequest;
 import com.avalon.avalonchat.global.error.exception.BadRequestException;
 import com.avalon.avalonchat.global.error.exception.NotFoundException;
 import com.avalon.avalonchat.global.model.RefreshToken;
@@ -38,6 +45,7 @@ public class LoginServiceImpl implements LoginService {
 	private final JwtTokenService tokenService;
 	private final RefreshTokenService refreshTokenService;
 	private final PhoneNumberAuthCodeStore phoneNumberAuthCodeStore;
+	private final SmsMessageService smsMessageService;
 
 	@Override
 	public LoginResponse login(LoginRequest request) {
@@ -64,7 +72,7 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public EmailFindResponse findEmailByPhoneNumber(String phoneNumber) {
 		// 1. check authenticate phoneNumber
-		PhoneNumberKey phoneNumberKey = PhoneNumberKey.fromString(phoneNumber);
+		PhoneNumberKey phoneNumberKey = EmailFindKey.fromString(phoneNumber);
 		if (!phoneNumberAuthCodeStore.isAuthenticated(phoneNumberKey)) {
 			throw new BadRequestException("phonenumber.no-auth", phoneNumber);
 		}
@@ -110,5 +118,37 @@ public class LoginServiceImpl implements LoginService {
 		refreshTokenService.deleteById(findRefreshToken.getRefreshToken());
 		refreshTokenService.save(refreshToken, findUser.getId());
 		return new TokenReissueResponse(accessToken, refreshToken);
+	}
+
+	@Override
+	public void sendPhoneNumberAuthentication(PhoneNumberAuthenticationSendRequest request) {
+		// 1. get phone number and certification code
+		String phoneNumber = request.getPhoneNumber().replaceAll("-", "").trim();
+		String certificationCode = RandomStringUtils.randomNumeric(6);
+
+		// 2. send certification code
+		smsMessageService.sendAuthenticationCode(phoneNumber, certificationCode);
+
+		// 3. put it to key-value store
+		phoneNumberAuthCodeStore.put(
+			EmailFindKey.fromString(phoneNumber),
+			AuthCodeValue.ofUnauthenticated(certificationCode)
+		);
+	}
+
+	@Override
+	public PhoneNumberAuthenticationCheckResponse checkPhoneNumberAuthentication(
+		PhoneNumberAuthenticationCheckRequest request) {
+		// 1. get phone number
+		String phoneNumber = request.getPhoneNumber().replaceAll("-", "").trim();
+
+		// 2. check authenticated
+		boolean authenticated = phoneNumberAuthCodeStore.checkKeyValueMatches(
+			EmailFindKey.fromString(phoneNumber),
+			request.getCertificationCode()
+		);
+
+		// 3. return
+		return new PhoneNumberAuthenticationCheckResponse(authenticated);
 	}
 }
