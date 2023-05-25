@@ -23,4 +23,6 @@ public interface ProfileService {
 	void deleteProfileImage(long profileId, ProfileImageDeleteRequest request);
 
 	void deleteBackgroundImage(long profileId, BackgroundImageDeleteRequest request);
+
+	ProfileDetailedGetResponse getFriendDetailedById(long myProfileId, long friendProfileId);
 }
