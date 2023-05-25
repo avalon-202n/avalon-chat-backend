@@ -16,6 +16,7 @@ import com.avalon.avalonchat.core.profile.domain.Profile;
 import com.avalon.avalonchat.core.profile.domain.ProfileRepository;
 import com.avalon.avalonchat.core.user.application.PhoneNumberAuthCodeStore;
 import com.avalon.avalonchat.core.user.application.SmsMessageService;
+import com.avalon.avalonchat.core.user.application.enums.PhoneNumberKeyPurpose;
 import com.avalon.avalonchat.core.user.application.keyvalue.AuthCodeValue;
 import com.avalon.avalonchat.core.user.application.keyvalue.PhoneNumberKey;
 import com.avalon.avalonchat.core.user.domain.Password;
@@ -71,7 +72,7 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public EmailFindResponse findEmailByPhoneNumber(String phoneNumber) {
 		// 1. check authenticate phoneNumber
-		PhoneNumberKey phoneNumberKey = PhoneNumberKey.ofPurpose(PhoneNumberKey.Purpose.EMAIL_FIND, phoneNumber);
+		PhoneNumberKey phoneNumberKey = PhoneNumberKey.ofPurpose(PhoneNumberKeyPurpose.EMAIL_FIND, phoneNumber);
 		if (!phoneNumberAuthCodeStore.isAuthenticated(phoneNumberKey)) {
 			throw new BadRequestException("phonenumber.no-auth", phoneNumber);
 		}
@@ -130,7 +131,7 @@ public class LoginServiceImpl implements LoginService {
 
 		// 3. put it to key-value store
 		phoneNumberAuthCodeStore.put(
-			PhoneNumberKey.ofPurpose(PhoneNumberKey.Purpose.EMAIL_FIND, phoneNumber),
+			PhoneNumberKey.ofPurpose(PhoneNumberKeyPurpose.EMAIL_FIND, phoneNumber),
 			AuthCodeValue.ofUnauthenticated(certificationCode)
 		);
 	}
@@ -143,7 +144,7 @@ public class LoginServiceImpl implements LoginService {
 
 		// 2. check authenticated
 		boolean authenticated = phoneNumberAuthCodeStore.checkKeyValueMatches(
-			PhoneNumberKey.ofPurpose(PhoneNumberKey.Purpose.EMAIL_FIND, phoneNumber),
+			PhoneNumberKey.ofPurpose(PhoneNumberKeyPurpose.EMAIL_FIND, phoneNumber),
 			request.getCertificationCode()
 		);
 
