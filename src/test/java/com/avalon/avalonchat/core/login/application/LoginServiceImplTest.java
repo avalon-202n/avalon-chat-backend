@@ -18,7 +18,6 @@ import com.avalon.avalonchat.core.profile.domain.ProfileRepository;
 import com.avalon.avalonchat.core.user.application.PhoneNumberAuthCodeStore;
 import com.avalon.avalonchat.core.user.application.UserServiceImpl;
 import com.avalon.avalonchat.core.user.application.keyvalue.AuthCodeValue;
-import com.avalon.avalonchat.core.user.application.keyvalue.EmailFindKey;
 import com.avalon.avalonchat.core.user.application.keyvalue.PhoneNumberKey;
 import com.avalon.avalonchat.core.user.domain.User;
 import com.avalon.avalonchat.core.user.domain.UserRepository;
@@ -88,7 +87,7 @@ public class LoginServiceImplTest {
 		profileRepository.save(profile);
 
 		String authCode = "cert-code";
-		PhoneNumberKey key = EmailFindKey.fromString(profile.getPhoneNumber());
+		PhoneNumberKey key = PhoneNumberKey.ofPurpose(PhoneNumberKey.Purpose.EMAIL_FIND, profile.getPhoneNumber());
 		AuthCodeValue authCodeValue = AuthCodeValue.fromString(authCode);
 
 		phoneNumberKeyValueStore.put(key, authCodeValue);
@@ -111,7 +110,7 @@ public class LoginServiceImplTest {
 		profileRepository.save(profile);
 
 		String authCode = "cert-code";
-		PhoneNumberKey key = EmailFindKey.fromString(profile.getPhoneNumber());
+		PhoneNumberKey key = PhoneNumberKey.ofPurpose(PhoneNumberKey.Purpose.EMAIL_FIND, profile.getPhoneNumber());
 		AuthCodeValue authCodeValue = AuthCodeValue.fromString(authCode);
 
 		phoneNumberKeyValueStore.put(key, authCodeValue);
