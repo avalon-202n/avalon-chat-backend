@@ -2,7 +2,8 @@ package com.avalon.avalonchat.core.user.application.keyvalue;
 
 import static lombok.AccessLevel.*;
 
-import lombok.Getter;
+import com.avalon.avalonchat.core.user.application.enums.PhoneNumberKeyPurpose;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,7 +19,7 @@ public class PhoneNumberKey {
 		return new PhoneNumberKey(key);
 	}
 
-	public static PhoneNumberKey ofPurpose(Purpose purpose, String phoneNumber) {
+	public static PhoneNumberKey ofPurpose(PhoneNumberKeyPurpose purpose, String phoneNumber) {
 		log.debug("PhoneNumberKey : {}", PREFIX + phoneNumber + purpose.getName());
 		return new PhoneNumberKey(PREFIX + phoneNumber + purpose.getName());
 	}
@@ -26,14 +27,5 @@ public class PhoneNumberKey {
 	@Override
 	public String toString() {
 		return PREFIX + key;
-	}
-
-	@Getter
-	@RequiredArgsConstructor
-	public enum Purpose {
-		EMAIL_FIND("::EMAIL_FIND"),
-		SING_UP("::SING_UP");
-
-		private final String name;
 	}
 }
