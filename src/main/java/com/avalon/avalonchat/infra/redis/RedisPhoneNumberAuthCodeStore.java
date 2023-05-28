@@ -1,7 +1,5 @@
 package com.avalon.avalonchat.infra.redis;
 
-import java.time.Duration;
-
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 
@@ -20,12 +18,17 @@ public class RedisPhoneNumberAuthCodeStore implements PhoneNumberAuthCodeStore {
 	}
 
 	@Override
-	public void put(PhoneNumberKey key, AuthCodeValue value) {
-		phoneNumberAuthOperations.set(key, value, Duration.ofMinutes(30));
+	public void save(PhoneNumberKey key, AuthCodeValue value) {
+
 	}
 
 	@Override
-	public AuthCodeValue get(PhoneNumberKey key) {
-		return phoneNumberAuthOperations.get(key);
+	public boolean isAuthenticated(PhoneNumberKey key) {
+		return false;
+	}
+
+	@Override
+	public boolean checkKeyValueMatches(PhoneNumberKey key, AuthCodeValue value) {
+		return false;
 	}
 }

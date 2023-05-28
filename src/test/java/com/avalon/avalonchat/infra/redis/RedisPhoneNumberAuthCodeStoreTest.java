@@ -24,13 +24,12 @@ class RedisPhoneNumberAuthCodeStoreTest {
 		AuthCodeValue value = AuthCodeValue.ofUnauthenticated("cert-code");
 
 		// when
-		sut.put(key, value);
-		AuthCodeValue authCodeValue = sut.get(key);
-		AuthCodeValue nullCodeValue = sut.get(PhoneNumberKey.fromString("01099999999"));
+		sut.save(key, value);
+		boolean authenticated1 = sut.isAuthenticated(key);
+		boolean authenticated2 = sut.isAuthenticated(PhoneNumberKey.fromString("01099999999"));
 
 		// then
-		assertThat(authCodeValue.isAuthenticated()).isFalse();
-		assertThat(authCodeValue.matches("cert-code")).isTrue();
-		assertThat(nullCodeValue).isNull();
+		assertThat(authenticated1).isTrue();
+		assertThat(authenticated2).isFalse();
 	}
 }

@@ -69,10 +69,10 @@ class UserServiceImplTest {
 
 		// when
 		sut.sendPhoneNumberAuthentication(request);
-		AuthCodeValue authCodeValue = phoneNumberAuthKeyValueStore.get(PhoneNumberKey.fromString(toPhoneNumber));
+		boolean authenticated = phoneNumberAuthKeyValueStore.isAuthenticated(PhoneNumberKey.fromString(toPhoneNumber));
 
 		// then
-		assertThat(authCodeValue.isAuthenticated()).isFalse();
+		assertThat(authenticated).isFalse();
 	}
 
 	@Test
@@ -83,7 +83,7 @@ class UserServiceImplTest {
 		String toPhoneNumber = "01055110625";
 
 		smsMessageService.sendAuthenticationCode(toPhoneNumber, certificationCode);
-		phoneNumberAuthKeyValueStore.put(
+		phoneNumberAuthKeyValueStore.save(
 			PhoneNumberKey.fromString(toPhoneNumber),
 			AuthCodeValue.ofUnauthenticated(certificationCode)
 		);

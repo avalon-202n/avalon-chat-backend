@@ -2,22 +2,12 @@ package com.avalon.avalonchat.core.user.application;
 
 import com.avalon.avalonchat.core.user.application.keyvalue.AuthCodeValue;
 import com.avalon.avalonchat.core.user.application.keyvalue.PhoneNumberKey;
-import com.avalon.avalonchat.global.keyvalue.KeyValueStore;
 
-public interface PhoneNumberAuthCodeStore extends KeyValueStore<PhoneNumberKey, AuthCodeValue> {
+public interface PhoneNumberAuthCodeStore {
 
-	default boolean isAuthenticated(PhoneNumberKey key) {
-		AuthCodeValue authCodeValue = get(key);
-		return authCodeValue != null && authCodeValue.isAuthenticated();
-	}
+	void save(PhoneNumberKey key, AuthCodeValue value);
 
-	default boolean checkKeyValueMatches(PhoneNumberKey key, String authCodeValue) {
-		AuthCodeValue gotAuthCodeValue = get(key);
-		boolean checked = gotAuthCodeValue != null && gotAuthCodeValue.matches(authCodeValue);
-		if (checked) {
-			// do authenticate
-			put(key, AuthCodeValue.ofAuthenticated());
-		}
-		return checked;
-	}
+	boolean isAuthenticated(PhoneNumberKey key);
+
+	boolean checkKeyValueMatches(PhoneNumberKey key, AuthCodeValue value);
 }

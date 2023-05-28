@@ -74,7 +74,7 @@ class ProfileServiceImplTest {
 		String toPhoneNumber = "01055110625";
 
 		smsMessageService.sendAuthenticationCode(toPhoneNumber, certificationCode);
-		phoneNumberAuthKeyValueStore.put(
+		phoneNumberAuthKeyValueStore.save(
 			PhoneNumberKey.fromString(toPhoneNumber),
 			AuthCodeValue.ofUnauthenticated(certificationCode)
 		);
@@ -114,7 +114,7 @@ class ProfileServiceImplTest {
 		String toPhoneNumber = "01055110625";
 
 		smsMessageService.sendAuthenticationCode(toPhoneNumber, certificationCode);
-		phoneNumberAuthKeyValueStore.put(
+		phoneNumberAuthKeyValueStore.save(
 			PhoneNumberKey.fromString(toPhoneNumber),
 			AuthCodeValue.ofUnauthenticated(certificationCode)
 		);

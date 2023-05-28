@@ -91,8 +91,8 @@ public class LoginServiceImplTest {
 		PhoneNumberKey key = PhoneNumberKey.ofPurpose(PhoneNumberKeyPurpose.EMAIL_FIND, profile.getPhoneNumber());
 		AuthCodeValue authCodeValue = AuthCodeValue.fromString(authCode);
 
-		phoneNumberKeyValueStore.put(key, authCodeValue);
-		phoneNumberKeyValueStore.checkKeyValueMatches(key, authCode);
+		phoneNumberKeyValueStore.save(key, authCodeValue);
+		phoneNumberKeyValueStore.checkKeyValueMatches(key, authCodeValue);
 
 		//when
 		EmailFindResponse emailFindResponse = sut.findEmailByPhoneNumber(profile.getPhoneNumber());
@@ -114,7 +114,7 @@ public class LoginServiceImplTest {
 		PhoneNumberKey key = PhoneNumberKey.ofPurpose(PhoneNumberKeyPurpose.EMAIL_FIND, profile.getPhoneNumber());
 		AuthCodeValue authCodeValue = AuthCodeValue.fromString(authCode);
 
-		phoneNumberKeyValueStore.put(key, authCodeValue);
+		phoneNumberKeyValueStore.save(key, authCodeValue);
 
 		//when & then
 		assertThatExceptionOfType(RuntimeException.class)
