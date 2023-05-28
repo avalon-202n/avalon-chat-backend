@@ -7,14 +7,22 @@ import com.avalon.avalonchat.core.login.dto.PasswordFindRequest;
 import com.avalon.avalonchat.core.login.dto.PasswordFindResponse;
 import com.avalon.avalonchat.core.login.dto.TokenReissueRequest;
 import com.avalon.avalonchat.core.login.dto.TokenReissueResponse;
+import com.avalon.avalonchat.core.user.dto.PhoneNumberAuthenticationCheckRequest;
+import com.avalon.avalonchat.core.user.dto.PhoneNumberAuthenticationCheckResponse;
+import com.avalon.avalonchat.core.user.dto.PhoneNumberAuthenticationSendRequest;
 
 public interface LoginService {
 
 	LoginResponse login(LoginRequest request);
 
-	EmailFindResponse findEmailByPhoneNumber(String request);
+	EmailFindResponse findEmailByPhoneNumber(String phoneNumber);
 
 	PasswordFindResponse resetPassword(PasswordFindRequest request);
 
 	TokenReissueResponse reissueToken(TokenReissueRequest request);
+
+	void sendFindEmailPhoneNumberAuthentication(PhoneNumberAuthenticationSendRequest request);
+
+	PhoneNumberAuthenticationCheckResponse checkFindEmailPhoneNumberAuthentication(
+		PhoneNumberAuthenticationCheckRequest request);
 }
