@@ -39,6 +39,7 @@ import com.avalon.avalonchat.core.user.domain.User;
 import com.avalon.avalonchat.core.user.domain.UserRepository;
 import com.avalon.avalonchat.core.user.dto.PhoneNumberAuthenticationCheckRequest;
 import com.avalon.avalonchat.global.error.exception.BadRequestException;
+import com.avalon.avalonchat.global.error.exception.NotFoundException;
 
 @Transactional
 @SpringBootTest
@@ -150,6 +151,53 @@ class ProfileServiceImplTest {
 		//then
 		assertThat(response.getBio()).isEqualTo("hi there");
 		assertThat(response.getNickname()).isEqualTo("haha");
+	}
+
+	@Test
+	void profileId로_친구_profile_상세_조회_성공() {
+		//given
+		User user = createUser("hello@world.com", "password");
+		User friendUser = createUser("friendUser1@world.com", "friendUser1");
+		userRepository.save(user);
+		userRepository.save(friendUser);
+
+		Profile myProfile = createProfile(user, "hi there", LocalDate.of(1997, 8, 21), "haha", "01055110625");
+		Profile friendProfile = createProfile(
+			friendUser, "I'm friend1", LocalDate.of(1998, 9, 22), "A_friend", "01012123434"
+		);
+		profileRepository.save(myProfile);
+		profileRepository.save(friendProfile);
+
+		// given - ready for friends
+		Friend friend = new Friend(myProfile, friendProfile);
+		friendRepository.save(friend);
+
+		//when
+		ProfileDetailedGetResponse response = sut.getFriendDetailedById(myProfile.getId(), friendProfile.getId());
+
+		//then
+		assertThat(response.getBio()).isEqualTo("I'm friend1");
+		assertThat(response.getNickname()).isEqualTo("A_friend");
+	}
+
+	@Test
+	void 친구가_아닌_profileId로_profile_상세_조회_실패() {
+		//given
+		User user = createUser("hello@world.com", "password");
+		User friendUser = createUser("friendUser1@world.com", "friendUser1");
+		userRepository.save(user);
+		userRepository.save(friendUser);
+
+		Profile myProfile = createProfile(user, "hi there", LocalDate.of(1997, 8, 21), "haha", "01055110625");
+		Profile friendProfile = createProfile(
+			friendUser, "I'm friend1", LocalDate.of(1998, 9, 22), "A_friend", "01012123434"
+		);
+		profileRepository.save(myProfile);
+		profileRepository.save(friendProfile);
+
+		//when & then
+		assertThatExceptionOfType(NotFoundException.class)
+			.isThrownBy(() -> sut.getFriendDetailedById(myProfile.getId(), friendProfile.getId()));
 	}
 
 	@Test

@@ -7,6 +7,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.avalon.avalonchat.core.friend.domain.Friend;
+import com.avalon.avalonchat.core.friend.domain.FriendRepository;
 import com.avalon.avalonchat.core.profile.domain.Profile;
 import com.avalon.avalonchat.core.profile.domain.ProfileRepository;
 import com.avalon.avalonchat.core.profile.dto.BackgroundImageDeleteRequest;
@@ -33,6 +35,7 @@ public class ProfileServiceImpl implements ProfileService {
 
 	private final ProfileRepository profileRepository;
 	private final UserRepository userRepository;
+	private final FriendRepository friendRepository;
 	private final PhoneNumberAuthCodeStore phoneNumberKeyValueStore;
 
 	@Transactional
@@ -150,5 +153,14 @@ public class ProfileServiceImpl implements ProfileService {
 
 		// 3. delete backgroundImages
 		profile.deleteBackgroundImage(request.getDeletedBackgroundImageUrls());
+	}
+
+	@Override
+	public ProfileDetailedGetResponse getFriendDetailedById(long myProfileId, long friendProfileId) {
+		// 1. 내 친구 프로필 아이디인지 확인
+		Friend friend = friendRepository.findByMyProfileIdAndFriendProfileId(myProfileId, friendProfileId)
+			.orElseThrow(() -> new NotFoundException("friend", friendProfileId));
+		// 2. 프로필 조회
+		return getDetailedById(friendProfileId);
 	}
 }

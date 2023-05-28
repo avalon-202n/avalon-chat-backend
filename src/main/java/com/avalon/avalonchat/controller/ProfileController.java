@@ -10,6 +10,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -65,6 +66,19 @@ public class ProfileController {
 		@AuthenticationPrincipal SecurityUser securityUser
 	) {
 		return service.getDetailedById(securityUser.getProfileId());
+	}
+
+	@Operation(
+		summary = "친구 프로필 상세 조회",
+		description = "친구 프로필 아이디로 상세 조회",
+		security = {@SecurityRequirement(name = "bearer-key")}
+	)
+	@GetMapping("/{profileId}")
+	public ProfileDetailedGetResponse getFriendProfile(
+		@PathVariable long profileId,
+		@AuthenticationPrincipal SecurityUser securityUser
+	) {
+		return service.getFriendDetailedById(securityUser.getProfileId(), profileId);
 	}
 
 	@Operation(
