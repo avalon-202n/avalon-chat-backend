@@ -21,12 +21,10 @@ import com.avalon.avalonchat.core.user.application.keyvalue.AuthCodeValue;
 import com.avalon.avalonchat.core.user.application.keyvalue.PhoneNumberKey;
 import com.avalon.avalonchat.core.user.domain.Password;
 import com.avalon.avalonchat.core.user.domain.User;
-import com.avalon.avalonchat.core.user.domain.UserRepository;
 import com.avalon.avalonchat.core.user.dto.PhoneNumberAuthenticationCheckRequest;
 import com.avalon.avalonchat.core.user.dto.PhoneNumberAuthenticationCheckResponse;
 import com.avalon.avalonchat.core.user.dto.PhoneNumberAuthenticationSendRequest;
 import com.avalon.avalonchat.global.error.exception.BadRequestException;
-import com.avalon.avalonchat.global.error.exception.NotFoundException;
 import com.avalon.avalonchat.global.model.RefreshToken;
 import com.avalon.avalonchat.infra.jwt.JwtTokenService;
 
@@ -39,7 +37,6 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class LoginServiceImpl implements LoginService {
 
-	private final UserRepository userRepository;
 	private final ProfileRepository profileRepository;
 	private final RefreshTokenRepository refreshTokenRepository;
 	private final JwtTokenService tokenService;
@@ -50,8 +47,9 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public LoginResponse login(LoginRequest request) {
 		// 1. check user exists
-		User findUser = userRepository.findByEmail(request.getEmail())
+		Profile profile = profileRepository.findByEmailWithUser(request.getEmail())
 			.orElseThrow(() -> new BadRequestException("login-failed.email.notfound", request.getEmail()));
+		User findUser = profile.getUser();
 
 		// 2. verify password
 		if (!request.getPassword().matches(findUser.getPassword())) {
@@ -59,14 +57,19 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		// 3. jwt token create
-		long profileId = profileRepository.findProfileIdByUserId(findUser.getId())
-			.orElseThrow(() -> new NotFoundException("profile", " userId = " + findUser.getId()));
-		String accessToken = tokenService.createAccessToken(findUser, profileId);
+		String accessToken = tokenService.createAccessToken(profile);
 		String refreshToken = tokenService.createRefreshToken();
 
 		// 4.refreshToken save
 		refreshTokenService.save(refreshToken, findUser.getId());
-		return new LoginResponse(findUser.getEmail(), accessToken, refreshToken);
+		return new LoginResponse(
+			findUser.getEmail(),
+			accessToken,
+			refreshToken,
+			profile.getNickname(),
+			profile.getBio(),
+			profile.getLatestProfileImageUrl()
+		);
 	}
 
 	@Override
@@ -102,16 +105,13 @@ public class LoginServiceImpl implements LoginService {
 			.orElseThrow(() -> new BadRequestException("token-reissue-failed.refresh-token.notfound"));
 
 		// refresh token 의 user 조회
-		User findUser = userRepository.findById(findRefreshToken.getUserId())
+		Profile profile = profileRepository.findByUserIdWithUser(findRefreshToken.getUserId())
 			.orElseThrow(
 				() -> new BadRequestException("token-reissue-failed.userid.notfound", findRefreshToken.getUserId()));
-
-		//profile 조회
-		long profileId = profileRepository.findProfileIdByUserId(findUser.getId())
-			.orElseThrow(() -> new NotFoundException("profile", " userId = " + findUser.getId()));
+		User findUser = profile.getUser();
 
 		//access token & refresh token reissue
-		String accessToken = tokenService.createAccessToken(findUser, profileId);
+		String accessToken = tokenService.createAccessToken(profile);
 		String refreshToken = tokenService.createRefreshToken();
 
 		// 기존 refresh token 삭제 & 새로운 refresh token 등록

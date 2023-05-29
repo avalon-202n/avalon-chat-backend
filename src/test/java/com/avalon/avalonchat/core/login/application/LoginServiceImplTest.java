@@ -2,7 +2,8 @@ package com.avalon.avalonchat.core.login.application;
 
 import static org.assertj.core.api.AssertionsForClassTypes.*;
 
-import org.junit.jupiter.api.Disabled;
+import java.time.LocalDate;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -41,12 +42,13 @@ public class LoginServiceImplTest {
 	@Autowired
 	private ProfileRepository profileRepository;
 
-	@Disabled("회원가입 프로세스에 대한 정리 필요")
 	@Test
 	void 로그인_성공() {
 		//given
-		User user = Fixture.createUser();
+		User user = Fixture.createUser("avalon@e.com", "passw0rd");
+		Profile profile = Fixture.createProfile(user, "bio", LocalDate.of(1997, 8, 21), "haha", "01012345678");
 		userRepository.save(user);
+		profileRepository.save(profile);
 
 		//when
 		LoginRequest loginRequest = DtoFixture.loginRequest("avalon@e.com", "passw0rd");
@@ -55,6 +57,9 @@ public class LoginServiceImplTest {
 		//then
 		assertThat(loginResponse.getEmail().getValue()).isEqualTo(loginRequest.getEmail().getValue());
 		assertThat(loginResponse.getAccessToken()).isNotNull();
+		assertThat(loginResponse.getBio()).isEqualTo("bio");
+		assertThat(loginResponse.getNickname()).isEqualTo("haha");
+		assertThat(loginResponse.getProfileImageUrl()).isNull();
 	}
 
 	@CsvSource({

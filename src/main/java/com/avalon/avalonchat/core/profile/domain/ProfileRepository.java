@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.avalon.avalonchat.core.profile.dto.ProfileListGetResponse;
-import com.avalon.avalonchat.core.user.domain.User;
+import com.avalon.avalonchat.core.user.domain.Email;
 
 public interface ProfileRepository extends JpaRepository<Profile, Long> {
 	List<Profile> findAllByPhoneNumberIn(List<String> phoneNumbers);
@@ -20,7 +20,12 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
 		+ "WHERE p.user.id = :userId")
 	Optional<Long> findProfileIdByUserId(@Param("userId") long userId);
 
-	Optional<Profile> findByUser(User user);
+	@Query(
+		"SELECT p "
+			+ "FROM Profile p join fetch p.user u "
+			+ "WHERE u.email = :email"
+	)
+	Optional<Profile> findByEmailWithUser(Email email);
 
 	@Query(
 		"SELECT new com.avalon.avalonchat.core.profile.dto.ProfileListGetResponse("
@@ -47,4 +52,11 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
 		+ "INNER JOIN f.myProfile mp "
 		+ "WHERE mp.id = :myProfileId")
 	List<String> findAllFriendPhoneNumbersByMyProfileId(@Param("myProfileId") long myProfileId);
+
+	@Query(
+		"SELECT p "
+			+ "FROM Profile p join fetch p.user u "
+			+ "WHERE u.id = :userId"
+	)
+	Optional<Profile> findByUserIdWithUser(long userId);
 }

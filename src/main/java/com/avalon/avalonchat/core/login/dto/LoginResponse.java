@@ -24,4 +24,16 @@ public class LoginResponse {
 	@NotNull
 	@Schema(description = "refresh 인증 토큰", example = "jjj.www.ttt")
 	private String refreshToken;
+
+	@NotNull
+	@Schema(description = "닉네임", example = "haha")
+	private String nickname;
+
+	@NotNull
+	@Schema(description = "bio", example = "안녕하세요~")
+	private String bio;
+
+	@NotNull
+	@Schema(description = "프로필 이미지 주소", example = "profile.image.url")
+	private String profileImageUrl;
 }
