@@ -37,6 +37,20 @@ public class Friend extends BaseAuditingEntity {
 	@Enumerated(STRING)
 	private Status status;
 
+	private String displayName;
+
+	public Friend(Profile myProfile, Profile friendProfile, String displayName) {
+		checkNotNull(myProfile, "Friend.myProfile cannot be null");
+		checkNotNull(myProfile, "Friend.friendProfile cannot be null");
+		checkNotNull(displayName, "friend.displayName cannot be null");
+
+		this.myProfile = myProfile;
+		this.friendProfile = friendProfile;
+		this.status = Status.NORMAL;
+		this.displayName = displayName;
+	}
+
+	//TODO 아래의 생성자 친구 동기화 API 수정 후 삭제
 	public Friend(Profile myProfile, Profile friendProfile) {
 		checkNotNull(myProfile, "Friend.myProfile cannot be null");
 		checkNotNull(myProfile, "Friend.friendProfile cannot be null");

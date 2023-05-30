@@ -10,6 +10,8 @@ import org.springframework.data.repository.query.Param;
 import com.avalon.avalonchat.core.friend.dto.FriendAddResponse;
 
 public interface FriendRepository extends JpaRepository<Friend, Long> {
+	boolean existsByFriendProfileId(long friendId);
+
 	Optional<Friend> findByMyProfileIdAndFriendProfileId(long myProfileId, long friendProfileId);
 
 	@Query("SELECT new com.avalon.avalonchat.core.friend.dto.FriendAddResponse("

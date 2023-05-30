@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.avalon.avalonchat.core.friend.application.FriendService;
 import com.avalon.avalonchat.core.friend.dto.FriendAddRequest;
 import com.avalon.avalonchat.core.friend.dto.FriendAddResponse;
+import com.avalon.avalonchat.core.friend.dto.FriendPhoneNumberAddRequest;
+import com.avalon.avalonchat.core.friend.dto.FriendPhoneNumberAddResponse;
 import com.avalon.avalonchat.core.friend.dto.FriendStatusUpdateRequest;
 import com.avalon.avalonchat.core.friend.dto.FriendStatusUpdateResponse;
 import com.avalon.avalonchat.global.model.SecurityUser;
@@ -34,6 +36,15 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 public class FriendController {
 	private final FriendService friendService;
+
+	@PostMapping("/phoneNumber")
+	public ResponseEntity<FriendPhoneNumberAddResponse> addFriendByPhoneNumber(
+		@AuthenticationPrincipal SecurityUser securityUser,
+		FriendPhoneNumberAddRequest request
+	) {
+		FriendPhoneNumberAddResponse body = friendService.addFriendByPhoneNumber(securityUser.getProfileId(), request);
+		return created(body);
+	}
 
 	@Operation(
 		summary = "[WIP] 친구 추가",

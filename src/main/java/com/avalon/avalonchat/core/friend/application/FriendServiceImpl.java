@@ -10,10 +10,13 @@ import com.avalon.avalonchat.core.friend.domain.Friend;
 import com.avalon.avalonchat.core.friend.domain.FriendRepository;
 import com.avalon.avalonchat.core.friend.dto.FriendAddRequest;
 import com.avalon.avalonchat.core.friend.dto.FriendAddResponse;
+import com.avalon.avalonchat.core.friend.dto.FriendPhoneNumberAddRequest;
+import com.avalon.avalonchat.core.friend.dto.FriendPhoneNumberAddResponse;
 import com.avalon.avalonchat.core.friend.dto.FriendStatusUpdateRequest;
 import com.avalon.avalonchat.core.friend.dto.FriendStatusUpdateResponse;
 import com.avalon.avalonchat.core.profile.domain.Profile;
 import com.avalon.avalonchat.core.profile.domain.ProfileRepository;
+import com.avalon.avalonchat.global.error.exception.BadRequestException;
 import com.avalon.avalonchat.global.error.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
@@ -25,6 +28,30 @@ public class FriendServiceImpl implements FriendService {
 
 	private final FriendRepository friendRepository;
 	private final ProfileRepository profileRepository;
+
+	@Override
+	@Transactional
+	public FriendPhoneNumberAddResponse addFriendByPhoneNumber(long profileId, FriendPhoneNumberAddRequest request) {
+		// 1. find myProfile & friendProfile
+		Profile myProfile = profileRepository.findById(profileId)
+			.orElseThrow(() -> new NotFoundException("myProfile", profileId));
+
+		Profile friendProfile = profileRepository.findByPhoneNumber(request.getPhoneNumber())
+			.orElseThrow(() -> new NotFoundException("friendProfile", request.getPhoneNumber()));
+
+		// 2. check if already exists
+		boolean exists = friendRepository.existsByFriendProfileId(friendProfile.getId());
+		if (exists) {
+			throw new BadRequestException("addFriendByPhoneNumber-failed.already-exists");
+		}
+
+		// 3. create friend & save them
+		Friend friend = new Friend(myProfile, friendProfile, request.getDisplayName());
+		Friend savedFriend = friendRepository.save(friend);
+
+		// 4. create & return response
+		return FriendPhoneNumberAddResponse.of(friendProfile, savedFriend);
+	}
 
 	@Override
 	@Transactional

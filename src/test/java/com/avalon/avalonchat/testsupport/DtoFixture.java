@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.avalon.avalonchat.core.friend.dto.FriendAddRequest;
+import com.avalon.avalonchat.core.friend.dto.FriendPhoneNumberAddRequest;
 import com.avalon.avalonchat.core.login.dto.LoginRequest;
 import com.avalon.avalonchat.core.profile.dto.BackgroundImageDeleteRequest;
 import com.avalon.avalonchat.core.profile.dto.ProfileImageDeleteRequest;
@@ -112,4 +113,10 @@ public final class DtoFixture {
 		return new BackgroundImageDeleteRequest(deletedBackgroundImageUrls);
 	}
 	/* Profile Package DTO End */
+
+	/* Friend Package DTO Start */
+	public static FriendPhoneNumberAddRequest friendPhoneNumberAddRequest(String phoneNumber, String displayName) {
+		return new FriendPhoneNumberAddRequest(phoneNumber, displayName);
+	}
+	/* Friend Package DTO End */
 }

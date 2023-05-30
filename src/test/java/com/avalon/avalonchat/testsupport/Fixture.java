@@ -47,6 +47,10 @@ public final class Fixture {
 		);
 	}
 
+	public static Friend createFriend(Profile myProfile, Profile friendProfile, String displayName) {
+		return new Friend(myProfile, friendProfile, displayName);
+	}
+
 	public static Friend createFriend(Profile myProfile, Profile friendProfile) {
 		return new Friend(myProfile, friendProfile);
 	}

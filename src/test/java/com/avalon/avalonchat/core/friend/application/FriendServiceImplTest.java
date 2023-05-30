@@ -3,7 +3,8 @@ package com.avalon.avalonchat.core.friend.application;
 import static com.avalon.avalonchat.testsupport.DtoFixture.*;
 import static com.avalon.avalonchat.testsupport.Fixture.*;
 import static java.time.LocalDate.*;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -18,6 +19,8 @@ import com.avalon.avalonchat.core.friend.domain.Friend.Status;
 import com.avalon.avalonchat.core.friend.domain.FriendRepository;
 import com.avalon.avalonchat.core.friend.dto.FriendAddRequest;
 import com.avalon.avalonchat.core.friend.dto.FriendAddResponse;
+import com.avalon.avalonchat.core.friend.dto.FriendPhoneNumberAddRequest;
+import com.avalon.avalonchat.core.friend.dto.FriendPhoneNumberAddResponse;
 import com.avalon.avalonchat.core.friend.dto.FriendStatusUpdateRequest;
 import com.avalon.avalonchat.core.friend.dto.FriendStatusUpdateResponse;
 import com.avalon.avalonchat.core.profile.domain.Profile;
@@ -26,6 +29,7 @@ import com.avalon.avalonchat.core.user.domain.Email;
 import com.avalon.avalonchat.core.user.domain.Password;
 import com.avalon.avalonchat.core.user.domain.User;
 import com.avalon.avalonchat.core.user.domain.UserRepository;
+import com.avalon.avalonchat.global.error.exception.BadRequestException;
 
 @Transactional
 @SpringBootTest
@@ -38,6 +42,79 @@ class FriendServiceImplTest {
 	private ProfileRepository profileRepository;
 	@Autowired
 	private UserRepository userRepository;
+
+	@Test
+	@Transactional
+	void 연락처_친구추가_성공() {
+		// given
+		User myUser = createUser("myuser@email.com", "passw0rd");
+		User friendUser = createUser("frienduser@email.com", "passw0rd");
+		userRepository.saveAll(List.of(myUser, friendUser));
+
+		Profile myProfile = createProfile(
+			myUser,
+			"my bio",
+			of(1999, 01, 23),
+			"이철수",
+			"010-1234-4321"
+		);
+		Profile friendProfile = createProfile(
+			friendUser,
+			"friend bio",
+			of(1999, 07, 07),
+			"홍길동",
+			"010-1234-5678"
+		);
+		profileRepository.saveAll(List.of(myProfile, friendProfile));
+
+		FriendPhoneNumberAddRequest request
+			= friendPhoneNumberAddRequest("010-1234-5678", "홍길동99");
+
+		// when
+		FriendPhoneNumberAddResponse response = sut.addFriendByPhoneNumber(myProfile.getId(), request);
+
+		// then
+		assertThat(response.getFriendProfileId()).isEqualTo(friendProfile.getId());
+		assertThat(response.getDisplayName()).isEqualTo(request.getDisplayName());
+		assertThat(response.getBio()).isEqualTo(friendProfile.getBio());
+		assertThat(response.getProfileImage()).isEqualTo(friendProfile.getLatestProfileImageUrl());
+		assertThat(response.getStatus()).isEqualTo(Status.NORMAL);
+	}
+
+	@Test
+	@Transactional
+	void 연락처_친구추가_예외발생() {
+		// given
+		User myUser = createUser("myuser@email.com", "passw0rd");
+		User friendUser = createUser("frienduser@email.com", "passw0rd");
+		userRepository.saveAll(List.of(myUser, friendUser));
+
+		Profile myProfile = createProfile(
+			myUser,
+			"my bio",
+			of(1999, 01, 23),
+			"이철수",
+			"010-1234-4321"
+		);
+		Profile friendProfile = createProfile(
+			friendUser,
+			"friend bio",
+			of(1999, 07, 07),
+			"홍길동",
+			"010-1234-5678"
+		);
+		profileRepository.saveAll(List.of(myProfile, friendProfile));
+
+		Friend friend = createFriend(myProfile, friendProfile, "홍길동99");
+		friendRepository.save(friend);
+
+		FriendPhoneNumberAddRequest request
+			= friendPhoneNumberAddRequest("010-1234-5678", "홍길동99");
+
+		// when & then
+		assertThatExceptionOfType(BadRequestException.class)
+			.isThrownBy(() -> sut.addFriendByPhoneNumber(myProfile.getId(), request));
+	}
 
 	@Test
 	@Transactional
