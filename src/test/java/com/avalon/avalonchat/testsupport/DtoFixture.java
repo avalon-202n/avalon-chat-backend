@@ -2,9 +2,10 @@ package com.avalon.avalonchat.testsupport;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
-import com.avalon.avalonchat.core.friend.dto.FriendAddRequest;
 import com.avalon.avalonchat.core.friend.dto.FriendPhoneNumberAddRequest;
+import com.avalon.avalonchat.core.friend.dto.FriendSynchronizeRequest;
 import com.avalon.avalonchat.core.login.dto.LoginRequest;
 import com.avalon.avalonchat.core.profile.dto.BackgroundImageDeleteRequest;
 import com.avalon.avalonchat.core.profile.dto.ProfileImageDeleteRequest;
@@ -83,10 +84,6 @@ public final class DtoFixture {
 	}
 	/* Login Package DTO End */
 
-	public static FriendAddRequest friendAddRequest(List<String> phoneNumbers) {
-		return new FriendAddRequest(phoneNumbers);
-	}
-
 	/* Profile Package DTO Start */
 	public static ProfileUpdateRequest profileUpdateRequest(
 		LocalDate birthDate,
@@ -117,6 +114,10 @@ public final class DtoFixture {
 	/* Friend Package DTO Start */
 	public static FriendPhoneNumberAddRequest friendPhoneNumberAddRequest(String phoneNumber, String displayName) {
 		return new FriendPhoneNumberAddRequest(phoneNumber, displayName);
+	}
+
+	public static FriendSynchronizeRequest friendSynchronizeRequest(Map<String, String> friendsInfo) {
+		return new FriendSynchronizeRequest(friendsInfo);
 	}
 	/* Friend Package DTO End */
 }

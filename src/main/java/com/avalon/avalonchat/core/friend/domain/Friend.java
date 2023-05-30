@@ -50,7 +50,6 @@ public class Friend extends BaseAuditingEntity {
 		this.displayName = displayName;
 	}
 
-	//TODO 아래의 생성자 친구 동기화 API 수정 후 삭제
 	public Friend(Profile myProfile, Profile friendProfile) {
 		checkNotNull(myProfile, "Friend.myProfile cannot be null");
 		checkNotNull(myProfile, "Friend.friendProfile cannot be null");
@@ -58,6 +57,7 @@ public class Friend extends BaseAuditingEntity {
 		this.myProfile = myProfile;
 		this.friendProfile = friendProfile;
 		this.status = Status.NORMAL;
+		this.displayName = friendProfile.getNickname();
 	}
 
 	public void updateStatus(Status status) {
