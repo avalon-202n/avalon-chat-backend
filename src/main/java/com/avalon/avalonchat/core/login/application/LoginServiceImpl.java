@@ -76,7 +76,8 @@ public class LoginServiceImpl implements LoginService {
 	public EmailFindResponse findEmailByPhoneNumber(String phoneNumber) {
 		// 1. check authenticate phoneNumber
 		PhoneNumberKey phoneNumberKey = PhoneNumberKey.ofPurpose(PhoneNumberKeyPurpose.EMAIL_FIND, phoneNumber);
-		if (!phoneNumberAuthCodeStore.isAuthenticated(phoneNumberKey)) {
+		boolean authenticated = phoneNumberAuthCodeStore.isAuthenticated(phoneNumberKey);
+		if (!authenticated) {
 			throw new BadRequestException("phonenumber.no-auth", phoneNumber);
 		}
 
@@ -130,7 +131,7 @@ public class LoginServiceImpl implements LoginService {
 		smsMessageService.sendAuthenticationCode(phoneNumber, certificationCode);
 
 		// 3. put it to key-value store
-		phoneNumberAuthCodeStore.put(
+		phoneNumberAuthCodeStore.save(
 			PhoneNumberKey.ofPurpose(PhoneNumberKeyPurpose.EMAIL_FIND, phoneNumber),
 			AuthCodeValue.ofUnauthenticated(certificationCode)
 		);
@@ -145,7 +146,7 @@ public class LoginServiceImpl implements LoginService {
 		// 2. check authenticated
 		boolean authenticated = phoneNumberAuthCodeStore.checkKeyValueMatches(
 			PhoneNumberKey.ofPurpose(PhoneNumberKeyPurpose.EMAIL_FIND, phoneNumber),
-			request.getCertificationCode()
+			AuthCodeValue.ofUnauthenticated(request.getCertificationCode())
 		);
 
 		// 3. return

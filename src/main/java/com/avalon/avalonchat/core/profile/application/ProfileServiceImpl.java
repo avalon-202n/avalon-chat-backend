@@ -47,7 +47,8 @@ public class ProfileServiceImpl implements ProfileService {
 
 		// 2. check
 		String phoneNumber = request.getPhoneNumber();
-		if (!phoneNumberKeyValueStore.isAuthenticated(PhoneNumberKey.fromString(phoneNumber))) {
+		boolean authenticated = !phoneNumberKeyValueStore.isAuthenticated(PhoneNumberKey.fromString(phoneNumber));
+		if (authenticated) {
 			throw new BadRequestException("phonenumber.no-auth", phoneNumber);
 		}
 

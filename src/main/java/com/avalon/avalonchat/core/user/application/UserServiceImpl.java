@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
 		smsMessageService.sendAuthenticationCode(phoneNumber, certificationCode);
 
 		// 3. put it to key-value store
-		phoneNumberKeyValueStore.put(
+		phoneNumberKeyValueStore.save(
 			PhoneNumberKey.fromString(phoneNumber),
 			AuthCodeValue.ofUnauthenticated(certificationCode)
 		);
@@ -79,7 +79,7 @@ public class UserServiceImpl implements UserService {
 		// 2. check authenticated
 		boolean authenticated = phoneNumberKeyValueStore.checkKeyValueMatches(
 			PhoneNumberKey.fromString(phoneNumber),
-			request.getCertificationCode()
+			AuthCodeValue.ofUnauthenticated(request.getCertificationCode())
 		);
 
 		// 3. return
