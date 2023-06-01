@@ -2,6 +2,8 @@ package com.avalon.avalonchat.core.friend.application;
 
 import java.util.List;
 
+import com.avalon.avalonchat.core.friend.dto.FriendEmailAddRequest;
+import com.avalon.avalonchat.core.friend.dto.FriendEmailAddResponse;
 import com.avalon.avalonchat.core.friend.dto.FriendPhoneNumberAddRequest;
 import com.avalon.avalonchat.core.friend.dto.FriendPhoneNumberAddResponse;
 import com.avalon.avalonchat.core.friend.dto.FriendStatusUpdateRequest;
@@ -12,6 +14,8 @@ import com.avalon.avalonchat.core.friend.dto.FriendSynchronizeResponse;
 public interface FriendService {
 
 	FriendPhoneNumberAddResponse addFriendByPhoneNumber(long profileId, FriendPhoneNumberAddRequest request);
+
+	FriendEmailAddResponse addFriendByEmail(long profileId, FriendEmailAddRequest request);
 
 	/**
 	 * add friends by given request(phonenumber list)

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
+import com.avalon.avalonchat.core.friend.dto.FriendEmailAddRequest;
 import com.avalon.avalonchat.core.friend.dto.FriendPhoneNumberAddRequest;
 import com.avalon.avalonchat.core.friend.dto.FriendSynchronizeRequest;
 import com.avalon.avalonchat.core.login.dto.LoginRequest;
@@ -118,6 +119,10 @@ public final class DtoFixture {
 
 	public static FriendSynchronizeRequest friendSynchronizeRequest(Map<String, String> friendsInfo) {
 		return new FriendSynchronizeRequest(friendsInfo);
+	}
+
+	public static FriendEmailAddRequest friendEmailAddRequest(String email) {
+		return new FriendEmailAddRequest(email);
 	}
 	/* Friend Package DTO End */
 }
