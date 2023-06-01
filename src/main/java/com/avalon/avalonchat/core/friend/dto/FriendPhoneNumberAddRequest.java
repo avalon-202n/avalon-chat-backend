@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 public class FriendPhoneNumberAddRequest {
 	@Schema(description = "핸드폰 번호", example = "010-1234-5678")
 	private String phoneNumber;
-	@Schema(description = "친구 이름", example = "홍길동99")
-	private String displayName;
+	@Schema(description = "친구 프로필 닉네임", example = "홍길동")
+	private String friendProfileNickname;
 }

@@ -40,7 +40,7 @@ class FriendRepositoryTest {
 		Profile myProfile = new Profile(myUser, "bio1", LocalDate.now(), "nickname1", phoneNumber);
 		Profile friendProfile = new Profile(friendUser, "bio2", LocalDate.now(), "nickname2", phoneNumber);
 
-		Friend friend = new Friend(myProfile, friendProfile);
+		Friend friend = new Friend(myProfile, friendProfile, "nickname2");
 
 		// when
 		Friend savedFriend = friendRepository.save(friend);
@@ -61,8 +61,8 @@ class FriendRepositoryTest {
 		User friendUser2 = new User(Email.of("email3@gmail.com"), Password.of("password3"));
 		Profile friendProfile2 = new Profile(friendUser2, "bio4", LocalDate.now(), "nickname4", "01055110628");
 
-		Friend friend1 = new Friend(myProfile, friendProfile1);
-		Friend friend2 = new Friend(myProfile, friendProfile2);
+		Friend friend1 = new Friend(myProfile, friendProfile1, "nickname2");
+		Friend friend2 = new Friend(myProfile, friendProfile2, "nickname4");
 
 		userRepository.save(myUser);
 		userRepository.save(friendUser1);
@@ -97,7 +97,7 @@ class FriendRepositoryTest {
 		for (int i = 0; i < 10; i++) {
 			User friendUser = new User(Email.of("email@gmail" + i + ".com"), Password.of("password" + i));
 			Profile friendProfile = new Profile(friendUser, "bio", LocalDate.now(), "nickname", "01055110626" + i);
-			Friend friend = new Friend(myProfile, friendProfile);
+			Friend friend = new Friend(myProfile, friendProfile, "nickname");
 
 			userRepository.save(friendUser);
 			profileRepository.save(friendProfile);
@@ -128,7 +128,7 @@ class FriendRepositoryTest {
 		Profile savedFriendProfile = profileRepository.save(friendProfile);
 
 		// given - ready for friend
-		Friend friend = new Friend(savedMyProfile, savedFriendProfile);
+		Friend friend = new Friend(savedMyProfile, savedFriendProfile, "friendNickname");
 		friendRepository.save(friend);
 
 		// when

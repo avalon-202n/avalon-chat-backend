@@ -70,14 +70,14 @@ class FriendServiceImplTest {
 		profileRepository.saveAll(List.of(myProfile, friendProfile));
 
 		FriendPhoneNumberAddRequest request
-			= friendPhoneNumberAddRequest("010-1234-5678", "홍길동99");
+			= friendPhoneNumberAddRequest("010-1234-5678", "홍길동");
 
 		// when
 		FriendPhoneNumberAddResponse response = sut.addFriendByPhoneNumber(myProfile.getId(), request);
 
 		// then
 		assertThat(response.getFriendProfileId()).isEqualTo(friendProfile.getId());
-		assertThat(response.getDisplayName()).isEqualTo(request.getDisplayName());
+		assertThat(response.getFriendName()).isEqualTo(request.getFriendProfileNickname());
 		assertThat(response.getBio()).isEqualTo(friendProfile.getBio());
 		assertThat(response.getProfileImage()).isEqualTo(friendProfile.getLatestProfileImageUrl());
 		assertThat(response.getStatus()).isEqualTo(Status.NORMAL);
@@ -156,7 +156,7 @@ class FriendServiceImplTest {
 		// then
 		assertThat(responses).hasSize(1);
 		assertThat(responses.get(0).getFriendProfileId()).isEqualTo(newFriendProfile.getId());
-		assertThat(responses.get(0).getDisplayName()).isEqualTo(friendsInfo.get("010-1234-5678"));
+		assertThat(responses.get(0).getFriendName()).isEqualTo(friendsInfo.get("010-1234-5678"));
 		assertThat(responses.get(0).getBio()).isEqualTo(newFriendProfile.getBio());
 		assertThat(responses.get(0).getProfileImage()).isEqualTo(newFriendProfile.getLatestProfileImageUrl());
 		assertThat(responses.get(0).getStatus()).isEqualTo(Status.NORMAL);
@@ -177,7 +177,7 @@ class FriendServiceImplTest {
 		Profile savedFriendProfile = profileRepository.save(friendProfile);
 
 		// given - ready for friend
-		Friend friend = new Friend(savedMyProfile, savedFriendProfile);
+		Friend friend = new Friend(savedMyProfile, savedFriendProfile, "friendNickname");
 		friendRepository.save(friend);
 
 		// given - ready for the request

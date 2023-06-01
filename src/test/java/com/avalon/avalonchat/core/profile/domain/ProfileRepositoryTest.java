@@ -104,8 +104,8 @@ class ProfileRepositoryTest {
 		friendProfile2.addProfileImage("url4");
 		sut.saveAll(List.of(myProfile, friendProfile1, friendProfile2));
 
-		Friend friend1 = createFriend(myProfile, friendProfile1);
-		Friend friend2 = createFriend(myProfile, friendProfile2);
+		Friend friend1 = createFriend(myProfile, friendProfile1, "A_friend");
+		Friend friend2 = createFriend(myProfile, friendProfile2, "B_friend");
 		friendRepository.saveAll(List.of(friend1, friend2));
 
 		// when
@@ -166,8 +166,8 @@ class ProfileRepositoryTest {
 		);
 		sut.saveAll(List.of(myProfile, friendProfile1, friendProfile2));
 
-		Friend friend1 = createFriend(myProfile, friendProfile1);
-		Friend friend2 = createFriend(myProfile, friendProfile2);
+		Friend friend1 = createFriend(myProfile, friendProfile1, "A_friend");
+		Friend friend2 = createFriend(myProfile, friendProfile2, "B_friend");
 		friendRepository.saveAll(List.of(friend1, friend2));
 
 		// when

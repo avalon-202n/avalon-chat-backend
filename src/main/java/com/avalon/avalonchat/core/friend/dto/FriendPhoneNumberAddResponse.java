@@ -15,7 +15,7 @@ public class FriendPhoneNumberAddResponse {
 	@Schema(description = "친구 프로필 ID", example = "1")
 	private long friendProfileId;
 	@Schema(description = "친구 프로필 이름", example = "홍길동99")
-	private String displayName;
+	private String friendName;
 	@Schema(description = "친구 프로필 상태메시지", example = "hi there")
 	private String bio;
 	@Schema(description = "친구 프로필 이미지 주소", example = "http://profile/image/url")
@@ -26,7 +26,7 @@ public class FriendPhoneNumberAddResponse {
 	public static FriendPhoneNumberAddResponse of(Profile profile, Friend friend) {
 		return new FriendPhoneNumberAddResponse(
 			profile.getId(),
-			friend.getDisplayName(),
+			friend.getFriendName(),
 			profile.getBio(),
 			profile.getLatestProfileImageUrl(),
 			friend.getStatus()

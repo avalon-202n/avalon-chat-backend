@@ -169,7 +169,7 @@ class ProfileServiceImplTest {
 		profileRepository.save(friendProfile);
 
 		// given - ready for friends
-		Friend friend = new Friend(myProfile, friendProfile);
+		Friend friend = new Friend(myProfile, friendProfile, "A_friend");
 		friendRepository.save(friend);
 
 		//when
@@ -229,8 +229,8 @@ class ProfileServiceImplTest {
 		profileRepository.save(friendProfile2);
 
 		// given - ready for friends
-		Friend friend1 = new Friend(myProfile, friendProfile1);
-		Friend friend2 = new Friend(myProfile, friendProfile2);
+		Friend friend1 = new Friend(myProfile, friendProfile1, "A_friend");
+		Friend friend2 = new Friend(myProfile, friendProfile2, "B_friend");
 		friendRepository.save(friend1);
 		friendRepository.save(friend2);
 

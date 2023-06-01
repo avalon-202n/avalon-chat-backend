@@ -45,8 +45,8 @@ public class DataInitializer implements ApplicationRunner {
 		Profile profile2 = profileRepository.save(new Profile(user2, "bio2", now(), "user2", "010-2222-2222"));
 		Profile profile3 = profileRepository.save(new Profile(user3, "bio3", now(), "user3", "010-3333-3333"));
 
-		Friend friend12 = friendRepository.save(new Friend(profile1, profile2));
-		Friend friend21 = friendRepository.save(new Friend(profile2, profile1));
-		Friend friend23 = friendRepository.save(new Friend(profile2, profile3));
+		Friend friend12 = friendRepository.save(new Friend(profile1, profile2, "user2"));
+		Friend friend21 = friendRepository.save(new Friend(profile2, profile1, "user1"));
+		Friend friend23 = friendRepository.save(new Friend(profile2, profile3, "user3"));
 	}
 }

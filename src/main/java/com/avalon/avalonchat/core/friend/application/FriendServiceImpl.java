@@ -37,17 +37,19 @@ public class FriendServiceImpl implements FriendService {
 		Profile myProfile = profileRepository.findById(profileId)
 			.orElseThrow(() -> new NotFoundException("myProfile", profileId));
 
-		Profile friendProfile = profileRepository.findByPhoneNumber(request.getPhoneNumber())
+		Profile friendProfile = profileRepository.findByPhoneNumberAndNickname(request.getPhoneNumber(),
+				request.getFriendProfileNickname())
 			.orElseThrow(() -> new NotFoundException("friendProfile", request.getPhoneNumber()));
 
 		// 2. check if already exists
-		boolean exists = friendRepository.existsByFriendProfileId(friendProfile.getId());
+		boolean exists
+			= friendRepository.existsByFriendProfileIdAndMyProfileId(friendProfile.getId(), myProfile.getId());
 		if (exists) {
 			throw new BadRequestException("addFriendByPhoneNumber-failed.already-exists");
 		}
 
 		// 3. create friend & save them
-		Friend friend = new Friend(myProfile, friendProfile, request.getDisplayName());
+		Friend friend = new Friend(myProfile, friendProfile, request.getFriendProfileNickname());
 		Friend savedFriend = friendRepository.save(friend);
 
 		// 4. create & return response
