@@ -3,6 +3,7 @@ package com.avalon.avalonchat.core.profile.application;
 import java.util.List;
 import java.util.Optional;
 
+import com.avalon.avalonchat.core.profile.domain.PhoneNumber;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,7 +59,7 @@ public class ProfileServiceImpl implements ProfileService {
 			request.getBio(),
 			request.getBirthDate(),
 			request.getNickname(),
-			phoneNumber
+			PhoneNumber.of(phoneNumber)
 		);
 
 		// 4. create images & add to profile

@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.avalon.avalonchat.core.profile.domain.PhoneNumber;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -71,11 +72,11 @@ class ProfileServiceImplTest {
 	void addProfile_성공() {
 		// given - authenticate phone number
 		String certificationCode = RandomStringUtils.randomNumeric(6);
-		String toPhoneNumber = "01055110625";
+		PhoneNumber toPhoneNumber = PhoneNumber.of("010-5511-0625");
 
-		smsMessageService.sendAuthenticationCode(toPhoneNumber, certificationCode);
+		smsMessageService.sendAuthenticationCode(toPhoneNumber.getValue(), certificationCode);
 		phoneNumberAuthKeyValueStore.save(
-			PhoneNumberKey.fromString(toPhoneNumber),
+			PhoneNumberKey.fromString(toPhoneNumber.getValue()),
 			AuthCodeValue.ofUnauthenticated(certificationCode)
 		);
 		userService.checkPhoneNumberAuthentication(

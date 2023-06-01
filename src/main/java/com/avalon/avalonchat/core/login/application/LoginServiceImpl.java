@@ -1,5 +1,7 @@
 package com.avalon.avalonchat.core.login.application;
 
+import com.avalon.avalonchat.core.user.domain.UserRepository;
+import com.avalon.avalonchat.global.error.exception.NotFoundException;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +40,7 @@ import lombok.extern.slf4j.Slf4j;
 public class LoginServiceImpl implements LoginService {
 
 	private final ProfileRepository profileRepository;
+	private final UserRepository userRepository;
 	private final RefreshTokenRepository refreshTokenRepository;
 	private final JwtTokenService tokenService;
 	private final RefreshTokenService refreshTokenService;
@@ -47,9 +50,16 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public LoginResponse login(LoginRequest request) {
 		// 1. check user exists
+		User findUser = userRepository.findByEmail(request.getEmail())
+			.orElseThrow(() -> new BadRequestException("login-failed.email.notfound", request.getEmail()));
+
+		// 2. check profile exists(user 정보만 생성 했을 경우 체크)
+		//long profileId = profileRepository.findProfileIdByUserId(findUser.getId())
+			//.orElseThrow(() -> new BadRequestException("login-failed.profile.notfound", request.getEmail()));
+		// 1. check user exists
 		Profile profile = profileRepository.findByEmailWithUser(request.getEmail())
 			.orElseThrow(() -> new BadRequestException("login-failed.email.notfound", request.getEmail()));
-		User findUser = profile.getUser();
+		//User findUser = profile.getUser();
 
 		// 2. verify password
 		if (!request.getPassword().matches(findUser.getPassword())) {
@@ -57,7 +67,7 @@ public class LoginServiceImpl implements LoginService {
 		}
 
 		// 3. jwt token create
-		String accessToken = tokenService.createAccessToken(profile);
+		String accessToken = tokenService.createAccessToken(findUser, profile.getId());
 		String refreshToken = tokenService.createRefreshToken();
 
 		// 4.refreshToken save
@@ -112,7 +122,7 @@ public class LoginServiceImpl implements LoginService {
 		User findUser = profile.getUser();
 
 		//access token & refresh token reissue
-		String accessToken = tokenService.createAccessToken(profile);
+		String accessToken = tokenService.createAccessToken(findUser, profile.getId());
 		String refreshToken = tokenService.createRefreshToken();
 
 		// 기존 refresh token 삭제 & 새로운 refresh token 등록
@@ -124,7 +134,7 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public void sendFindEmailPhoneNumberAuthentication(PhoneNumberAuthenticationSendRequest request) {
 		// 1. get phone number and certification code
-		String phoneNumber = request.getPhoneNumber().replaceAll("-", "").trim();
+		String phoneNumber = request.getPhoneNumber().getValue();
 		String certificationCode = RandomStringUtils.randomNumeric(6);
 
 		// 2. send certification code
@@ -141,7 +151,7 @@ public class LoginServiceImpl implements LoginService {
 	public PhoneNumberAuthenticationCheckResponse checkFindEmailPhoneNumberAuthentication(
 		PhoneNumberAuthenticationCheckRequest request) {
 		// 1. get phone number
-		String phoneNumber = request.getPhoneNumber().replaceAll("-", "").trim();
+		String phoneNumber = request.getPhoneNumber().getValue();
 
 		// 2. check authenticated
 		boolean authenticated = phoneNumberAuthCodeStore.checkKeyValueMatches(

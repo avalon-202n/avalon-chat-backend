@@ -2,6 +2,7 @@ package com.avalon.avalonchat;
 
 import static java.time.LocalDate.*;
 
+import com.avalon.avalonchat.core.profile.domain.PhoneNumber;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -41,9 +42,9 @@ public class DataInitializer implements ApplicationRunner {
 		User user2 = userRepository.save(new User(Email.of("user222@gmail.com"), Password.of("password2")));
 		User user3 = userRepository.save(new User(Email.of("user333@gmail.com"), Password.of("password3")));
 
-		Profile profile1 = profileRepository.save(new Profile(user1, "bio1", now(), "user1", "010-1111-1111"));
-		Profile profile2 = profileRepository.save(new Profile(user2, "bio2", now(), "user2", "010-2222-2222"));
-		Profile profile3 = profileRepository.save(new Profile(user3, "bio3", now(), "user3", "010-3333-3333"));
+		Profile profile1 = profileRepository.save(new Profile(user1, "bio1", now(), "user1", PhoneNumber.of("010-1111-1111")));
+		Profile profile2 = profileRepository.save(new Profile(user2, "bio2", now(), "user2", PhoneNumber.of("010-2222-2222")));
+		Profile profile3 = profileRepository.save(new Profile(user3, "bio3", now(), "user3", PhoneNumber.of("010-3333-3333")));
 
 		Friend friend12 = friendRepository.save(new Friend(profile1, profile2));
 		Friend friend21 = friendRepository.save(new Friend(profile2, profile1));

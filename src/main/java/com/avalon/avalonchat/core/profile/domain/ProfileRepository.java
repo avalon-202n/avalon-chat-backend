@@ -11,7 +11,7 @@ import com.avalon.avalonchat.core.profile.dto.ProfileListGetResponse;
 import com.avalon.avalonchat.core.user.domain.Email;
 
 public interface ProfileRepository extends JpaRepository<Profile, Long> {
-	List<Profile> findAllByPhoneNumberIn(List<String> phoneNumbers);
+	List<Profile> findAllByPhoneNumberIn(List<PhoneNumber> phoneNumbers);
 
 	Optional<Profile> findByPhoneNumber(String phoneNumbers);
 
@@ -25,7 +25,7 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
 			+ "FROM Profile p join fetch p.user u "
 			+ "WHERE u.email = :email"
 	)
-	Optional<Profile> findByEmailWithUser(Email email);
+	Optional<Profile> findByEmailWithUser(@Param("email") Email email);
 
 	@Query(
 		"SELECT new com.avalon.avalonchat.core.profile.dto.ProfileListGetResponse("

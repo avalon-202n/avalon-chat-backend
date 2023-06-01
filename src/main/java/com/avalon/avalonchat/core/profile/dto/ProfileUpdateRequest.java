@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import javax.validation.constraints.NotNull;
 
+import com.avalon.avalonchat.core.profile.domain.PhoneNumber;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,5 +34,5 @@ public class ProfileUpdateRequest {
 
 	@NotNull
 	@Schema(description = "핸드폰 번호", example = "010-1234-5678")
-	private String phoneNumber;
+	private PhoneNumber phoneNumber;
 }

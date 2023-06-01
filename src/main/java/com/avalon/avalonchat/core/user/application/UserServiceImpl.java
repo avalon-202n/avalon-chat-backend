@@ -31,6 +31,8 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	@Override
 	public SignUpResponse signUp(SignUpRequest signUpRequest) {
+		// 이미 회원가입된 정보인지 확인
+
 		// create user from request
 		User user = new User(
 			signUpRequest.getEmail(),
@@ -56,7 +58,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void sendPhoneNumberAuthentication(PhoneNumberAuthenticationSendRequest request) {
 		// 1. get phone number and certification code
-		String phoneNumber = request.getPhoneNumber().replaceAll("-", "").trim();
+		String phoneNumber = request.getPhoneNumber().getValue();
 		String certificationCode = RandomStringUtils.randomNumeric(6);
 
 		// 2. send certification code
@@ -74,7 +76,7 @@ public class UserServiceImpl implements UserService {
 		PhoneNumberAuthenticationCheckRequest request
 	) {
 		// 1. get phone number
-		String phoneNumber = request.getPhoneNumber().replaceAll("-", "").trim();
+		String phoneNumber = request.getPhoneNumber().getValue();
 
 		// 2. check authenticated
 		boolean authenticated = phoneNumberKeyValueStore.checkKeyValueMatches(

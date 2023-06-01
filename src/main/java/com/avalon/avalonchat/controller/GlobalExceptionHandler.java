@@ -35,11 +35,11 @@ public class GlobalExceptionHandler {
 		InputValidationException.class
 	})
 	public ErrorResponse handleAvalonChatRuntimeException(AvalonChatRuntimeException ex) {
-		String type = ex.getClass().getSimpleName();
-		String defaultMessage = ex.getMessageKey();
-		String message = messageSourceAccessor.getMessage(ex.getMessageKey(), ex.getParams(), defaultMessage);
-
-		if (message.equals(defaultMessage)) {
+		String type = ex.getMessageKey();
+		//String defaultMessage = ex.getMessageKey();
+		String message = messageSourceAccessor.getMessage(ex.getMessageKey(), ex.getParams(), type);
+		log.info("message : {}", message);
+		if (message.equals(type)) {
 			log.warn("no error message for key : {}", ex.getMessageKey());
 		}
 		return new ErrorResponse(BAD_REQUEST, type, message);

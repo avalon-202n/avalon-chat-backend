@@ -8,6 +8,7 @@ import com.avalon.avalonchat.configuration.jwt.JwtProperties;
 import com.avalon.avalonchat.core.login.application.TokenService;
 import com.avalon.avalonchat.core.profile.domain.Profile;
 
+import com.avalon.avalonchat.core.user.domain.User;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
@@ -40,15 +41,15 @@ public class JwtTokenService implements TokenService {
 	}
 
 	@Override
-	public String createAccessToken(Profile profile) {
+	public String createAccessToken(User user, long profileId) {
 		long currentTime = (new Date()).getTime();
 		final Date accessTokenExpiresIn = new Date(currentTime + accessValidity);
 
 		return Jwts.builder()
 			.setSubject("AccessToken")
-			.claim("userId", profile.getUser().getId())
-			.claim("profileId", profile.getId())
-			.claim("email", profile.getUser().getEmail().getValue())
+			.claim("userId", user.getId())
+			.claim("profileId", profileId)
+			.claim("email", user.getEmail().getValue())
 			.setExpiration(accessTokenExpiresIn)
 			.signWith(secretKey, SignatureAlgorithm.HS512)
 			.compact();

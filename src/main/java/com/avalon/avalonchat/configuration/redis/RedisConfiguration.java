@@ -82,7 +82,7 @@ public class RedisConfiguration {
 		private final RedisServer redisServer;
 
 		public EmbeddedRedisConfiguration(RedisProperties redisProperties) {
-			this.redisServer = new RedisServer(redisProperties.getPort());
+			this.redisServer = new RedisServer(6381);
 		}
 
 		@PostConstruct

@@ -2,6 +2,7 @@ package com.avalon.avalonchat.core.user.application;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.*;
 
+import com.avalon.avalonchat.core.profile.domain.PhoneNumber;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -64,8 +65,8 @@ class UserServiceImplTest {
 	@Disabled
 	void 폰번호_인증번호_전송_성공() {
 		// given
-		String toPhoneNumber = "01055110625";
-		PhoneNumberAuthenticationSendRequest request = new PhoneNumberAuthenticationSendRequest(toPhoneNumber);
+		String toPhoneNumber = "010-5511-0625";
+		PhoneNumberAuthenticationSendRequest request = new PhoneNumberAuthenticationSendRequest(PhoneNumber.of(toPhoneNumber));
 
 		// when
 		sut.sendPhoneNumberAuthentication(request);
@@ -80,7 +81,7 @@ class UserServiceImplTest {
 	void 폰번호_인증_성공() {
 		// given
 		String certificationCode = RandomStringUtils.randomNumeric(6);
-		String toPhoneNumber = "01055110625";
+		String toPhoneNumber = "010-5511-0625";
 
 		smsMessageService.sendAuthenticationCode(toPhoneNumber, certificationCode);
 		phoneNumberAuthKeyValueStore.save(
@@ -89,7 +90,7 @@ class UserServiceImplTest {
 		);
 
 		PhoneNumberAuthenticationCheckRequest request
-			= new PhoneNumberAuthenticationCheckRequest(toPhoneNumber, certificationCode);
+			= new PhoneNumberAuthenticationCheckRequest(PhoneNumber.of(toPhoneNumber), certificationCode);
 
 		// when
 		PhoneNumberAuthenticationCheckResponse response = sut.checkPhoneNumberAuthentication(request);

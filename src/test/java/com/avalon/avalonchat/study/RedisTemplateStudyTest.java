@@ -79,7 +79,7 @@ public class RedisTemplateStudyTest {
 			void setUp() {
 				// setup
 				RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
-				RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration("127.0.0.1", 6379);
+				RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration("127.0.0.1", 6378);
 				configuration.setPassword(RedisPassword.of("avalon"));
 				LettuceConnectionFactory connectionFactory = new LettuceConnectionFactory(configuration);
 				connectionFactory.afterPropertiesSet();
@@ -124,7 +124,7 @@ public class RedisTemplateStudyTest {
 			void setUp() {
 				// setup
 				RedisTemplate<String, CodeValue> redisTemplate = new RedisTemplate<>();
-				RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration("127.0.0.1", 6379);
+				RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration("127.0.0.1", 6380);
 				configuration.setPassword(RedisPassword.of("avalon"));
 				LettuceConnectionFactory connectionFactory = new LettuceConnectionFactory(configuration);
 				connectionFactory.afterPropertiesSet();

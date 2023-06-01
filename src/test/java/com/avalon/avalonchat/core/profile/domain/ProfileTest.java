@@ -19,7 +19,7 @@ class ProfileTest {
 		String nickname = "nickname";
 		String profileUrl = "storage/url/profile_image.png";
 		String backgroundUrl = "storage/url/background_image.png";
-		String phoneNumber = "01055110625";
+		PhoneNumber phoneNumber = PhoneNumber.of("010-5511-0625");
 
 		// when
 		Profile profile = new Profile(user, bio, birthDate, nickname, phoneNumber);

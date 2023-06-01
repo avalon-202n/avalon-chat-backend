@@ -4,6 +4,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.*;
 
 import java.time.LocalDate;
 
+import com.avalon.avalonchat.core.profile.domain.PhoneNumber;
 import org.junit.jupiter.api.Test;
 
 import com.avalon.avalonchat.core.profile.domain.Profile;
@@ -20,8 +21,8 @@ class FriendTest {
 		User friendUser = new User(Email.of("email2@gmail.com"), Password.of("password2"));
 
 		String phoneNumber = "01055110625";
-		Profile myProfile = new Profile(myUser, "bio1", LocalDate.now(), "nickname1", phoneNumber);
-		Profile friendProfile = new Profile(friendUser, "bio2", LocalDate.now(), "nickname2", phoneNumber);
+		Profile myProfile = new Profile(myUser, "bio1", LocalDate.now(), "nickname1", PhoneNumber.of(phoneNumber));
+		Profile friendProfile = new Profile(friendUser, "bio2", LocalDate.now(), "nickname2", PhoneNumber.of(phoneNumber));
 
 		//when
 		Friend friend = new Friend(myProfile, friendProfile);

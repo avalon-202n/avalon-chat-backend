@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.avalon.avalonchat.core.profile.domain.BackgroundImage;
+import com.avalon.avalonchat.core.profile.domain.PhoneNumber;
 import com.avalon.avalonchat.core.profile.domain.Profile;
 
 import lombok.AllArgsConstructor;
@@ -20,7 +21,7 @@ public class ProfileAddResponse {
 	private String bio;
 	private String profileImageUrl;
 	private List<String> backgroundImageUrls;
-	private String phoneNumber;
+	private PhoneNumber phoneNumber;
 
 	public static ProfileAddResponse from(Profile profile) {
 		return new ProfileAddResponse(

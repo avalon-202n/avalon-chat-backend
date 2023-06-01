@@ -3,6 +3,7 @@ package com.avalon.avalonchat.testsupport;
 import java.time.LocalDate;
 
 import com.avalon.avalonchat.core.friend.domain.Friend;
+import com.avalon.avalonchat.core.profile.domain.PhoneNumber;
 import com.avalon.avalonchat.core.profile.domain.Profile;
 import com.avalon.avalonchat.core.user.domain.Email;
 import com.avalon.avalonchat.core.user.domain.Password;
@@ -43,7 +44,7 @@ public final class Fixture {
 			bio,
 			birthDate,
 			nickname,
-			phoneNumber
+			PhoneNumber.of(phoneNumber)
 		);
 	}
 

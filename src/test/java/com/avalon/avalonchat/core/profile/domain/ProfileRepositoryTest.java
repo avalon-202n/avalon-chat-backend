@@ -72,7 +72,7 @@ class ProfileRepositoryTest {
 			createProfile(user2, "bio2", now(), "nickname2", "010-1234-1234"));
 
 		// when
-		List<Profile> foundProfiles = sut.findAllByPhoneNumberIn(List.of("010-1234-5678", "010-1234-1234"));
+		List<Profile> foundProfiles = sut.findAllByPhoneNumberIn(List.of(PhoneNumber.of("010-1234-5678"), PhoneNumber.of("010-1234-1234")));
 
 		// then
 		assertThat(foundProfiles).containsExactlyInAnyOrder(profile1, profile2);

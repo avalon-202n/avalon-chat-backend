@@ -8,6 +8,7 @@ import static org.assertj.core.api.Assertions.*;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.avalon.avalonchat.core.profile.domain.PhoneNumber;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -43,7 +44,7 @@ class FriendServiceImplTest {
 	@Transactional
 	void 친구추가_성공1() {
 		// given
-		FriendAddRequest request = new FriendAddRequest(List.of("010-1234-5678", "010-8765-4321"));
+		FriendAddRequest request = new FriendAddRequest(List.of(PhoneNumber.of("010-1234-5678"), PhoneNumber.of("010-8765-4321")));
 
 		User myUser = new User(Email.of("myuser@gmail.com"), Password.of("password"));
 		User friendUser1 = new User(Email.of("frienduser1@gmail.com"), Password.of("password1"));
@@ -53,9 +54,9 @@ class FriendServiceImplTest {
 		User savedFriendUser1 = userRepository.save(friendUser1);
 		User savedFriendUser2 = userRepository.save(friendUser2);
 
-		Profile myProfile = new Profile(savedMyUser, "bio", now(), "myuser", "010-5511-0625");
-		Profile friendProfile1 = new Profile(savedFriendUser1, "bio1", now(), "frienduser1", "010-1234-5678");
-		Profile friendProfile2 = new Profile(savedFriendUser2, "bio2", now(), "frienduser2", "010-8765-4321");
+		Profile myProfile = new Profile(savedMyUser, "bio", now(), "myuser", PhoneNumber.of("010-5511-0625"));
+		Profile friendProfile1 = new Profile(savedFriendUser1, "bio1", now(), "frienduser1", PhoneNumber.of("010-1234-5678"));
+		Profile friendProfile2 = new Profile(savedFriendUser2, "bio2", now(), "frienduser2", PhoneNumber.of("010-8765-4321"));
 
 		String friendProfileUrl1 = "storage/url/profile_image1.png";
 		String friendProfileUrl2 = "storage/url/profile_image2.png";
@@ -87,10 +88,10 @@ class FriendServiceImplTest {
 	void 친구상태변경_성공() {
 		// given - ready for users & profiles
 		User myUser = new User(Email.of("myUser@gmail.com"), Password.of("myPassword"));
-		Profile myProfile = new Profile(myUser, "myBio", LocalDate.now(), "myProfile", "01012345678");
+		Profile myProfile = new Profile(myUser, "myBio", LocalDate.now(), "myProfile", PhoneNumber.of("01012345678"));
 
 		User friendUser = new User(Email.of("friendUser@gmail.com"), Password.of("friendPassword"));
-		Profile friendProfile = new Profile(friendUser, "friendBio", LocalDate.now(), "friendNickname", "01012123434");
+		Profile friendProfile = new Profile(friendUser, "friendBio", LocalDate.now(), "friendNickname", PhoneNumber.of("01012123434"));
 
 		userRepository.save(myUser);
 		userRepository.save(friendUser);

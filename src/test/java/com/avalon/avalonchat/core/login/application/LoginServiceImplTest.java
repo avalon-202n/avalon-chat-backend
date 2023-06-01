@@ -93,14 +93,14 @@ public class LoginServiceImplTest {
 		profileRepository.save(profile);
 
 		String authCode = "cert-code";
-		PhoneNumberKey key = PhoneNumberKey.ofPurpose(PhoneNumberKeyPurpose.EMAIL_FIND, profile.getPhoneNumber());
+		PhoneNumberKey key = PhoneNumberKey.ofPurpose(PhoneNumberKeyPurpose.EMAIL_FIND, profile.getPhoneNumber().getValue());
 		AuthCodeValue authCodeValue = AuthCodeValue.fromString(authCode);
 
 		phoneNumberKeyValueStore.save(key, authCodeValue);
 		phoneNumberKeyValueStore.checkKeyValueMatches(key, authCodeValue);
 
 		//when
-		EmailFindResponse emailFindResponse = sut.findEmailByPhoneNumber(profile.getPhoneNumber());
+		EmailFindResponse emailFindResponse = sut.findEmailByPhoneNumber(profile.getPhoneNumber().getValue());
 
 		//then
 		assertThat(emailFindResponse.getEmail().getValue()).isEqualTo("avalon@e.com");
@@ -116,13 +116,13 @@ public class LoginServiceImplTest {
 		profileRepository.save(profile);
 
 		String authCode = "cert-code";
-		PhoneNumberKey key = PhoneNumberKey.ofPurpose(PhoneNumberKeyPurpose.EMAIL_FIND, profile.getPhoneNumber());
+		PhoneNumberKey key = PhoneNumberKey.ofPurpose(PhoneNumberKeyPurpose.EMAIL_FIND, profile.getPhoneNumber().getValue());
 		AuthCodeValue authCodeValue = AuthCodeValue.fromString(authCode);
 
 		phoneNumberKeyValueStore.save(key, authCodeValue);
 
 		//when & then
 		assertThatExceptionOfType(RuntimeException.class)
-			.isThrownBy(() -> sut.findEmailByPhoneNumber(profile.getPhoneNumber()));
+			.isThrownBy(() -> sut.findEmailByPhoneNumber(profile.getPhoneNumber().getValue()));
 	}
 }

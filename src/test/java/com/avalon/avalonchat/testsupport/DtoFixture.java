@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.avalon.avalonchat.core.friend.dto.FriendAddRequest;
 import com.avalon.avalonchat.core.login.dto.LoginRequest;
+import com.avalon.avalonchat.core.profile.domain.PhoneNumber;
 import com.avalon.avalonchat.core.profile.dto.BackgroundImageDeleteRequest;
 import com.avalon.avalonchat.core.profile.dto.ProfileImageDeleteRequest;
 import com.avalon.avalonchat.core.profile.dto.ProfileUpdateRequest;
@@ -59,14 +60,14 @@ public final class DtoFixture {
 	}
 
 	public static PhoneNumberAuthenticationSendRequest phoneNumberAuthenticationSendRequest(String phoneNumber) {
-		return new PhoneNumberAuthenticationSendRequest(phoneNumber);
+		return new PhoneNumberAuthenticationSendRequest(PhoneNumber.of(phoneNumber));
 	}
 
 	public static PhoneNumberAuthenticationCheckRequest phoneNumberAuthenticationCheckRequest(
 		String phoneNumber,
 		String certificationCode
 	) {
-		return new PhoneNumberAuthenticationCheckRequest(phoneNumber, certificationCode);
+		return new PhoneNumberAuthenticationCheckRequest(PhoneNumber.of(phoneNumber), certificationCode);
 	}
 
 	public static PhoneNumberAuthenticationCheckResponse phoneNumberAuthenticationCheckResponse(boolean authenticated) {
@@ -82,7 +83,7 @@ public final class DtoFixture {
 	}
 	/* Login Package DTO End */
 
-	public static FriendAddRequest friendAddRequest(List<String> phoneNumbers) {
+	public static FriendAddRequest friendAddRequest(List<PhoneNumber> phoneNumbers) {
 		return new FriendAddRequest(phoneNumbers);
 	}
 
@@ -96,7 +97,7 @@ public final class DtoFixture {
 		String phoneNumber
 	) {
 		return new ProfileUpdateRequest(
-			birthDate, nickName, bio, profileImageUrl, backgroundImageUrl, phoneNumber
+			birthDate, nickName, bio, profileImageUrl, backgroundImageUrl, PhoneNumber.of(phoneNumber)
 		);
 	}
 
