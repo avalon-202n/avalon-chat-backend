@@ -24,7 +24,7 @@ class FriendTest {
 		Profile friendProfile = new Profile(friendUser, "bio2", LocalDate.now(), "nickname2", phoneNumber);
 
 		//when
-		Friend friend = new Friend(myProfile, friendProfile);
+		Friend friend = new Friend(myProfile, friendProfile, "nickname2");
 
 		//then
 		assertThat(friend.getMyProfile()).isEqualTo(myProfile);

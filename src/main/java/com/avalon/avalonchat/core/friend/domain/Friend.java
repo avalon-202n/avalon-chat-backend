@@ -37,13 +37,17 @@ public class Friend extends BaseAuditingEntity {
 	@Enumerated(STRING)
 	private Status status;
 
-	public Friend(Profile myProfile, Profile friendProfile) {
+	private String friendName;
+
+	public Friend(Profile myProfile, Profile friendProfile, String friendName) {
 		checkNotNull(myProfile, "Friend.myProfile cannot be null");
 		checkNotNull(myProfile, "Friend.friendProfile cannot be null");
+		checkNotNull(friendName, "friend.displayName cannot be null");
 
 		this.myProfile = myProfile;
 		this.friendProfile = friendProfile;
 		this.status = Status.NORMAL;
+		this.friendName = friendName;
 	}
 
 	public void updateStatus(Status status) {

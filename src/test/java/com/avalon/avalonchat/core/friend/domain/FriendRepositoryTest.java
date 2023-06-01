@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.avalon.avalonchat.core.friend.dto.FriendAddResponse;
 import com.avalon.avalonchat.core.profile.domain.Profile;
 import com.avalon.avalonchat.core.profile.domain.ProfileRepository;
 import com.avalon.avalonchat.core.user.domain.Email;
@@ -41,7 +40,7 @@ class FriendRepositoryTest {
 		Profile myProfile = new Profile(myUser, "bio1", LocalDate.now(), "nickname1", phoneNumber);
 		Profile friendProfile = new Profile(friendUser, "bio2", LocalDate.now(), "nickname2", phoneNumber);
 
-		Friend friend = new Friend(myProfile, friendProfile);
+		Friend friend = new Friend(myProfile, friendProfile, "nickname2");
 
 		// when
 		Friend savedFriend = friendRepository.save(friend);
@@ -62,8 +61,8 @@ class FriendRepositoryTest {
 		User friendUser2 = new User(Email.of("email3@gmail.com"), Password.of("password3"));
 		Profile friendProfile2 = new Profile(friendUser2, "bio4", LocalDate.now(), "nickname4", "01055110628");
 
-		Friend friend1 = new Friend(myProfile, friendProfile1);
-		Friend friend2 = new Friend(myProfile, friendProfile2);
+		Friend friend1 = new Friend(myProfile, friendProfile1, "nickname2");
+		Friend friend2 = new Friend(myProfile, friendProfile2, "nickname4");
 
 		userRepository.save(myUser);
 		userRepository.save(friendUser1);
@@ -98,7 +97,7 @@ class FriendRepositoryTest {
 		for (int i = 0; i < 10; i++) {
 			User friendUser = new User(Email.of("email@gmail" + i + ".com"), Password.of("password" + i));
 			Profile friendProfile = new Profile(friendUser, "bio", LocalDate.now(), "nickname", "01055110626" + i);
-			Friend friend = new Friend(myProfile, friendProfile);
+			Friend friend = new Friend(myProfile, friendProfile, "nickname");
 
 			userRepository.save(friendUser);
 			profileRepository.save(friendProfile);
@@ -129,7 +128,7 @@ class FriendRepositoryTest {
 		Profile savedFriendProfile = profileRepository.save(friendProfile);
 
 		// given - ready for friend
-		Friend friend = new Friend(savedMyProfile, savedFriendProfile);
+		Friend friend = new Friend(savedMyProfile, savedFriendProfile, "friendNickname");
 		friendRepository.save(friend);
 
 		// when
@@ -139,42 +138,5 @@ class FriendRepositoryTest {
 		// then
 		assertThat(foundFriend.getMyProfile().getId()).isEqualTo(savedMyProfile.getId());
 		assertThat(foundFriend.getFriendProfile().getId()).isEqualTo(savedFriendProfile.getId());
-	}
-
-	@Test
-	void friendIds로_추가된_친구_프로필찾기성공() {
-		// given - ready for users & profiles
-		User myUser = new User(Email.of("myUser@gmail.com"), Password.of("myPassword"));
-		Profile myProfile = new Profile(myUser, "myBio", LocalDate.now(), "myProfile", "01012345678");
-
-		User friendUser1 = new User(Email.of("friendUser1@gmail.com"), Password.of("friendPassword"));
-		Profile friendProfile1 = new Profile(friendUser1, "friendBio1", LocalDate.now(), "friendNickname1",
-			"01012123434");
-		User friendUser2 = new User(Email.of("friendUser2@gmail.com"), Password.of("friendPassword"));
-		Profile friendProfile2 = new Profile(friendUser2, "friendBio2", LocalDate.now(), "friendNickname2",
-			"01011112222");
-
-		userRepository.save(myUser);
-		userRepository.save(friendUser1);
-		userRepository.save(friendUser2);
-		Profile savedMyProfile = profileRepository.save(myProfile);
-		Profile savedFriendProfile1 = profileRepository.save(friendProfile1);
-		Profile savedFriendProfile2 = profileRepository.save(friendProfile2);
-
-		// given - ready for friend
-		Friend friend1 = new Friend(savedMyProfile, savedFriendProfile1);
-		Friend friend2 = new Friend(savedMyProfile, savedFriendProfile2);
-
-		friendRepository.save(friend1);
-		friendRepository.save(friend2);
-
-		// when
-		List<Long> friendIds = new ArrayList<>();
-		friendIds.add(friend1.getId());
-		friendIds.add(friend2.getId());
-		List<FriendAddResponse> responses = friendRepository.findAllByFriendIds(friendIds);
-
-		// then
-		assertThat(responses.size()).isEqualTo(2);
 	}
 }

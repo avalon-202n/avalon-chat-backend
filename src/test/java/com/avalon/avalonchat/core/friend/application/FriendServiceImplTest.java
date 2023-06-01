@@ -3,10 +3,13 @@ package com.avalon.avalonchat.core.friend.application;
 import static com.avalon.avalonchat.testsupport.DtoFixture.*;
 import static com.avalon.avalonchat.testsupport.Fixture.*;
 import static java.time.LocalDate.*;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,16 +19,19 @@ import org.springframework.transaction.annotation.Transactional;
 import com.avalon.avalonchat.core.friend.domain.Friend;
 import com.avalon.avalonchat.core.friend.domain.Friend.Status;
 import com.avalon.avalonchat.core.friend.domain.FriendRepository;
-import com.avalon.avalonchat.core.friend.dto.FriendAddRequest;
-import com.avalon.avalonchat.core.friend.dto.FriendAddResponse;
+import com.avalon.avalonchat.core.friend.dto.FriendPhoneNumberAddRequest;
+import com.avalon.avalonchat.core.friend.dto.FriendPhoneNumberAddResponse;
 import com.avalon.avalonchat.core.friend.dto.FriendStatusUpdateRequest;
 import com.avalon.avalonchat.core.friend.dto.FriendStatusUpdateResponse;
+import com.avalon.avalonchat.core.friend.dto.FriendSynchronizeRequest;
+import com.avalon.avalonchat.core.friend.dto.FriendSynchronizeResponse;
 import com.avalon.avalonchat.core.profile.domain.Profile;
 import com.avalon.avalonchat.core.profile.domain.ProfileRepository;
 import com.avalon.avalonchat.core.user.domain.Email;
 import com.avalon.avalonchat.core.user.domain.Password;
 import com.avalon.avalonchat.core.user.domain.User;
 import com.avalon.avalonchat.core.user.domain.UserRepository;
+import com.avalon.avalonchat.global.error.exception.BadRequestException;
 
 @Transactional
 @SpringBootTest
@@ -41,46 +47,119 @@ class FriendServiceImplTest {
 
 	@Test
 	@Transactional
-	void 친구추가_성공1() {
+	void 연락처_친구추가_성공() {
 		// given
-		FriendAddRequest request = new FriendAddRequest(List.of("010-1234-5678", "010-8765-4321"));
+		User myUser = createUser("myuser@email.com", "passw0rd");
+		User friendUser = createUser("frienduser@email.com", "passw0rd");
+		userRepository.saveAll(List.of(myUser, friendUser));
 
-		User myUser = new User(Email.of("myuser@gmail.com"), Password.of("password"));
-		User friendUser1 = new User(Email.of("frienduser1@gmail.com"), Password.of("password1"));
-		User friendUser2 = new User(Email.of("frienduser2@gmail.com"), Password.of("password2"));
+		Profile myProfile = createProfile(
+			myUser,
+			"my bio",
+			of(1999, 01, 23),
+			"이철수",
+			"010-1234-4321"
+		);
+		Profile friendProfile = createProfile(
+			friendUser,
+			"friend bio",
+			of(1999, 07, 07),
+			"홍길동",
+			"010-1234-5678"
+		);
+		profileRepository.saveAll(List.of(myProfile, friendProfile));
 
-		User savedMyUser = userRepository.save(myUser);
-		User savedFriendUser1 = userRepository.save(friendUser1);
-		User savedFriendUser2 = userRepository.save(friendUser2);
-
-		Profile myProfile = new Profile(savedMyUser, "bio", now(), "myuser", "010-5511-0625");
-		Profile friendProfile1 = new Profile(savedFriendUser1, "bio1", now(), "frienduser1", "010-1234-5678");
-		Profile friendProfile2 = new Profile(savedFriendUser2, "bio2", now(), "frienduser2", "010-8765-4321");
-
-		String friendProfileUrl1 = "storage/url/profile_image1.png";
-		String friendProfileUrl2 = "storage/url/profile_image2.png";
-		String friendBackgroundUrl1 = "storage/url/background_image1.png";
-		String friendBackgroundUrl2 = "storage/url/background_image2.png";
-
-		friendProfile1.addProfileImage("storage/url/profile_image1.png");
-		friendProfile1.addBackgroundImage("storage/url/background_image1.png");
-		friendProfile2.addProfileImage("storage/url/profile_image2.png");
-		friendProfile2.addBackgroundImage("storage/url/background_image2.png");
-
-		Profile savedMyProfile = profileRepository.save(myProfile);
-		profileRepository.save(friendProfile1);
-		profileRepository.save(friendProfile2);
+		FriendPhoneNumberAddRequest request
+			= friendPhoneNumberAddRequest("010-1234-5678", "홍길동");
 
 		// when
-		List<FriendAddResponse> responses = sut.addFriend(savedMyProfile.getId(), request);
+		FriendPhoneNumberAddResponse response = sut.addFriendByPhoneNumber(myProfile.getId(), request);
 
 		// then
-		for (FriendAddResponse response : responses) {
-			assertThat(response.getFriendProfileId()).isIn(friendProfile1.getId(), friendProfile2.getId());
-			assertThat(response.getNickname()).isIn(friendProfile1.getNickname(), friendProfile2.getNickname());
-			assertThat(response.getBio()).isIn(friendProfile1.getBio(), friendProfile2.getBio());
-			assertThat(response.getStatus()).isEqualTo(Status.NORMAL);
-		}
+		assertThat(response.getFriendProfileId()).isEqualTo(friendProfile.getId());
+		assertThat(response.getFriendName()).isEqualTo(request.getFriendProfileNickname());
+		assertThat(response.getBio()).isEqualTo(friendProfile.getBio());
+		assertThat(response.getProfileImage()).isEqualTo(friendProfile.getLatestProfileImageUrl());
+		assertThat(response.getStatus()).isEqualTo(Status.NORMAL);
+	}
+
+	@Test
+	@Transactional
+	void 연락처_친구추가_예외발생() {
+		// given
+		User myUser = createUser("myuser@email.com", "passw0rd");
+		User friendUser = createUser("frienduser@email.com", "passw0rd");
+		userRepository.saveAll(List.of(myUser, friendUser));
+
+		Profile myProfile = createProfile(
+			myUser,
+			"my bio",
+			of(1999, 01, 23),
+			"이철수",
+			"010-1234-4321"
+		);
+		Profile friendProfile = createProfile(
+			friendUser,
+			"friend bio",
+			of(1999, 07, 07),
+			"홍길동",
+			"010-1234-5678"
+		);
+		profileRepository.saveAll(List.of(myProfile, friendProfile));
+
+		Friend friend = createFriend(myProfile, friendProfile, "홍길동99");
+		friendRepository.save(friend);
+
+		FriendPhoneNumberAddRequest request
+			= friendPhoneNumberAddRequest("010-1234-5678", "홍길동99");
+
+		// when & then
+		assertThatExceptionOfType(BadRequestException.class)
+			.isThrownBy(() -> sut.addFriendByPhoneNumber(myProfile.getId(), request));
+	}
+
+	@Test
+	@Transactional
+	void 친구동기화_성공() {
+		// given
+		User myUser = createUser("myuser@email.com", "passw0rd");
+		User newFriendUser = createUser("newfriend@email.com", "passw0rd");
+		User existFriendUser = createUser("existfriend@email.com", "passw0rd");
+		userRepository.saveAll(List.of(myUser, newFriendUser, existFriendUser));
+
+		Profile myProfile = createProfile(
+			myUser, "my bio", of(1999, 01, 23),
+			"이철수", "010-1122-3344"
+		);
+		Profile newFriendProfile = createProfile(
+			newFriendUser, "new friend", of(1999, 02, 12),
+			"홍길동", "010-1234-5678"
+		);
+		Profile existFriendProfile = createProfile(
+			existFriendUser, "exist friend", of(1999, 12, 25),
+			"김영희", "010-4321-1234"
+		);
+		profileRepository.saveAll(List.of(myProfile, newFriendProfile, existFriendProfile));
+
+		Friend friend = createFriend(myProfile, existFriendProfile, "김영희99");
+		friendRepository.save(friend);
+
+		Map<String, String> friendsInfo = new HashMap<>();
+		friendsInfo.put("010-1234-5678", "홍길동99");
+		friendsInfo.put("010-4321-1234", "김영희99");
+
+		FriendSynchronizeRequest request = friendSynchronizeRequest(friendsInfo);
+
+		// when
+		List<FriendSynchronizeResponse> responses = sut.synchronizeFriend(myProfile.getId(), request);
+
+		// then
+		assertThat(responses).hasSize(1);
+		assertThat(responses.get(0).getFriendProfileId()).isEqualTo(newFriendProfile.getId());
+		assertThat(responses.get(0).getFriendName()).isEqualTo(friendsInfo.get("010-1234-5678"));
+		assertThat(responses.get(0).getBio()).isEqualTo(newFriendProfile.getBio());
+		assertThat(responses.get(0).getProfileImage()).isEqualTo(newFriendProfile.getLatestProfileImageUrl());
+		assertThat(responses.get(0).getStatus()).isEqualTo(Status.NORMAL);
 	}
 
 	@Test
@@ -98,7 +177,7 @@ class FriendServiceImplTest {
 		Profile savedFriendProfile = profileRepository.save(friendProfile);
 
 		// given - ready for friend
-		Friend friend = new Friend(savedMyProfile, savedFriendProfile);
+		Friend friend = new Friend(savedMyProfile, savedFriendProfile, "friendNickname");
 		friendRepository.save(friend);
 
 		// given - ready for the request
@@ -110,48 +189,5 @@ class FriendServiceImplTest {
 
 		// then
 		assertThat(response.getStatus()).isEqualTo(Status.BLOCKED);
-	}
-
-	@Test
-	@Transactional
-	void 이미친구인번호를제외하고_친구추가_성공() {
-		// given
-		User myUser = createUser("myemail@email.com", "password");
-		Profile myProfile = createProfile(
-			myUser, "my bio", LocalDate.of(1999, 01, 01),
-			"myNickname", "010-1234-5678"
-		);
-
-		User friendUser1 = createUser("friendemail1@email.com", "password");
-		Profile friendProfile1 = createProfile(
-			friendUser1, "friend bio1", LocalDate.of(2000, 02, 02),
-			"friendNickname1", "010-1111-2222"
-		);
-
-		User friendUser2 = createUser("friendemail2@email.com", "password");
-		Profile friendProfile2 = createProfile(
-			friendUser2, "friend bio2", LocalDate.of(2000, 03, 03),
-			"friendNickname2", "010-1212-3434"
-		);
-
-		userRepository.saveAll(List.of(myUser, friendUser1, friendUser2));
-		profileRepository.saveAll(List.of(myProfile, friendProfile1, friendProfile2));
-
-		Friend friend = createFriend(myProfile, friendProfile1);
-		friendRepository.save(friend);
-
-		FriendAddRequest request
-			= friendAddRequest(List.of(friendProfile1.getPhoneNumber(), friendProfile2.getPhoneNumber()));
-
-		// when
-		List<FriendAddResponse> responses = sut.addFriend(myProfile.getId(), request);
-
-		// then
-		assertThat(responses).hasSize(1);
-		assertThat(responses.get(0).getFriendProfileId()).isEqualTo(friendProfile2.getId());
-		assertThat(responses.get(0).getNickname()).isEqualTo(friendProfile2.getNickname());
-		assertThat(responses.get(0).getBio()).isEqualTo(friendProfile2.getBio());
-		assertThat(responses.get(0).getProfileImage()).isEqualTo(friendProfile2.getLatestProfileImageUrl());
-		assertThat(responses.get(0).getStatus()).isEqualTo(Status.NORMAL);
 	}
 }

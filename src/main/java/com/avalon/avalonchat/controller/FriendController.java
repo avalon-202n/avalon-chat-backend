@@ -15,10 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.avalon.avalonchat.core.friend.application.FriendService;
-import com.avalon.avalonchat.core.friend.dto.FriendAddRequest;
-import com.avalon.avalonchat.core.friend.dto.FriendAddResponse;
+import com.avalon.avalonchat.core.friend.dto.FriendPhoneNumberAddRequest;
+import com.avalon.avalonchat.core.friend.dto.FriendPhoneNumberAddResponse;
 import com.avalon.avalonchat.core.friend.dto.FriendStatusUpdateRequest;
 import com.avalon.avalonchat.core.friend.dto.FriendStatusUpdateResponse;
+import com.avalon.avalonchat.core.friend.dto.FriendSynchronizeRequest;
+import com.avalon.avalonchat.core.friend.dto.FriendSynchronizeResponse;
 import com.avalon.avalonchat.global.model.SecurityUser;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,17 +38,32 @@ public class FriendController {
 	private final FriendService friendService;
 
 	@Operation(
-		summary = "[WIP] 친구 추가",
+		summary = "연락처 친구 추가",
+		description = "phoneNumber 를 이용하여 friend 레코드를 추가합니다.",
+		security = {@SecurityRequirement(name = "bearer-key")}
+	)
+	@PostMapping("/phoneNumber")
+	public ResponseEntity<FriendPhoneNumberAddResponse> addFriendByPhoneNumber(
+		@AuthenticationPrincipal SecurityUser securityUser,
+		FriendPhoneNumberAddRequest request
+	) {
+		FriendPhoneNumberAddResponse body = friendService.addFriendByPhoneNumber(securityUser.getProfileId(), request);
+		return created(body);
+	}
+
+	@Operation(
+		summary = "친구 동기화",
 		description = "phoneNumbers 를 이용하여 friend 레코드를 추가합니다.",
 		security = {@SecurityRequirement(name = "bearer-key")}
 	)
 	@PostMapping
-	public ResponseEntity<Map<String, List<FriendAddResponse>>> addFriend(
+	public ResponseEntity<Map<String, List<FriendSynchronizeResponse>>> synchronizeFriend(
 		@AuthenticationPrincipal SecurityUser securityUser,
-		FriendAddRequest request
+		FriendSynchronizeRequest request
 	) {
-		List<FriendAddResponse> responses = friendService.addFriend(securityUser.getProfileId(), request);
-		Map<String, List<FriendAddResponse>> body = Map.of("data", responses);
+		List<FriendSynchronizeResponse> responses
+			= friendService.synchronizeFriend(securityUser.getProfileId(), request);
+		Map<String, List<FriendSynchronizeResponse>> body = Map.of("data", responses);
 		return created(body);
 	}
 
