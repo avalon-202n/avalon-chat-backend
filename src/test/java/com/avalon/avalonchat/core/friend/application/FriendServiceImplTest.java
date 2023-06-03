@@ -19,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.avalon.avalonchat.core.friend.domain.Friend;
 import com.avalon.avalonchat.core.friend.domain.Friend.Status;
 import com.avalon.avalonchat.core.friend.domain.FriendRepository;
+import com.avalon.avalonchat.core.friend.dto.FriendEmailAddRequest;
+import com.avalon.avalonchat.core.friend.dto.FriendEmailAddResponse;
 import com.avalon.avalonchat.core.friend.dto.FriendPhoneNumberAddRequest;
 import com.avalon.avalonchat.core.friend.dto.FriendPhoneNumberAddResponse;
 import com.avalon.avalonchat.core.friend.dto.FriendStatusUpdateRequest;
@@ -116,6 +118,77 @@ class FriendServiceImplTest {
 		// when & then
 		assertThatExceptionOfType(BadRequestException.class)
 			.isThrownBy(() -> sut.addFriendByPhoneNumber(myProfile.getId(), request));
+	}
+
+	@Test
+	@Transactional
+	void 이메일_친구추가_성공() {
+		// given
+		User myUser = createUser("myuser@email.com", "passw0rd");
+		User friendUser = createUser("frienduser@email.com", "passw0rd");
+		userRepository.saveAll(List.of(myUser, friendUser));
+
+		Profile myProfile = createProfile(
+			myUser,
+			"my bio",
+			of(1999, 01, 23),
+			"이철수",
+			"010-1234-4321"
+		);
+		Profile friendProfile = createProfile(
+			friendUser,
+			"friend bio",
+			of(1999, 07, 07),
+			"홍길동",
+			"010-1234-5678"
+		);
+		profileRepository.saveAll(List.of(myProfile, friendProfile));
+
+		FriendEmailAddRequest request = friendEmailAddRequest("frienduser@email.com");
+
+		// when
+		FriendEmailAddResponse response = sut.addFriendByEmail(myProfile.getId(), request);
+
+		// then
+		assertThat(response.getFriendProfileId()).isEqualTo(friendProfile.getId());
+		assertThat(response.getFriendName()).isEqualTo(friendProfile.getNickname());
+		assertThat(response.getBio()).isEqualTo(friendProfile.getBio());
+		assertThat(response.getProfileImage()).isEqualTo(friendProfile.getLatestProfileImageUrl());
+		assertThat(response.getStatus()).isEqualTo(Status.NORMAL);
+	}
+
+	@Test
+	@Transactional
+	void 이메일_친구추가_예외발생() {
+		// given
+		User myUser = createUser("myuser@email.com", "passw0rd");
+		User friendUser = createUser("frienduser@email.com", "passw0rd");
+		userRepository.saveAll(List.of(myUser, friendUser));
+
+		Profile myProfile = createProfile(
+			myUser,
+			"my bio",
+			of(1999, 01, 23),
+			"이철수",
+			"010-1234-4321"
+		);
+		Profile friendProfile = createProfile(
+			friendUser,
+			"friend bio",
+			of(1999, 07, 07),
+			"홍길동",
+			"010-1234-5678"
+		);
+		profileRepository.saveAll(List.of(myProfile, friendProfile));
+
+		Friend friend = createFriend(myProfile, friendProfile, friendProfile.getNickname());
+		friendRepository.save(friend);
+
+		FriendEmailAddRequest request = friendEmailAddRequest("frienduser@email.com");
+
+		// when & then
+		assertThatExceptionOfType(BadRequestException.class)
+			.isThrownBy(() -> sut.addFriendByEmail(myProfile.getId(), request));
 	}
 
 	@Test

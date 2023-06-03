@@ -17,6 +17,11 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
 
 	Optional<Profile> findByPhoneNumberAndNickname(String phoneNumber, String nickname);
 
+	@Query("SELECT p "
+		+ "FROM  Profile p "
+		+ "WHERE p.user.email = :email")
+	Optional<Profile> findProfileByEmail(@Param("email") Email email);
+
 	@Query("SELECT p.id "
 		+ "FROM Profile p "
 		+ "WHERE p.user.id = :userId")

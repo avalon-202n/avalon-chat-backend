@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.avalon.avalonchat.core.friend.application.FriendService;
+import com.avalon.avalonchat.core.friend.dto.FriendEmailAddRequest;
+import com.avalon.avalonchat.core.friend.dto.FriendEmailAddResponse;
 import com.avalon.avalonchat.core.friend.dto.FriendPhoneNumberAddRequest;
 import com.avalon.avalonchat.core.friend.dto.FriendPhoneNumberAddResponse;
 import com.avalon.avalonchat.core.friend.dto.FriendStatusUpdateRequest;
@@ -48,6 +50,20 @@ public class FriendController {
 		FriendPhoneNumberAddRequest request
 	) {
 		FriendPhoneNumberAddResponse body = friendService.addFriendByPhoneNumber(securityUser.getProfileId(), request);
+		return created(body);
+	}
+
+	@Operation(
+		summary = "이메일 친구 추가",
+		description = "email 을 이용하여 friend 레코드를 추가합니다.",
+		security = {@SecurityRequirement(name = "bearer-key")}
+	)
+	@PostMapping("/email")
+	public ResponseEntity<FriendEmailAddResponse> addFriendByEmail(
+		@AuthenticationPrincipal SecurityUser securityUser,
+		FriendEmailAddRequest request
+	) {
+		FriendEmailAddResponse body = friendService.addFriendByEmail(securityUser.getProfileId(), request);
 		return created(body);
 	}
 
