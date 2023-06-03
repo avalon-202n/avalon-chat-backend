@@ -11,11 +11,11 @@ import com.avalon.avalonchat.core.profile.dto.ProfileListGetResponse;
 import com.avalon.avalonchat.core.user.domain.Email;
 
 public interface ProfileRepository extends JpaRepository<Profile, Long> {
-	List<Profile> findAllByPhoneNumberIn(List<String> phoneNumbers);
+	List<Profile> findAllByPhoneNumberIn(List<PhoneNumber> phoneNumbers);
 
-	Optional<Profile> findByPhoneNumber(String phoneNumber);
+	Optional<Profile> findByPhoneNumber(PhoneNumber phoneNumber);
 
-	Optional<Profile> findByPhoneNumberAndNickname(String phoneNumber, String nickname);
+	Optional<Profile> findByPhoneNumberAndNickname(PhoneNumber phoneNumber, String nickname);
 
 	@Query("SELECT p "
 		+ "FROM  Profile p "
@@ -32,7 +32,7 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
 			+ "FROM Profile p join fetch p.user u "
 			+ "WHERE u.email = :email"
 	)
-	Optional<Profile> findByEmailWithUser(Email email);
+	Optional<Profile> findByEmailWithUser(@Param("email") Email email);
 
 	@Query(
 		"SELECT new com.avalon.avalonchat.core.profile.dto.ProfileListGetResponse("
@@ -58,7 +58,7 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
 		+ "INNER JOIN f.friendProfile fp "
 		+ "INNER JOIN f.myProfile mp "
 		+ "WHERE mp.id = :myProfileId")
-	List<String> findAllFriendPhoneNumbersByMyProfileId(@Param("myProfileId") long myProfileId);
+	List<PhoneNumber> findAllFriendPhoneNumbersByMyProfileId(@Param("myProfileId") long myProfileId);
 
 	@Query(
 		"SELECT p "

@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.avalon.avalonchat.core.profile.domain.PhoneNumber;
 import com.avalon.avalonchat.core.user.application.keyvalue.AuthCodeValue;
 import com.avalon.avalonchat.core.user.application.keyvalue.PhoneNumberKey;
 import com.avalon.avalonchat.core.user.domain.Email;
@@ -25,6 +26,7 @@ class UserServiceImplTest {
 
 	@Autowired
 	private UserServiceImpl sut;
+
 	@Autowired
 	private SmsMessageService smsMessageService;
 
@@ -33,8 +35,20 @@ class UserServiceImplTest {
 
 	@Test
 	void 회원가입_성공() {
-		//given
-		SignUpRequest request = DtoFixture.signUpRequest("hello@wolrd.com", "passw0rd");
+		// given
+		String certificationCode = RandomStringUtils.randomNumeric(6);
+		String toPhoneNumber = "010-5511-0625";
+
+		smsMessageService.sendAuthenticationCode(toPhoneNumber, certificationCode);
+		phoneNumberAuthKeyValueStore.save(
+			PhoneNumberKey.fromString(toPhoneNumber),
+			AuthCodeValue.ofUnauthenticated(certificationCode)
+		);
+		sut.checkPhoneNumberAuthentication(
+			new PhoneNumberAuthenticationCheckRequest(toPhoneNumber, certificationCode)
+		);
+
+		SignUpRequest request = DtoFixture.signUpRequest("hello@wolrd.com", "passw0rd", toPhoneNumber);
 
 		//when
 		SignUpResponse response = sut.signUp(request);
@@ -45,8 +59,20 @@ class UserServiceImplTest {
 
 	@Test
 	void 이메일_중복_확인_성공() {
-		//given
-		SignUpRequest request = DtoFixture.signUpRequest("savedUser@wolrd.com", "passw0rd");
+		// given - authenticate phone number
+		String certificationCode = RandomStringUtils.randomNumeric(6);
+		PhoneNumber phoneNumber = PhoneNumber.of("010-5511-0625");
+
+		smsMessageService.sendAuthenticationCode(phoneNumber.getValue(), certificationCode);
+		phoneNumberAuthKeyValueStore.save(
+			PhoneNumberKey.fromString(phoneNumber.getValue()),
+			AuthCodeValue.ofUnauthenticated(certificationCode)
+		);
+		sut.checkPhoneNumberAuthentication(
+			new PhoneNumberAuthenticationCheckRequest(phoneNumber.getValue(), certificationCode)
+		);
+
+		SignUpRequest request = DtoFixture.signUpRequest("savedUser@wolrd.com", "passw0rd", "010-5511-0625");
 		sut.signUp(request);
 
 		//when

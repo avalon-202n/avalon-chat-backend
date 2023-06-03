@@ -37,7 +37,6 @@ import com.avalon.avalonchat.core.user.domain.Email;
 import com.avalon.avalonchat.core.user.domain.Password;
 import com.avalon.avalonchat.core.user.domain.User;
 import com.avalon.avalonchat.core.user.domain.UserRepository;
-import com.avalon.avalonchat.core.user.dto.PhoneNumberAuthenticationCheckRequest;
 import com.avalon.avalonchat.global.error.exception.BadRequestException;
 import com.avalon.avalonchat.global.error.exception.NotFoundException;
 
@@ -69,19 +68,6 @@ class ProfileServiceImplTest {
 	@Test
 	@Disabled("TODO - add mocking or add new NullMessageService for test")
 	void addProfile_성공() {
-		// given - authenticate phone number
-		String certificationCode = RandomStringUtils.randomNumeric(6);
-		String toPhoneNumber = "01055110625";
-
-		smsMessageService.sendAuthenticationCode(toPhoneNumber, certificationCode);
-		phoneNumberAuthKeyValueStore.save(
-			PhoneNumberKey.fromString(toPhoneNumber),
-			AuthCodeValue.ofUnauthenticated(certificationCode)
-		);
-		userService.checkPhoneNumberAuthentication(
-			new PhoneNumberAuthenticationCheckRequest(toPhoneNumber, certificationCode)
-		);
-
 		// given - ready for the request
 		User savedUser = userRepository.save(createUser("email@gmail.com", "password"));
 
@@ -93,8 +79,7 @@ class ProfileServiceImplTest {
 				"nickname",
 				"bio",
 				"profileImageUrl",
-				"backgroundImageUrl",
-				"01055110625"
+				"backgroundImageUrl"
 			)
 		);
 
@@ -104,14 +89,13 @@ class ProfileServiceImplTest {
 		assertThat(response.getBio()).isEqualTo("bio");
 		assertThat(response.getProfileImageUrl()).isEqualTo("profileImageUrl");
 		assertThat(response.getBackgroundImageUrls().get(0)).isEqualTo("backgroundImageUrl");
-		assertThat(response.getPhoneNumber()).isEqualTo("01055110625");
 	}
 
 	@Test
 	void addProfile_핸드폰인증되지않은사용자_예외던지기_성공() {
 		// given - send user certificationCode with no checking
 		String certificationCode = RandomStringUtils.randomNumeric(6);
-		String toPhoneNumber = "01055110625";
+		String toPhoneNumber = "010-5511-0625";
 
 		smsMessageService.sendAuthenticationCode(toPhoneNumber, certificationCode);
 		phoneNumberAuthKeyValueStore.save(
@@ -129,7 +113,7 @@ class ProfileServiceImplTest {
 		String profileImageUrl = "profileImageUrl";
 		String backgroundImageUrl = "backgroundImageUrl";
 		ProfileAddRequest request = new ProfileAddRequest(birthDate, nickname, bio, profileImageUrl,
-			backgroundImageUrl, toPhoneNumber);
+			backgroundImageUrl);
 
 		// when & then
 		assertThatExceptionOfType(BadRequestException.class)
@@ -142,7 +126,7 @@ class ProfileServiceImplTest {
 		User user = createUser("hello@world.com", "password");
 		User savedUser = userRepository.save(user);
 
-		Profile profile = createProfile(user, "hi there", LocalDate.of(1997, 8, 21), "haha", "01055110625");
+		Profile profile = createProfile(user, "hi there", LocalDate.of(1997, 8, 21), "haha", "010-5511-0625");
 		Profile savedProfile = profileRepository.save(profile);
 
 		//when
@@ -161,9 +145,9 @@ class ProfileServiceImplTest {
 		userRepository.save(user);
 		userRepository.save(friendUser);
 
-		Profile myProfile = createProfile(user, "hi there", LocalDate.of(1997, 8, 21), "haha", "01055110625");
+		Profile myProfile = createProfile(user, "hi there", LocalDate.of(1997, 8, 21), "haha", "010-5511-0625");
 		Profile friendProfile = createProfile(
-			friendUser, "I'm friend1", LocalDate.of(1998, 9, 22), "A_friend", "01012123434"
+			friendUser, "I'm friend1", LocalDate.of(1998, 9, 22), "A_friend", "010-1212-3434"
 		);
 		profileRepository.save(myProfile);
 		profileRepository.save(friendProfile);
@@ -188,9 +172,9 @@ class ProfileServiceImplTest {
 		userRepository.save(user);
 		userRepository.save(friendUser);
 
-		Profile myProfile = createProfile(user, "hi there", LocalDate.of(1997, 8, 21), "haha", "01055110625");
+		Profile myProfile = createProfile(user, "hi there", LocalDate.of(1997, 8, 21), "haha", "010-5511-0625");
 		Profile friendProfile = createProfile(
-			friendUser, "I'm friend1", LocalDate.of(1998, 9, 22), "A_friend", "01012123434"
+			friendUser, "I'm friend1", LocalDate.of(1998, 9, 22), "A_friend", "010-1212-3434"
 		);
 		profileRepository.save(myProfile);
 		profileRepository.save(friendProfile);
@@ -212,13 +196,13 @@ class ProfileServiceImplTest {
 
 		// given - ready for profiles
 		Profile myProfile = createProfile(
-			myUser, "I'm myUser", LocalDate.of(1997, 8, 21), "my", "01012345678"
+			myUser, "I'm myUser", LocalDate.of(1997, 8, 21), "my", "010-1234-5678"
 		);
 		Profile friendProfile1 = createProfile(
-			friendUser1, "I'm friend1", LocalDate.of(1998, 9, 22), "A_friend", "01012123434"
+			friendUser1, "I'm friend1", LocalDate.of(1998, 9, 22), "A_friend", "010-1212-3434"
 		);
 		Profile friendProfile2 = createProfile(
-			friendUser2, "I'm friend2", LocalDate.of(1999, 10, 23), "B_friend", "01011112222"
+			friendUser2, "I'm friend2", LocalDate.of(1999, 10, 23), "B_friend", "010-1111-2222"
 		);
 		friendProfile1.addProfileImage("url1");
 		friendProfile1.addProfileImage("url2");
@@ -264,8 +248,7 @@ class ProfileServiceImplTest {
 			"nickName",
 			"updated bio",
 			"http://profile/image/url",
-			"http://background/image/url",
-			"010-1234-5678"
+			"http://background/image/url"
 		);
 
 		// when
@@ -276,7 +259,6 @@ class ProfileServiceImplTest {
 		assertThat(response.getNickname()).isEqualTo("nickName");
 		assertThat(response.getBio()).isNotEqualTo("bio");
 		assertThat(response.getBio()).isEqualTo("updated bio");
-		assertThat(response.getPhoneNumber()).isEqualTo("010-1234-5678");
 
 		assertThat(response.getProfileImageUrl()).isEqualTo("http://profile/image/url");
 		assertThat(response.getBackgroundImageUrls().get(0)).isEqualTo("http://background/image/url");
@@ -301,8 +283,7 @@ class ProfileServiceImplTest {
 			"updated nickName",
 			"bio",
 			"",
-			null,
-			"010-1234-1234"
+			null
 		);
 
 		// when
@@ -314,8 +295,6 @@ class ProfileServiceImplTest {
 		assertThat(response.getNickname()).isNotEqualTo("nickName");
 		assertThat(response.getNickname()).isEqualTo("updated nickName");
 		assertThat(response.getBio()).isEqualTo("bio");
-		assertThat(response.getPhoneNumber()).isNotEqualTo("010-1234-5678");
-		assertThat(response.getPhoneNumber()).isEqualTo("010-1234-1234");
 
 		assertThat(response.getProfileImageUrl()).isNull();
 		assertThat(response.getBackgroundImageUrls()).hasSize(0);

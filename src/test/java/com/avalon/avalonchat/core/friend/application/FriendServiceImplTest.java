@@ -27,6 +27,7 @@ import com.avalon.avalonchat.core.friend.dto.FriendStatusUpdateRequest;
 import com.avalon.avalonchat.core.friend.dto.FriendStatusUpdateResponse;
 import com.avalon.avalonchat.core.friend.dto.FriendSynchronizeRequest;
 import com.avalon.avalonchat.core.friend.dto.FriendSynchronizeResponse;
+import com.avalon.avalonchat.core.profile.domain.PhoneNumber;
 import com.avalon.avalonchat.core.profile.domain.Profile;
 import com.avalon.avalonchat.core.profile.domain.ProfileRepository;
 import com.avalon.avalonchat.core.user.domain.Email;
@@ -72,7 +73,7 @@ class FriendServiceImplTest {
 		profileRepository.saveAll(List.of(myProfile, friendProfile));
 
 		FriendPhoneNumberAddRequest request
-			= friendPhoneNumberAddRequest("010-1234-5678", "홍길동");
+			= friendPhoneNumberAddRequest(PhoneNumber.of("010-1234-5678"), "홍길동");
 
 		// when
 		FriendPhoneNumberAddResponse response = sut.addFriendByPhoneNumber(myProfile.getId(), request);
@@ -113,7 +114,7 @@ class FriendServiceImplTest {
 		friendRepository.save(friend);
 
 		FriendPhoneNumberAddRequest request
-			= friendPhoneNumberAddRequest("010-1234-5678", "홍길동99");
+			= friendPhoneNumberAddRequest(PhoneNumber.of("010-1234-5678"), "홍길동99");
 
 		// when & then
 		assertThatExceptionOfType(BadRequestException.class)
@@ -217,9 +218,9 @@ class FriendServiceImplTest {
 		Friend friend = createFriend(myProfile, existFriendProfile, "김영희99");
 		friendRepository.save(friend);
 
-		Map<String, String> friendsInfo = new HashMap<>();
-		friendsInfo.put("010-1234-5678", "홍길동99");
-		friendsInfo.put("010-4321-1234", "김영희99");
+		Map<PhoneNumber, String> friendsInfo = new HashMap<>();
+		friendsInfo.put(PhoneNumber.of("010-1234-5678"), "홍길동99");
+		friendsInfo.put(PhoneNumber.of("010-4321-1234"), "김영희99");
 
 		FriendSynchronizeRequest request = friendSynchronizeRequest(friendsInfo);
 
@@ -229,7 +230,7 @@ class FriendServiceImplTest {
 		// then
 		assertThat(responses).hasSize(1);
 		assertThat(responses.get(0).getFriendProfileId()).isEqualTo(newFriendProfile.getId());
-		assertThat(responses.get(0).getFriendName()).isEqualTo(friendsInfo.get("010-1234-5678"));
+		assertThat(responses.get(0).getFriendName()).isEqualTo(friendsInfo.get(PhoneNumber.of("010-1234-5678")));
 		assertThat(responses.get(0).getBio()).isEqualTo(newFriendProfile.getBio());
 		assertThat(responses.get(0).getProfileImage()).isEqualTo(newFriendProfile.getLatestProfileImageUrl());
 		assertThat(responses.get(0).getStatus()).isEqualTo(Status.NORMAL);
@@ -239,10 +240,11 @@ class FriendServiceImplTest {
 	void 친구상태변경_성공() {
 		// given - ready for users & profiles
 		User myUser = new User(Email.of("myUser@gmail.com"), Password.of("myPassword"));
-		Profile myProfile = new Profile(myUser, "myBio", LocalDate.now(), "myProfile", "01012345678");
+		Profile myProfile = new Profile(myUser, "myBio", LocalDate.now(), "myProfile", PhoneNumber.of("010-1234-5678"));
 
 		User friendUser = new User(Email.of("friendUser@gmail.com"), Password.of("friendPassword"));
-		Profile friendProfile = new Profile(friendUser, "friendBio", LocalDate.now(), "friendNickname", "01012123434");
+		Profile friendProfile = new Profile(friendUser, "friendBio", LocalDate.now(), "friendNickname",
+			PhoneNumber.of("010-1212-3434"));
 
 		userRepository.save(myUser);
 		userRepository.save(friendUser);

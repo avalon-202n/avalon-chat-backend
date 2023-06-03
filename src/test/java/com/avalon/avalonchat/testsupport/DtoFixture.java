@@ -8,6 +8,7 @@ import com.avalon.avalonchat.core.friend.dto.FriendEmailAddRequest;
 import com.avalon.avalonchat.core.friend.dto.FriendPhoneNumberAddRequest;
 import com.avalon.avalonchat.core.friend.dto.FriendSynchronizeRequest;
 import com.avalon.avalonchat.core.login.dto.LoginRequest;
+import com.avalon.avalonchat.core.profile.domain.PhoneNumber;
 import com.avalon.avalonchat.core.profile.dto.BackgroundImageDeleteRequest;
 import com.avalon.avalonchat.core.profile.dto.ProfileImageDeleteRequest;
 import com.avalon.avalonchat.core.profile.dto.ProfileUpdateRequest;
@@ -27,10 +28,11 @@ import com.avalon.avalonchat.core.user.dto.SignUpResponse;
 public final class DtoFixture {
 
 	/* User Package Dto Begin */
-	public static SignUpRequest signUpRequest(String email, String password) {
+	public static SignUpRequest signUpRequest(String email, String password, String phoneNumber) {
 		return new SignUpRequest(
 			Email.of(email),
-			Password.of(password)
+			Password.of(password),
+			PhoneNumber.of(phoneNumber)
 		);
 	}
 
@@ -91,11 +93,10 @@ public final class DtoFixture {
 		String nickName,
 		String bio,
 		String profileImageUrl,
-		String backgroundImageUrl,
-		String phoneNumber
+		String backgroundImageUrl
 	) {
 		return new ProfileUpdateRequest(
-			birthDate, nickName, bio, profileImageUrl, backgroundImageUrl, phoneNumber
+			birthDate, nickName, bio, profileImageUrl, backgroundImageUrl
 		);
 	}
 
@@ -113,11 +114,11 @@ public final class DtoFixture {
 	/* Profile Package DTO End */
 
 	/* Friend Package DTO Start */
-	public static FriendPhoneNumberAddRequest friendPhoneNumberAddRequest(String phoneNumber, String displayName) {
+	public static FriendPhoneNumberAddRequest friendPhoneNumberAddRequest(PhoneNumber phoneNumber, String displayName) {
 		return new FriendPhoneNumberAddRequest(phoneNumber, displayName);
 	}
 
-	public static FriendSynchronizeRequest friendSynchronizeRequest(Map<String, String> friendsInfo) {
+	public static FriendSynchronizeRequest friendSynchronizeRequest(Map<PhoneNumber, String> friendsInfo) {
 		return new FriendSynchronizeRequest(friendsInfo);
 	}
 

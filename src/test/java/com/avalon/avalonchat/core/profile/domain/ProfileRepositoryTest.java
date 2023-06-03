@@ -51,7 +51,7 @@ class ProfileRepositoryTest {
 		assertThat(profile.getBio()).isEqualTo("bio");
 		assertThat(profile.getBirthDate()).isEqualTo(LocalDate.of(2023, 4, 20));
 		assertThat(profile.getNickname()).isEqualTo("nickname");
-		assertThat(profile.getPhoneNumber()).isEqualTo("010-1234-5678");
+		assertThat(profile.getPhoneNumber().getValue()).isEqualTo("01012345678");
 		assertThat(profile.getLatestProfileImageUrl()).isEqualTo("http://profile/image/url");
 
 		assertThat(profile.getProfileImages()).hasSize(1);
@@ -72,7 +72,8 @@ class ProfileRepositoryTest {
 			createProfile(user2, "bio2", now(), "nickname2", "010-1234-1234"));
 
 		// when
-		List<Profile> foundProfiles = sut.findAllByPhoneNumberIn(List.of("010-1234-5678", "010-1234-1234"));
+		List<Profile> foundProfiles = sut.findAllByPhoneNumberIn(
+			List.of(PhoneNumber.of("010-1234-5678"), PhoneNumber.of("010-1234-1234")));
 
 		// then
 		assertThat(foundProfiles).containsExactlyInAnyOrder(profile1, profile2);
@@ -88,15 +89,15 @@ class ProfileRepositoryTest {
 
 		Profile myProfile = createProfile(
 			myUser, "I'm myUser", of(1997, 8, 21),
-			",my", "01012345678"
+			",my", "010-1234-5678"
 		);
 		Profile friendProfile1 = createProfile(
 			friendUser1, "I'm friend1", of(1998, 9, 22),
-			"A_friend", "01012123434"
+			"A_friend", "010-1212-3434"
 		);
 		Profile friendProfile2 = createProfile(
 			friendUser2, "I'm friend2", of(1999, 10, 23),
-			"B_friend", "01011112222"
+			"B_friend", "010-1111-2222"
 		);
 		friendProfile1.addProfileImage("url1");
 		friendProfile1.addProfileImage("url2");
@@ -154,15 +155,15 @@ class ProfileRepositoryTest {
 
 		Profile myProfile = createProfile(
 			myUser, "I'm myUser", of(1997, 8, 21),
-			",my", "01012345678"
+			",my", "010-1234-5678"
 		);
 		Profile friendProfile1 = createProfile(
 			friendUser1, "I'm friend1", of(1998, 9, 22),
-			"A_friend", "01012123434"
+			"A_friend", "010-1212-3434"
 		);
 		Profile friendProfile2 = createProfile(
 			friendUser2, "I'm friend2", of(1999, 10, 23),
-			"B_friend", "01011112222"
+			"B_friend", "010-1111-2222"
 		);
 		sut.saveAll(List.of(myProfile, friendProfile1, friendProfile2));
 
@@ -171,7 +172,7 @@ class ProfileRepositoryTest {
 		friendRepository.saveAll(List.of(friend1, friend2));
 
 		// when
-		List<String> foundFriendPhoneNumbers = sut.findAllFriendPhoneNumbersByMyProfileId(myProfile.getId());
+		List<PhoneNumber> foundFriendPhoneNumbers = sut.findAllFriendPhoneNumbersByMyProfileId(myProfile.getId());
 
 		// then
 		assertThat(foundFriendPhoneNumbers.get(0))

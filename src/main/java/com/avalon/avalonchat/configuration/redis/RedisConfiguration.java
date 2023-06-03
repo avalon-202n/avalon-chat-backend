@@ -26,8 +26,6 @@ import redis.embedded.RedisServer;
 @Configuration(proxyBeanMethods = false)
 public class RedisConfiguration {
 
-
-
 	@Bean
 	public RedisConnectionFactory redisConnectionFactory(RedisProperties properties) {
 		RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration(
@@ -82,7 +80,7 @@ public class RedisConfiguration {
 		private final RedisServer redisServer;
 
 		public EmbeddedRedisConfiguration(RedisProperties redisProperties) {
-			this.redisServer = new RedisServer(redisProperties.getPort());
+			this.redisServer = new RedisServer(6378);
 		}
 
 		@PostConstruct

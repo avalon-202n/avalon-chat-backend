@@ -4,6 +4,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.avalon.avalonchat.core.profile.application.ProfileService;
 import com.avalon.avalonchat.core.user.application.keyvalue.AuthCodeValue;
 import com.avalon.avalonchat.core.user.application.keyvalue.PhoneNumberKey;
 import com.avalon.avalonchat.core.user.domain.Email;
@@ -16,6 +17,7 @@ import com.avalon.avalonchat.core.user.dto.PhoneNumberAuthenticationCheckRespons
 import com.avalon.avalonchat.core.user.dto.PhoneNumberAuthenticationSendRequest;
 import com.avalon.avalonchat.core.user.dto.SignUpRequest;
 import com.avalon.avalonchat.core.user.dto.SignUpResponse;
+import com.avalon.avalonchat.global.error.exception.BadRequestException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,12 +27,21 @@ import lombok.RequiredArgsConstructor;
 public class UserServiceImpl implements UserService {
 
 	private final UserRepository userRepository;
+	private final ProfileService profileService;
 	private final SmsMessageService smsMessageService;
 	private final PhoneNumberAuthCodeStore phoneNumberKeyValueStore;
 
 	@Transactional
 	@Override
 	public SignUpResponse signUp(SignUpRequest signUpRequest) {
+
+		// phoneNumber check authenticated
+		String phoneNumber = signUpRequest.getPhoneNumber().getValue();
+		boolean authenticated = !phoneNumberKeyValueStore.isAuthenticated(PhoneNumberKey.fromString(phoneNumber));
+		if (authenticated) {
+			throw new BadRequestException("phonenumber.no-auth", phoneNumber);
+		}
+
 		// create user from request
 		User user = new User(
 			signUpRequest.getEmail(),
@@ -39,6 +50,9 @@ public class UserServiceImpl implements UserService {
 
 		// save user
 		User savedUser = userRepository.save(user);
+
+		// save profile
+		profileService.unitProfile(savedUser, signUpRequest.getPhoneNumber());
 
 		// convert to response
 		return SignUpResponse.ofEntity(savedUser);

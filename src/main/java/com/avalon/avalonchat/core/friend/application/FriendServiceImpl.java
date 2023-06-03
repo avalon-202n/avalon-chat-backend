@@ -17,6 +17,7 @@ import com.avalon.avalonchat.core.friend.dto.FriendStatusUpdateRequest;
 import com.avalon.avalonchat.core.friend.dto.FriendStatusUpdateResponse;
 import com.avalon.avalonchat.core.friend.dto.FriendSynchronizeRequest;
 import com.avalon.avalonchat.core.friend.dto.FriendSynchronizeResponse;
+import com.avalon.avalonchat.core.profile.domain.PhoneNumber;
 import com.avalon.avalonchat.core.profile.domain.Profile;
 import com.avalon.avalonchat.core.profile.domain.ProfileRepository;
 import com.avalon.avalonchat.core.user.domain.Email;
@@ -92,10 +93,11 @@ public class FriendServiceImpl implements FriendService {
 			.orElseThrow(() -> new NotFoundException("profile", profileId));
 
 		// 2. get phoneNumbers from request
-		List<String> phoneNumbers = new ArrayList<>(request.getFriendsInfo().keySet());
+		List<PhoneNumber> phoneNumbers = new ArrayList<>(request.getFriendsInfo().keySet());
 
 		// 3. filter if already exists
-		List<String> friendPhoneNumbers = profileRepository.findAllFriendPhoneNumbersByMyProfileId(myProfile.getId());
+		List<PhoneNumber> friendPhoneNumbers = profileRepository.findAllFriendPhoneNumbersByMyProfileId(
+			myProfile.getId());
 
 		List<Profile> friendProfiles = profileRepository.findAllByPhoneNumberIn(phoneNumbers).stream()
 			.filter(profile -> !friendPhoneNumbers.contains(profile.getPhoneNumber()))
