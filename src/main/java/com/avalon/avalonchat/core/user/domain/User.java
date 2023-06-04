@@ -9,7 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 import com.avalon.avalonchat.global.model.BaseAuditingEntity;
-import com.avalon.avalonchat.global.util.BooleanToYNConverter;
+import com.avalon.avalonchat.global.util.BooleanToYnConverter;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,7 +26,7 @@ public class User extends BaseAuditingEntity {
 	@Embedded
 	private Password password;
 
-	@Convert(converter = BooleanToYNConverter.class)
+	@Convert(converter = BooleanToYnConverter.class)
 	private Boolean isCreateProfileStatus;
 
 	public User(Email email, Password password) {
