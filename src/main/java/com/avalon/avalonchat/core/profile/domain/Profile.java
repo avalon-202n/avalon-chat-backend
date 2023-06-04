@@ -82,9 +82,9 @@ public class Profile extends BaseAuditingEntity {
 		profileImages.removeAll(deleteImages);
 	}
 
-	public void deleteBackgroundImage(List<String> deleteBackgroundImageUrls) {
+	public void deleteBackgroundImage(String deleteBackgroundImageUrl) {
 		List<BackgroundImage> deleteImages = backgroundImages.stream()
-			.filter(backgroundImage -> deleteBackgroundImageUrls.contains(backgroundImage.getUrl()))
+			.filter(backgroundImage -> backgroundImage.getUrl().equals(deleteBackgroundImageUrl))
 			.collect(Collectors.toList());
 
 		backgroundImages.removeAll(deleteImages);

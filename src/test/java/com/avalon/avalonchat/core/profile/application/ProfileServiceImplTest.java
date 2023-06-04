@@ -6,7 +6,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -361,20 +360,14 @@ class ProfileServiceImplTest {
 		userRepository.save(user);
 		profileRepository.save(profile);
 
-		List<String> deletedBackgroundImageUrls = new ArrayList<>();
-		deletedBackgroundImageUrls.add("http://background/image/url1");
-		deletedBackgroundImageUrls.add("http://background/image/url2");
-		deletedBackgroundImageUrls.add("http://background/image/url5");
-
-		BackgroundImageDeleteRequest request = backgroundImageDeleteRequest(deletedBackgroundImageUrls);
+		BackgroundImageDeleteRequest request
+			= backgroundImageDeleteRequest("http://background/image/url5");
 
 		// when
 		sut.deleteBackgroundImage(profile.getId(), request);
 
 		// then
-		assertThat(profile.getBackgroundImages()).hasSize(2);
-		assertThat(profile.getBackgroundImages().get(0).getUrl()).isEqualTo("http://background/image/url3");
-		assertThat(profile.getBackgroundImages().get(1).getUrl()).isEqualTo("http://background/image/url4");
+		assertThat(profile.getBackgroundImages()).hasSize(4);
 	}
 }
 

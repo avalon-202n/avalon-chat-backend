@@ -1,7 +1,6 @@
 package com.avalon.avalonchat.testsupport;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Map;
 
 import com.avalon.avalonchat.core.friend.dto.FriendEmailAddRequest;
@@ -106,9 +105,9 @@ public final class DtoFixture {
 	}
 
 	public static BackgroundImageDeleteRequest backgroundImageDeleteRequest(
-		List<String> deletedBackgroundImageUrls
+		String deletedBackgroundImageUrl
 	) {
-		return new BackgroundImageDeleteRequest(deletedBackgroundImageUrls);
+		return new BackgroundImageDeleteRequest(deletedBackgroundImageUrl);
 	}
 	/* Profile Package DTO End */
 
