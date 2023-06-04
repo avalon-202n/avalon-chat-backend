@@ -322,7 +322,7 @@ class ProfileServiceImplTest {
 	}
 
 	@Test
-	void profileImage_몇개남기고_삭제성공() {
+	void 프로필이미지_삭제성공() {
 		// given
 		User user = createUser("test@email.com", "passw0rd");
 		Profile profile = createProfile(user);
@@ -336,101 +336,14 @@ class ProfileServiceImplTest {
 		userRepository.save(user);
 		profileRepository.save(profile);
 
-		List<String> deletedProfileImageUrls = new ArrayList<>();
-		deletedProfileImageUrls.add("http://profile/image/url1");
-		deletedProfileImageUrls.add("http://profile/image/url2");
-		deletedProfileImageUrls.add("http://profile/image/url5");
-
-		ProfileImageDeleteRequest request = profileImageDeleteRequest(deletedProfileImageUrls);
+		ProfileImageDeleteRequest request = profileImageDeleteRequest("http://profile/image/url5");
 
 		// when
 		sut.deleteProfileImage(profile.getId(), request);
 
 		// then
 		assertThat(profile.getLatestProfileImageUrl()).isEqualTo("http://profile/image/url4");
-		assertThat(profile.getProfileImages()).hasSize(2);
-		assertThat(profile.getProfileImages().get(0).getUrl()).isEqualTo("http://profile/image/url3");
-		assertThat(profile.getProfileImages().get(1).getUrl()).isEqualTo("http://profile/image/url4");
-	}
-
-	@Test
-	void profileImage_하나도안남기고_삭제성공() {
-		// given
-		User user = createUser("test@email.com", "passw0rd");
-		Profile profile = createProfile(user);
-
-		profile.addProfileImage("http://profile/image/url1");
-		profile.addProfileImage("http://profile/image/url2");
-		profile.addProfileImage("http://profile/image/url3");
-		profile.addProfileImage("http://profile/image/url4");
-		profile.addProfileImage("http://profile/image/url5");
-
-		userRepository.save(user);
-		profileRepository.save(profile);
-
-		List<String> deletedProfileImageUrls = new ArrayList<>();
-		deletedProfileImageUrls.add("http://profile/image/url1");
-		deletedProfileImageUrls.add("http://profile/image/url2");
-		deletedProfileImageUrls.add("http://profile/image/url3");
-		deletedProfileImageUrls.add("http://profile/image/url4");
-		deletedProfileImageUrls.add("http://profile/image/url5");
-
-		ProfileImageDeleteRequest request = profileImageDeleteRequest(deletedProfileImageUrls);
-
-		// when
-		sut.deleteProfileImage(profile.getId(), request);
-
-		// then
-		assertThat(profile.getLatestProfileImageUrl()).isNull();
-		assertThat(profile.getProfileImages()).hasSize(0);
-	}
-
-	@Test
-	void 삭제할프로필이미지_범위넘침_예외발생() {
-		// given
-		User user = createUser("test@email.com", "passw0rd");
-		Profile profile = createProfile(user);
-
-		profile.addProfileImage("http://profile/image/url1");
-		profile.addProfileImage("http://profile/image/url2");
-		profile.addProfileImage("http://profile/image/url3");
-
-		userRepository.save(user);
-		profileRepository.save(profile);
-
-		List<String> deletedProfileImageUrls = new ArrayList<>();
-		deletedProfileImageUrls.add("http://profile/image/url1");
-		deletedProfileImageUrls.add("http://profile/image/url2");
-		deletedProfileImageUrls.add("http://profile/image/url3");
-		deletedProfileImageUrls.add("http://profile/image/url4");
-		deletedProfileImageUrls.add("http://profile/image/url5");
-
-		ProfileImageDeleteRequest request = profileImageDeleteRequest(deletedProfileImageUrls);
-
-		// when then
-		assertThatExceptionOfType(BadRequestException.class)
-			.isThrownBy(() -> sut.deleteProfileImage(profile.getId(), request));
-	}
-
-	@Test
-	void 삭제할프로필이미지_비어있음_예외발생() {
-		// given
-		User user = createUser("test@email.com", "passw0rd");
-		Profile profile = createProfile(user);
-
-		profile.addProfileImage("http://profile/image/url1");
-		profile.addProfileImage("http://profile/image/url2");
-		profile.addProfileImage("http://profile/image/url3");
-
-		userRepository.save(user);
-		profileRepository.save(profile);
-
-		List<String> deletedProfileImageUrls = new ArrayList<>();
-		ProfileImageDeleteRequest request = profileImageDeleteRequest(deletedProfileImageUrls);
-
-		// when then
-		assertThatExceptionOfType(BadRequestException.class)
-			.isThrownBy(() -> sut.deleteProfileImage(profile.getId(), request));
+		assertThat(profile.getProfileImages()).hasSize(4);
 	}
 
 	@Test

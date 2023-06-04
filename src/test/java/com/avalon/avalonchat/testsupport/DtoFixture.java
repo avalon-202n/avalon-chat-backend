@@ -100,9 +100,9 @@ public final class DtoFixture {
 	}
 
 	public static ProfileImageDeleteRequest profileImageDeleteRequest(
-		List<String> deletedProfileImageUrls
+		String deletedProfileImageUrl
 	) {
-		return new ProfileImageDeleteRequest(deletedProfileImageUrls);
+		return new ProfileImageDeleteRequest(deletedProfileImageUrl);
 	}
 
 	public static BackgroundImageDeleteRequest backgroundImageDeleteRequest(

@@ -74,9 +74,9 @@ public class Profile extends BaseAuditingEntity {
 		this.latestProfileImageUrl = latestProfileImageUrl;
 	}
 
-	public void deleteProfileImage(List<String> deleteProfileImageUrls) {
+	public void deleteProfileImage(String deletedProfileImageUrl) {
 		List<ProfileImage> deleteImages = profileImages.stream()
-			.filter(profileImage -> deleteProfileImageUrls.contains(profileImage.getUrl()))
+			.filter(profileImage -> profileImage.getUrl().equals(deletedProfileImageUrl))
 			.collect(Collectors.toList());
 
 		profileImages.removeAll(deleteImages);

@@ -110,7 +110,7 @@ public class ProfileController {
 
 	@Operation(
 		summary = "프로필 이미지 삭제",
-		description = "클라이언트 서버와 백엔드 서버에 동일한 순서(저장일자 오름차순)로 저장된 리스트 객체의 인덱스들을 통해 이미지를 삭제합니다.",
+		description = "프로필 이미지 url을 통해 이미지를 삭제합니다.",
 		security = {@SecurityRequirement(name = "bearer-key")}
 	)
 	@DeleteMapping("/profile_image")
