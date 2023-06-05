@@ -117,18 +117,10 @@ public class ProfileServiceImpl implements ProfileService {
 		Profile profile = profileRepository.findById(profileId)
 			.orElseThrow(() -> new NotFoundException("profile", profileId));
 
-		// 2. validation
-		if (request.getDeletedProfileImageUrls().size() == 0) {
-			throw new BadRequestException("profileImageDelete-failed.empty-parameter");
-		}
-		if (request.getDeletedProfileImageUrls().size() > profile.getProfileImages().size()) {
-			throw new BadRequestException("profileImageDelete-failed.index-out-of-range");
-		}
+		// 2. delete profileImages
+		profile.deleteProfileImage(request.getDeletedProfileImageUrl());
 
-		// 3. delete profileImages
-		profile.deleteProfileImage(request.getDeletedProfileImageUrls());
-
-		// 4. update latestProfileImageUrl
+		// 3. update latestProfileImageUrl
 		Optional<String> optionalLatestProfileImageUrl = profileRepository.findLatestProfileImageUrl(profileId);
 		if (optionalLatestProfileImageUrl.isPresent()) {
 			profile.updateLatestProfileImageUrl(optionalLatestProfileImageUrl.get());
@@ -144,16 +136,8 @@ public class ProfileServiceImpl implements ProfileService {
 		Profile profile = profileRepository.findById(profileId)
 			.orElseThrow(() -> new NotFoundException("profile", profileId));
 
-		// 2. validation
-		if (request.getDeletedBackgroundImageUrls().size() == 0) {
-			throw new BadRequestException("backgroundImageDelete-failed.empty-parameter");
-		}
-		if (request.getDeletedBackgroundImageUrls().size() > profile.getBackgroundImages().size()) {
-			throw new BadRequestException("backgroundImageDelete-failed.index-out-of-range");
-		}
-
-		// 3. delete backgroundImages
-		profile.deleteBackgroundImage(request.getDeletedBackgroundImageUrls());
+		// 2. delete backgroundImages
+		profile.deleteBackgroundImage(request.getDeletedBackgroundImageUrl());
 	}
 
 	@Override
