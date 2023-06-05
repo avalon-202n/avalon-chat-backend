@@ -79,17 +79,17 @@ public class Profile extends BaseAuditingEntity {
 		this.latestProfileImageUrl = latestProfileImageUrl;
 	}
 
-	public void deleteProfileImage(List<String> deleteProfileImageUrls) {
+	public void deleteProfileImage(String deletedProfileImageUrl) {
 		List<ProfileImage> deleteImages = profileImages.stream()
-			.filter(profileImage -> deleteProfileImageUrls.contains(profileImage.getUrl()))
+			.filter(profileImage -> profileImage.getUrl().equals(deletedProfileImageUrl))
 			.collect(Collectors.toList());
 
 		profileImages.removeAll(deleteImages);
 	}
 
-	public void deleteBackgroundImage(List<String> deleteBackgroundImageUrls) {
+	public void deleteBackgroundImage(String deleteBackgroundImageUrl) {
 		List<BackgroundImage> deleteImages = backgroundImages.stream()
-			.filter(backgroundImage -> deleteBackgroundImageUrls.contains(backgroundImage.getUrl()))
+			.filter(backgroundImage -> backgroundImage.getUrl().equals(deleteBackgroundImageUrl))
 			.collect(Collectors.toList());
 
 		backgroundImages.removeAll(deleteImages);
