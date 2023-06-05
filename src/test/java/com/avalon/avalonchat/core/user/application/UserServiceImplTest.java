@@ -28,9 +28,6 @@ class UserServiceImplTest {
 	private UserServiceImpl sut;
 
 	@Autowired
-	private SmsMessageService smsMessageService;
-
-	@Autowired
 	private PhoneNumberAuthCodeStore phoneNumberAuthKeyValueStore;
 
 	@Test
@@ -39,7 +36,6 @@ class UserServiceImplTest {
 		String certificationCode = RandomStringUtils.randomNumeric(6);
 		String toPhoneNumber = "010-5511-0625";
 
-		smsMessageService.sendAuthenticationCode(toPhoneNumber, certificationCode);
 		phoneNumberAuthKeyValueStore.save(
 			PhoneNumberKey.fromString(toPhoneNumber),
 			AuthCodeValue.ofUnauthenticated(certificationCode)
@@ -63,7 +59,6 @@ class UserServiceImplTest {
 		String certificationCode = RandomStringUtils.randomNumeric(6);
 		PhoneNumber phoneNumber = PhoneNumber.of("010-5511-0625");
 
-		smsMessageService.sendAuthenticationCode(phoneNumber.getValue(), certificationCode);
 		phoneNumberAuthKeyValueStore.save(
 			PhoneNumberKey.fromString(phoneNumber.getValue()),
 			AuthCodeValue.ofUnauthenticated(certificationCode)
@@ -108,7 +103,6 @@ class UserServiceImplTest {
 		String certificationCode = RandomStringUtils.randomNumeric(6);
 		String toPhoneNumber = "01055110625";
 
-		smsMessageService.sendAuthenticationCode(toPhoneNumber, certificationCode);
 		phoneNumberAuthKeyValueStore.save(
 			PhoneNumberKey.fromString(toPhoneNumber),
 			AuthCodeValue.ofUnauthenticated(certificationCode)

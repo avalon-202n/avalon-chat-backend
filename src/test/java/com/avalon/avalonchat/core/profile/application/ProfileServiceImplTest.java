@@ -29,7 +29,6 @@ import com.avalon.avalonchat.core.profile.dto.ProfileListGetResponse;
 import com.avalon.avalonchat.core.profile.dto.ProfileUpdateRequest;
 import com.avalon.avalonchat.core.profile.dto.ProfileUpdateResponse;
 import com.avalon.avalonchat.core.user.application.PhoneNumberAuthCodeStore;
-import com.avalon.avalonchat.core.user.application.SmsMessageService;
 import com.avalon.avalonchat.core.user.application.UserService;
 import com.avalon.avalonchat.core.user.application.keyvalue.AuthCodeValue;
 import com.avalon.avalonchat.core.user.application.keyvalue.PhoneNumberKey;
@@ -52,9 +51,6 @@ class ProfileServiceImplTest {
 
 	@Autowired
 	private ProfileRepository profileRepository;
-
-	@Autowired
-	private SmsMessageService smsMessageService;
 
 	@Autowired
 	private UserService userService;
@@ -97,7 +93,6 @@ class ProfileServiceImplTest {
 		String certificationCode = RandomStringUtils.randomNumeric(6);
 		String toPhoneNumber = "010-5511-0625";
 
-		smsMessageService.sendAuthenticationCode(toPhoneNumber, certificationCode);
 		phoneNumberAuthKeyValueStore.save(
 			PhoneNumberKey.fromString(toPhoneNumber),
 			AuthCodeValue.ofUnauthenticated(certificationCode)

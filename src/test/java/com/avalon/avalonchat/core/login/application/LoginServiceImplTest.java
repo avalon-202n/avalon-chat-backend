@@ -18,7 +18,6 @@ import com.avalon.avalonchat.core.login.dto.LoginResponse;
 import com.avalon.avalonchat.core.profile.domain.Profile;
 import com.avalon.avalonchat.core.profile.domain.ProfileRepository;
 import com.avalon.avalonchat.core.user.application.PhoneNumberAuthCodeStore;
-import com.avalon.avalonchat.core.user.application.SmsMessageService;
 import com.avalon.avalonchat.core.user.application.UserServiceImpl;
 import com.avalon.avalonchat.core.user.application.enums.PhoneNumberKeyPurpose;
 import com.avalon.avalonchat.core.user.application.keyvalue.AuthCodeValue;
@@ -34,8 +33,6 @@ import com.avalon.avalonchat.testsupport.Fixture;
 @Transactional
 @SpringBootTest
 public class LoginServiceImplTest {
-	@Autowired
-	private SmsMessageService smsMessageService;
 	@Autowired
 	private PhoneNumberAuthCodeStore phoneNumberAuthKeyValueStore;
 	@Autowired
@@ -77,7 +74,6 @@ public class LoginServiceImplTest {
 		String certificationCode = RandomStringUtils.randomNumeric(6);
 		String toPhoneNumber = "010-5511-0625";
 
-		smsMessageService.sendAuthenticationCode(toPhoneNumber, certificationCode);
 		phoneNumberAuthKeyValueStore.save(
 			PhoneNumberKey.fromString(toPhoneNumber),
 			AuthCodeValue.ofUnauthenticated(certificationCode)
