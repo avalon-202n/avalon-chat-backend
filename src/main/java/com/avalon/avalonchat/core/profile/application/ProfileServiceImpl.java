@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.avalon.avalonchat.core.friend.domain.Friend;
@@ -59,9 +60,6 @@ public class ProfileServiceImpl implements ProfileService {
 		// 4. create images & add to profile
 		profile.addProfileImage(request.getProfileImageUrl());
 		profile.addBackgroundImage(request.getBackgroundImageUrl());
-
-		//5. update user profileCreateStatus
-		findUser.updateProfileStatusCreated();
 
 		// 6. return
 		return ProfileAddResponse.from(profile);
@@ -160,7 +158,7 @@ public class ProfileServiceImpl implements ProfileService {
 		return getDetailedById(friendProfileId);
 	}
 
-	@Transactional
+	@Transactional(propagation = Propagation.MANDATORY)
 	@Override
 	public void unitProfile(User user, PhoneNumber phoneNumber) {
 		Profile profile = new Profile(user, phoneNumber);

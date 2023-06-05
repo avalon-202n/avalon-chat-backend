@@ -53,8 +53,7 @@ public class Profile extends BaseAuditingEntity {
 	private List<BackgroundImage> backgroundImages = new ArrayList<>();
 
 	public Profile(User user, PhoneNumber phoneNumber) {
-		this.user = user;
-		this.phoneNumber = phoneNumber;
+		this(user, null, null, null, phoneNumber);
 	}
 
 	public Profile(User user, String bio, LocalDate birthDate, String nickname, PhoneNumber phoneNumber) {
@@ -100,5 +99,6 @@ public class Profile extends BaseAuditingEntity {
 		this.bio = bio;
 		this.birthDate = birthDate;
 		this.nickname = nickname;
+		this.user.updateProfileStatusCreated();
 	}
 }

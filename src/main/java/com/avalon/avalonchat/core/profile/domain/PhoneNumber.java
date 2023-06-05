@@ -32,4 +32,9 @@ public class PhoneNumber {
 		return new PhoneNumber(value);
 	}
 
+	@Override
+	public String toString() {
+		return "phoneNumber : " + this.value;
+	}
+
 }

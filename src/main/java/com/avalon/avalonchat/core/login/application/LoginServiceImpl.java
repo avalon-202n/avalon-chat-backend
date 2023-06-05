@@ -81,7 +81,7 @@ public class LoginServiceImpl implements LoginService {
 			phoneNumber.getValue());
 		boolean authenticated = phoneNumberAuthCodeStore.isAuthenticated(phoneNumberKey);
 		if (!authenticated) {
-			throw new BadRequestException("phonenumber.no-auth", phoneNumber.getValue());
+			throw new BadRequestException("phonenumber.no-auth", phoneNumber.toString());
 		}
 
 		// 2. find email
