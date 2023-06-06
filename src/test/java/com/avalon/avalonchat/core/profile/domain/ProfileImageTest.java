@@ -15,7 +15,7 @@ class ProfileImageTest {
 	void profileImage_생성성공() {
 		//given
 		User user = new User(Email.of("email@gmail.com"), Password.of("password"));
-		Profile profile = new Profile(user, "bio", LocalDate.now(), "nickname", "01055110625");
+		Profile profile = new Profile(user, "bio", LocalDate.now(), "nickname", PhoneNumber.of("010-5511-0625"));
 		String url = "storage/url/image.png";
 
 		//when

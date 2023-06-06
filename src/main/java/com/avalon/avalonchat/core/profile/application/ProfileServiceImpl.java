@@ -5,10 +5,12 @@ import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.avalon.avalonchat.core.friend.domain.Friend;
 import com.avalon.avalonchat.core.friend.domain.FriendRepository;
+import com.avalon.avalonchat.core.profile.domain.PhoneNumber;
 import com.avalon.avalonchat.core.profile.domain.Profile;
 import com.avalon.avalonchat.core.profile.domain.ProfileRepository;
 import com.avalon.avalonchat.core.profile.dto.BackgroundImageDeleteRequest;
@@ -20,7 +22,6 @@ import com.avalon.avalonchat.core.profile.dto.ProfileListGetResponse;
 import com.avalon.avalonchat.core.profile.dto.ProfileUpdateRequest;
 import com.avalon.avalonchat.core.profile.dto.ProfileUpdateResponse;
 import com.avalon.avalonchat.core.user.application.PhoneNumberAuthCodeStore;
-import com.avalon.avalonchat.core.user.application.keyvalue.PhoneNumberKey;
 import com.avalon.avalonchat.core.user.domain.User;
 import com.avalon.avalonchat.core.user.domain.UserRepository;
 import com.avalon.avalonchat.global.error.exception.BadRequestException;
@@ -40,33 +41,25 @@ public class ProfileServiceImpl implements ProfileService {
 
 	@Transactional
 	@Override
-	public ProfileAddResponse addProfile(long userId, ProfileAddRequest request) {
+	public ProfileAddResponse addProfile(long profileId, ProfileAddRequest request) {
 		// 1. find user
-		User user = userRepository.findById(userId)
-			.orElseThrow(() -> new NotFoundException("user", userId));
+		Profile profile = profileRepository.findById(profileId)
+			.orElseThrow(() -> new NotFoundException("profile", profileId));
+		User findUser = profile.getUser();
 
-		// 2. check
-		String phoneNumber = request.getPhoneNumber();
-		boolean authenticated = !phoneNumberKeyValueStore.isAuthenticated(PhoneNumberKey.fromString(phoneNumber));
-		if (authenticated) {
-			throw new BadRequestException("phonenumber.no-auth", phoneNumber);
+		// 2. check profile 생성 여부
+		if (findUser.getIsCreateProfileStatus()) {
+			throw new BadRequestException("profile-add-failed.already-create");
 		}
 
-		// 3. create profile
-		Profile profile = new Profile(
-			user,
-			request.getBio(),
-			request.getBirthDate(),
-			request.getNickname(),
-			phoneNumber
+		// 3. update profile
+		profile.update(
+			request.getBio(), request.getBirthDate(), request.getNickname()
 		);
 
 		// 4. create images & add to profile
 		profile.addProfileImage(request.getProfileImageUrl());
 		profile.addBackgroundImage(request.getBackgroundImageUrl());
-
-		// 5. save it
-		profileRepository.save(profile);
 
 		// 6. return
 		return ProfileAddResponse.from(profile);
@@ -95,7 +88,7 @@ public class ProfileServiceImpl implements ProfileService {
 
 		// 2. update profile
 		profile.update(
-			request.getBio(), request.getBirthDate(), request.getNickname(), request.getPhoneNumber()
+			request.getBio(), request.getBirthDate(), request.getNickname()
 		);
 
 		// 3. update images if not null or empty
@@ -147,5 +140,12 @@ public class ProfileServiceImpl implements ProfileService {
 			.orElseThrow(() -> new NotFoundException("friend", friendProfileId));
 		// 2. 프로필 조회
 		return getDetailedById(friendProfileId);
+	}
+
+	@Transactional(propagation = Propagation.MANDATORY)
+	@Override
+	public void unitProfile(User user, PhoneNumber phoneNumber) {
+		Profile profile = new Profile(user, phoneNumber);
+		profileRepository.save(profile);
 	}
 }

@@ -4,6 +4,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.*;
 
 import java.time.LocalDate;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.avalon.avalonchat.core.login.dto.EmailFindResponse;
 import com.avalon.avalonchat.core.login.dto.LoginRequest;
 import com.avalon.avalonchat.core.login.dto.LoginResponse;
+import com.avalon.avalonchat.core.profile.domain.PhoneNumber;
 import com.avalon.avalonchat.core.profile.domain.Profile;
 import com.avalon.avalonchat.core.profile.domain.ProfileRepository;
 import com.avalon.avalonchat.core.user.application.PhoneNumberAuthCodeStore;
@@ -23,6 +25,7 @@ import com.avalon.avalonchat.core.user.application.keyvalue.AuthCodeValue;
 import com.avalon.avalonchat.core.user.application.keyvalue.PhoneNumberKey;
 import com.avalon.avalonchat.core.user.domain.User;
 import com.avalon.avalonchat.core.user.domain.UserRepository;
+import com.avalon.avalonchat.core.user.dto.PhoneNumberAuthenticationCheckRequest;
 import com.avalon.avalonchat.core.user.dto.SignUpRequest;
 import com.avalon.avalonchat.global.error.exception.BadRequestException;
 import com.avalon.avalonchat.testsupport.DtoFixture;
@@ -32,7 +35,7 @@ import com.avalon.avalonchat.testsupport.Fixture;
 @SpringBootTest
 public class LoginServiceImplTest {
 	@Autowired
-	PhoneNumberAuthCodeStore phoneNumberKeyValueStore;
+	private PhoneNumberAuthCodeStore phoneNumberAuthKeyValueStore;
 	@Autowired
 	private LoginServiceImpl sut;
 	@Autowired
@@ -46,7 +49,7 @@ public class LoginServiceImplTest {
 	void 로그인_성공() {
 		//given
 		User user = Fixture.createUser("avalon@e.com", "passw0rd");
-		Profile profile = Fixture.createProfile(user, "bio", LocalDate.of(1997, 8, 21), "haha", "01012345678");
+		Profile profile = Fixture.createProfile(user, "bio", LocalDate.of(1997, 8, 21), "haha", "010-1234-5678");
 		userRepository.save(user);
 		profileRepository.save(profile);
 
@@ -69,7 +72,19 @@ public class LoginServiceImplTest {
 	@ParameterizedTest
 	void 잘못된_이메일_혹은_비밀번호를_사용한_로그인_실패(String email, String password) {
 		// given
-		SignUpRequest request = DtoFixture.signUpRequest("test@e.com", "passw0rd");
+		String certificationCode = RandomStringUtils.randomNumeric(6);
+		String toPhoneNumber = "010-5511-0625";
+		PhoneNumber phoneNumber = PhoneNumber.of(toPhoneNumber);
+
+		phoneNumberAuthKeyValueStore.save(
+			PhoneNumberKey.fromString(phoneNumber.getValue()),
+			AuthCodeValue.ofUnauthenticated(certificationCode)
+		);
+		userServiceImpl.checkPhoneNumberAuthentication(
+			new PhoneNumberAuthenticationCheckRequest(phoneNumber, certificationCode)
+		);
+
+		SignUpRequest request = DtoFixture.signUpRequest("test@e.com", "passw0rd", toPhoneNumber);
 		userServiceImpl.signUp(request);
 
 		LoginRequest loginRequest = DtoFixture.loginRequest(email, password);
@@ -86,21 +101,24 @@ public class LoginServiceImplTest {
 	@Test
 	void 전화번호로_이메일_찾기_성공() {
 		//given
+		String phoneNumber = "010-1234-5678";
+
 		User user = Fixture.createUser();
 		userRepository.save(user);
 
-		Profile profile = Fixture.createProfile(user);
+		Profile profile = Fixture.createProfile(user, "bio", LocalDate.of(1997, 8, 21), "haha", phoneNumber);
 		profileRepository.save(profile);
 
 		String authCode = "cert-code";
-		PhoneNumberKey key = PhoneNumberKey.ofPurpose(PhoneNumberKeyPurpose.EMAIL_FIND, profile.getPhoneNumber());
+		PhoneNumberKey key = PhoneNumberKey.ofPurpose(PhoneNumberKeyPurpose.EMAIL_FIND,
+			profile.getPhoneNumber().getValue());
 		AuthCodeValue authCodeValue = AuthCodeValue.fromString(authCode);
 
-		phoneNumberKeyValueStore.save(key, authCodeValue);
-		phoneNumberKeyValueStore.checkKeyValueMatches(key, authCodeValue);
+		phoneNumberAuthKeyValueStore.save(key, authCodeValue);
+		phoneNumberAuthKeyValueStore.checkKeyValueMatches(key, authCodeValue);
 
 		//when
-		EmailFindResponse emailFindResponse = sut.findEmailByPhoneNumber(profile.getPhoneNumber());
+		EmailFindResponse emailFindResponse = sut.findEmailByPhoneNumber(phoneNumber);
 
 		//then
 		assertThat(emailFindResponse.getEmail().getValue()).isEqualTo("avalon@e.com");
@@ -116,13 +134,14 @@ public class LoginServiceImplTest {
 		profileRepository.save(profile);
 
 		String authCode = "cert-code";
-		PhoneNumberKey key = PhoneNumberKey.ofPurpose(PhoneNumberKeyPurpose.EMAIL_FIND, profile.getPhoneNumber());
+		PhoneNumberKey key = PhoneNumberKey.ofPurpose(PhoneNumberKeyPurpose.EMAIL_FIND,
+			profile.getPhoneNumber().getValue());
 		AuthCodeValue authCodeValue = AuthCodeValue.fromString(authCode);
 
-		phoneNumberKeyValueStore.save(key, authCodeValue);
+		phoneNumberAuthKeyValueStore.save(key, authCodeValue);
 
 		//when & then
 		assertThatExceptionOfType(RuntimeException.class)
-			.isThrownBy(() -> sut.findEmailByPhoneNumber(profile.getPhoneNumber()));
+			.isThrownBy(() -> sut.findEmailByPhoneNumber(profile.getPhoneNumber().getValue()));
 	}
 }

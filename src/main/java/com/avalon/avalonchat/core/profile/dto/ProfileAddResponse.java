@@ -20,7 +20,6 @@ public class ProfileAddResponse {
 	private String bio;
 	private String profileImageUrl;
 	private List<String> backgroundImageUrls;
-	private String phoneNumber;
 
 	public static ProfileAddResponse from(Profile profile) {
 		return new ProfileAddResponse(
@@ -30,8 +29,7 @@ public class ProfileAddResponse {
 			profile.getLatestProfileImageUrl(),
 			profile.getBackgroundImages().stream()
 				.map(BackgroundImage::getUrl)
-				.collect(Collectors.toList()),
-			profile.getPhoneNumber()
+				.collect(Collectors.toList())
 		);
 	}
 }

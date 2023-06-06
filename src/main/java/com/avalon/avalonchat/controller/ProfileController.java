@@ -49,10 +49,10 @@ public class ProfileController {
 	)
 	@PostMapping
 	public ResponseEntity<ProfileAddResponse> addProfile(
-		@RequestHeader("user-id") Long userId,
+		@RequestHeader("profile-id") Long profileId,
 		@RequestBody ProfileAddRequest request
 	) {
-		ProfileAddResponse response = service.addProfile(userId, request);
+		ProfileAddResponse response = service.addProfile(profileId, request);
 		return created(response);
 	}
 

@@ -26,8 +26,6 @@ import redis.embedded.RedisServer;
 @Configuration(proxyBeanMethods = false)
 public class RedisConfiguration {
 
-
-
 	@Bean
 	public RedisConnectionFactory redisConnectionFactory(RedisProperties properties) {
 		RedisStandaloneConfiguration configuration = new RedisStandaloneConfiguration(

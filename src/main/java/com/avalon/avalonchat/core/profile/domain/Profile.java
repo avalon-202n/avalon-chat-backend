@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
@@ -39,8 +40,8 @@ public class Profile extends BaseAuditingEntity {
 	@Column
 	private String nickname;
 
-	@Column
-	private String phoneNumber;
+	@Embedded
+	private PhoneNumber phoneNumber;
 
 	@Column
 	private String latestProfileImageUrl;
@@ -51,7 +52,11 @@ public class Profile extends BaseAuditingEntity {
 	@OneToMany(mappedBy = "profile", cascade = ALL, orphanRemoval = true)
 	private List<BackgroundImage> backgroundImages = new ArrayList<>();
 
-	public Profile(User user, String bio, LocalDate birthDate, String nickname, String phoneNumber) {
+	public Profile(User user, PhoneNumber phoneNumber) {
+		this(user, null, null, null, phoneNumber);
+	}
+
+	public Profile(User user, String bio, LocalDate birthDate, String nickname, PhoneNumber phoneNumber) {
 		this.user = user;
 		this.bio = bio;
 		this.birthDate = birthDate;
@@ -90,10 +95,10 @@ public class Profile extends BaseAuditingEntity {
 		backgroundImages.removeAll(deleteImages);
 	}
 
-	public void update(String bio, LocalDate birthDate, String nickname, String phoneNumber) {
+	public void update(String bio, LocalDate birthDate, String nickname) {
 		this.bio = bio;
 		this.birthDate = birthDate;
 		this.nickname = nickname;
-		this.phoneNumber = phoneNumber;
+		this.user.updateProfileStatusCreated();
 	}
 }

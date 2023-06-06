@@ -20,8 +20,8 @@ public class PhoneNumberKey {
 	}
 
 	public static PhoneNumberKey ofPurpose(PhoneNumberKeyPurpose purpose, String phoneNumber) {
-		log.debug("PhoneNumberKey : {}", PREFIX + phoneNumber + purpose.getName());
-		return new PhoneNumberKey(PREFIX + phoneNumber + purpose.getName());
+		log.info("PhoneNumberKey : {}", PREFIX + phoneNumber + purpose.getName());
+		return new PhoneNumberKey(phoneNumber + purpose.getName());
 	}
 
 	@Override

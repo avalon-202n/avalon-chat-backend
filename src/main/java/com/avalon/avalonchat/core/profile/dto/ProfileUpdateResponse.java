@@ -21,7 +21,6 @@ public class ProfileUpdateResponse {
 	private String bio;
 	private String profileImageUrl;
 	private List<String> backgroundImageUrls;
-	private String phoneNumber;
 
 	public static ProfileUpdateResponse from(Profile profile) {
 		return new ProfileUpdateResponse(
@@ -31,8 +30,7 @@ public class ProfileUpdateResponse {
 			profile.getLatestProfileImageUrl(),
 			profile.getBackgroundImages().stream()
 				.map(BackgroundImage::getUrl)
-				.collect(Collectors.toList()),
-			profile.getPhoneNumber()
+				.collect(Collectors.toList())
 		);
 	}
 }
