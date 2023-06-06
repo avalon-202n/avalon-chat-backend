@@ -35,13 +35,14 @@ class UserServiceImplTest {
 		// given
 		String certificationCode = RandomStringUtils.randomNumeric(6);
 		String toPhoneNumber = "010-5511-0625";
+		PhoneNumber phoneNumber = PhoneNumber.of(toPhoneNumber);
 
 		phoneNumberAuthKeyValueStore.save(
-			PhoneNumberKey.fromString(toPhoneNumber),
+			PhoneNumberKey.fromString(phoneNumber.getValue()),
 			AuthCodeValue.ofUnauthenticated(certificationCode)
 		);
 		sut.checkPhoneNumberAuthentication(
-			new PhoneNumberAuthenticationCheckRequest(toPhoneNumber, certificationCode)
+			new PhoneNumberAuthenticationCheckRequest(phoneNumber, certificationCode)
 		);
 
 		SignUpRequest request = DtoFixture.signUpRequest("hello@wolrd.com", "passw0rd", toPhoneNumber);
@@ -57,17 +58,18 @@ class UserServiceImplTest {
 	void 이메일_중복_확인_성공() {
 		// given - authenticate phone number
 		String certificationCode = RandomStringUtils.randomNumeric(6);
-		PhoneNumber phoneNumber = PhoneNumber.of("010-5511-0625");
+		String toPhoneNumber = "010-5511-0625";
+		PhoneNumber phoneNumber = PhoneNumber.of(toPhoneNumber);
 
 		phoneNumberAuthKeyValueStore.save(
 			PhoneNumberKey.fromString(phoneNumber.getValue()),
 			AuthCodeValue.ofUnauthenticated(certificationCode)
 		);
 		sut.checkPhoneNumberAuthentication(
-			new PhoneNumberAuthenticationCheckRequest(phoneNumber.getValue(), certificationCode)
+			new PhoneNumberAuthenticationCheckRequest(phoneNumber, certificationCode)
 		);
 
-		SignUpRequest request = DtoFixture.signUpRequest("savedUser@wolrd.com", "passw0rd", "010-5511-0625");
+		SignUpRequest request = DtoFixture.signUpRequest("savedUser@wolrd.com", "passw0rd", toPhoneNumber);
 		sut.signUp(request);
 
 		//when
@@ -85,12 +87,15 @@ class UserServiceImplTest {
 	@Disabled
 	void 폰번호_인증번호_전송_성공() {
 		// given
-		String toPhoneNumber = "01055110625";
-		PhoneNumberAuthenticationSendRequest request = new PhoneNumberAuthenticationSendRequest(toPhoneNumber);
+		String toPhoneNumber = "010-5511-0625";
+		PhoneNumber phoneNumber = PhoneNumber.of(toPhoneNumber);
+
+		PhoneNumberAuthenticationSendRequest request = new PhoneNumberAuthenticationSendRequest(phoneNumber);
 
 		// when
 		sut.sendPhoneNumberAuthentication(request);
-		boolean authenticated = phoneNumberAuthKeyValueStore.isAuthenticated(PhoneNumberKey.fromString(toPhoneNumber));
+		boolean authenticated = phoneNumberAuthKeyValueStore.isAuthenticated(
+			PhoneNumberKey.fromString(phoneNumber.getValue()));
 
 		// then
 		assertThat(authenticated).isFalse();
@@ -101,15 +106,16 @@ class UserServiceImplTest {
 	void 폰번호_인증_성공() {
 		// given
 		String certificationCode = RandomStringUtils.randomNumeric(6);
-		String toPhoneNumber = "01055110625";
+		String toPhoneNumber = "010-5511-0625";
+		PhoneNumber phoneNumber = PhoneNumber.of(toPhoneNumber);
 
 		phoneNumberAuthKeyValueStore.save(
-			PhoneNumberKey.fromString(toPhoneNumber),
+			PhoneNumberKey.fromString(phoneNumber.getValue()),
 			AuthCodeValue.ofUnauthenticated(certificationCode)
 		);
 
 		PhoneNumberAuthenticationCheckRequest request
-			= new PhoneNumberAuthenticationCheckRequest(toPhoneNumber, certificationCode);
+			= new PhoneNumberAuthenticationCheckRequest(phoneNumber, certificationCode);
 
 		// when
 		PhoneNumberAuthenticationCheckResponse response = sut.checkPhoneNumberAuthentication(request);

@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.avalon.avalonchat.core.login.dto.EmailFindResponse;
 import com.avalon.avalonchat.core.login.dto.LoginRequest;
 import com.avalon.avalonchat.core.login.dto.LoginResponse;
+import com.avalon.avalonchat.core.profile.domain.PhoneNumber;
 import com.avalon.avalonchat.core.profile.domain.Profile;
 import com.avalon.avalonchat.core.profile.domain.ProfileRepository;
 import com.avalon.avalonchat.core.user.application.PhoneNumberAuthCodeStore;
@@ -73,13 +74,14 @@ public class LoginServiceImplTest {
 		// given
 		String certificationCode = RandomStringUtils.randomNumeric(6);
 		String toPhoneNumber = "010-5511-0625";
+		PhoneNumber phoneNumber = PhoneNumber.of(toPhoneNumber);
 
 		phoneNumberAuthKeyValueStore.save(
-			PhoneNumberKey.fromString(toPhoneNumber),
+			PhoneNumberKey.fromString(phoneNumber.getValue()),
 			AuthCodeValue.ofUnauthenticated(certificationCode)
 		);
 		userServiceImpl.checkPhoneNumberAuthentication(
-			new PhoneNumberAuthenticationCheckRequest(toPhoneNumber, certificationCode)
+			new PhoneNumberAuthenticationCheckRequest(phoneNumber, certificationCode)
 		);
 
 		SignUpRequest request = DtoFixture.signUpRequest("test@e.com", "passw0rd", toPhoneNumber);

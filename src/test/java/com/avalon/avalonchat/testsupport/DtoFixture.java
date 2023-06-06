@@ -63,14 +63,14 @@ public final class DtoFixture {
 	}
 
 	public static PhoneNumberAuthenticationSendRequest phoneNumberAuthenticationSendRequest(String phoneNumber) {
-		return new PhoneNumberAuthenticationSendRequest(phoneNumber);
+		return new PhoneNumberAuthenticationSendRequest(PhoneNumber.of(phoneNumber));
 	}
 
 	public static PhoneNumberAuthenticationCheckRequest phoneNumberAuthenticationCheckRequest(
 		String phoneNumber,
 		String certificationCode
 	) {
-		return new PhoneNumberAuthenticationCheckRequest(phoneNumber, certificationCode);
+		return new PhoneNumberAuthenticationCheckRequest(PhoneNumber.of(phoneNumber), certificationCode);
 	}
 
 	public static PhoneNumberAuthenticationCheckResponse phoneNumberAuthenticationCheckResponse(boolean authenticated) {

@@ -127,15 +127,15 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public void sendFindEmailPhoneNumberAuthentication(PhoneNumberAuthenticationSendRequest request) {
 		// 1. get phone number and certification code
-		String phoneNumber = request.getPhoneNumber().replaceAll("-", "").trim();
+		PhoneNumber phoneNumber = PhoneNumber.of(request.getPhoneNumber().getValue());
 		String certificationCode = RandomStringUtils.randomNumeric(6);
 
 		// 2. send certification code
-		smsMessageService.sendAuthenticationCode(phoneNumber, certificationCode);
+		smsMessageService.sendAuthenticationCode(phoneNumber.getValue(), certificationCode);
 
 		// 3. put it to key-value store
 		phoneNumberAuthCodeStore.save(
-			PhoneNumberKey.ofPurpose(PhoneNumberKeyPurpose.EMAIL_FIND, phoneNumber),
+			PhoneNumberKey.ofPurpose(PhoneNumberKeyPurpose.EMAIL_FIND, phoneNumber.getValue()),
 			AuthCodeValue.ofUnauthenticated(certificationCode)
 		);
 	}
@@ -144,11 +144,11 @@ public class LoginServiceImpl implements LoginService {
 	public PhoneNumberAuthenticationCheckResponse checkFindEmailPhoneNumberAuthentication(
 		PhoneNumberAuthenticationCheckRequest request) {
 		// 1. get phone number
-		String phoneNumber = request.getPhoneNumber().replaceAll("-", "").trim();
+		PhoneNumber phoneNumber = PhoneNumber.of(request.getPhoneNumber().getValue());
 
 		// 2. check authenticated
 		boolean authenticated = phoneNumberAuthCodeStore.checkKeyValueMatches(
-			PhoneNumberKey.ofPurpose(PhoneNumberKeyPurpose.EMAIL_FIND, phoneNumber),
+			PhoneNumberKey.ofPurpose(PhoneNumberKeyPurpose.EMAIL_FIND, phoneNumber.getValue()),
 			AuthCodeValue.ofUnauthenticated(request.getCertificationCode())
 		);
 

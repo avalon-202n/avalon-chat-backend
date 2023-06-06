@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public void sendPhoneNumberAuthentication(PhoneNumberAuthenticationSendRequest request) {
 		// 1. get phone number and certification code
-		String phoneNumber = request.getPhoneNumber().replaceAll("-", "").trim();
+		String phoneNumber = request.getPhoneNumber().getValue();
 		String certificationCode = RandomStringUtils.randomNumeric(6);
 
 		// 2. send certification code
@@ -87,16 +87,13 @@ public class UserServiceImpl implements UserService {
 	public PhoneNumberAuthenticationCheckResponse checkPhoneNumberAuthentication(
 		PhoneNumberAuthenticationCheckRequest request
 	) {
-		// 1. get phone number
-		String phoneNumber = request.getPhoneNumber().replaceAll("-", "").trim();
-
-		// 2. check authenticated
+		// 1. check authenticated
 		boolean authenticated = phoneNumberKeyValueStore.checkKeyValueMatches(
-			PhoneNumberKey.fromString(phoneNumber),
+			PhoneNumberKey.fromString(request.getPhoneNumber().getValue()),
 			AuthCodeValue.ofUnauthenticated(request.getCertificationCode())
 		);
 
-		// 3. return
+		// 2. return
 		return new PhoneNumberAuthenticationCheckResponse(authenticated);
 	}
 }
