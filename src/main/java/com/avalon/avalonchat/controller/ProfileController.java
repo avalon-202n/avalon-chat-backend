@@ -44,19 +44,6 @@ public class ProfileController {
 	private final ProfileService service;
 
 	@Operation(
-		summary = "프로필 생성",
-		description = "헤더의 user_id 를 사용하여 user 레코드와 매핑된 profile 레코드가 생성됩니다."
-	)
-	@PostMapping
-	public ResponseEntity<ProfileAddResponse> addProfile(
-		@RequestHeader("profile-id") Long profileId,
-		@RequestBody ProfileAddRequest request
-	) {
-		ProfileAddResponse response = service.addProfile(profileId, request);
-		return created(response);
-	}
-
-	@Operation(
 		summary = "내 프로필 조회",
 		description = "내 프로필 상세 조회",
 		security = {@SecurityRequirement(name = "bearer-key")}

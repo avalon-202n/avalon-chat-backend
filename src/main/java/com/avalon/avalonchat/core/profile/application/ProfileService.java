@@ -14,7 +14,6 @@ import com.avalon.avalonchat.core.profile.dto.ProfileUpdateResponse;
 import com.avalon.avalonchat.core.user.domain.User;
 
 public interface ProfileService {
-	ProfileAddResponse addProfile(long userId, ProfileAddRequest request);
 
 	ProfileDetailedGetResponse getDetailedById(long profileId);
 

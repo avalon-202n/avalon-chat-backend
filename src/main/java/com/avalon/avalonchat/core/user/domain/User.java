@@ -1,12 +1,10 @@
 package com.avalon.avalonchat.core.user.domain;
 
 import static com.avalon.avalonchat.global.util.Preconditions.*;
+import static javax.persistence.EnumType.STRING;
 import static lombok.AccessLevel.*;
 
-import javax.persistence.Convert;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import com.avalon.avalonchat.global.model.BaseAuditingEntity;
 import com.avalon.avalonchat.global.util.BooleanToYnConverter;
@@ -26,8 +24,8 @@ public class User extends BaseAuditingEntity {
 	@Embedded
 	private Password password;
 
-	@Convert(converter = BooleanToYnConverter.class)
-	private Boolean isCreateProfileStatus;
+	@Enumerated(STRING)
+	private Status status;
 
 	public User(Email email, Password password) {
 		checkNotNull(email, "User.email cannot be null");
@@ -35,10 +33,16 @@ public class User extends BaseAuditingEntity {
 
 		this.email = email;
 		this.password = password;
-		this.isCreateProfileStatus = false;
+		this.status = Status.NO_PROFILE;
 	}
 
-	public void updateProfileStatusCreated() {
-		this.isCreateProfileStatus = true;
+	public void activeStatus() {
+		this.status = Status.ACTIVE;
+	}
+
+	public enum Status {
+		NO_PROFILE,
+		ACTIVE,
+		INACTIVE
 	}
 }

@@ -4,6 +4,7 @@ import javax.validation.constraints.NotNull;
 
 import com.avalon.avalonchat.core.user.domain.Email;
 
+import com.avalon.avalonchat.core.user.domain.User;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,14 +27,6 @@ public class LoginResponse {
 	private String refreshToken;
 
 	@NotNull
-	@Schema(description = "닉네임", example = "haha")
-	private String nickname;
-
-	@NotNull
-	@Schema(description = "bio", example = "안녕하세요~")
-	private String bio;
-
-	@NotNull
-	@Schema(description = "프로필 이미지 주소", example = "profile.image.url")
-	private String profileImageUrl;
+	@Schema(description = "유저 상태", example = "ACTIVE")
+	private User.Status userStatus;
 }

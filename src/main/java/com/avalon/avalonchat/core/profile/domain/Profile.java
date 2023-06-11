@@ -99,6 +99,6 @@ public class Profile extends BaseAuditingEntity {
 		this.bio = bio;
 		this.birthDate = birthDate;
 		this.nickname = nickname;
-		this.user.updateProfileStatusCreated();
+		this.user.activeStatus();
 	}
 }

@@ -61,60 +61,6 @@ class ProfileServiceImplTest {
 	private FriendRepository friendRepository;
 
 	@Test
-	@Disabled("TODO - add mocking or add new NullMessageService for test")
-	void addProfile_성공() {
-		// given - ready for the request
-		User savedUser = userRepository.save(createUser("email@gmail.com", "password"));
-
-		// when
-		ProfileAddResponse response = sut.addProfile(
-			savedUser.getId(),
-			new ProfileAddRequest(
-				LocalDate.now(),
-				"nickname",
-				"bio",
-				"profileImageUrl",
-				"backgroundImageUrl"
-			)
-		);
-
-		// then
-		assertThat(response.getBirthDate()).isEqualTo(LocalDate.now());
-		assertThat(response.getNickname()).isEqualTo("nickname");
-		assertThat(response.getBio()).isEqualTo("bio");
-		assertThat(response.getProfileImageUrl()).isEqualTo("profileImageUrl");
-		assertThat(response.getBackgroundImageUrls().get(0)).isEqualTo("backgroundImageUrl");
-	}
-
-	@Test
-	void addProfile_핸드폰인증되지않은사용자_예외던지기_성공() {
-		// given - send user certificationCode with no checking
-		String certificationCode = RandomStringUtils.randomNumeric(6);
-		String toPhoneNumber = "010-5511-0625";
-
-		phoneNumberAuthKeyValueStore.save(
-			PhoneNumberKey.fromString(toPhoneNumber),
-			AuthCodeValue.ofUnauthenticated(certificationCode)
-		);
-
-		// given - ready for the request
-		User user = new User(Email.of("email@gmail.com"), Password.of("password"));
-		User savedUser = userRepository.save(user);
-
-		LocalDate birthDate = LocalDate.now();
-		String nickname = "nickname";
-		String bio = "bio";
-		String profileImageUrl = "profileImageUrl";
-		String backgroundImageUrl = "backgroundImageUrl";
-		ProfileAddRequest request = new ProfileAddRequest(birthDate, nickname, bio, profileImageUrl,
-			backgroundImageUrl);
-
-		// when & then
-		assertThatExceptionOfType(BadRequestException.class)
-			.isThrownBy(() -> sut.addProfile(savedUser.getId(), request));
-	}
-
-	@Test
 	void profileId_로_profile_상세_조회_성공() {
 		//given
 		User user = createUser("hello@world.com", "password");

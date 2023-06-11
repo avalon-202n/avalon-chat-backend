@@ -39,32 +39,6 @@ public class ProfileServiceImpl implements ProfileService {
 	private final FriendRepository friendRepository;
 	private final PhoneNumberAuthCodeStore phoneNumberKeyValueStore;
 
-	@Transactional
-	@Override
-	public ProfileAddResponse addProfile(long profileId, ProfileAddRequest request) {
-		// 1. find user
-		Profile profile = profileRepository.findById(profileId)
-			.orElseThrow(() -> new NotFoundException("profile", profileId));
-		User findUser = profile.getUser();
-
-		// 2. check profile 생성 여부
-		if (findUser.getIsCreateProfileStatus()) {
-			throw new BadRequestException("profile-add-failed.already-create");
-		}
-
-		// 3. update profile
-		profile.update(
-			request.getBio(), request.getBirthDate(), request.getNickname()
-		);
-
-		// 4. create images & add to profile
-		profile.addProfileImage(request.getProfileImageUrl());
-		profile.addBackgroundImage(request.getBackgroundImageUrl());
-
-		// 6. return
-		return ProfileAddResponse.from(profile);
-	}
-
 	@Override
 	public ProfileDetailedGetResponse getDetailedById(long profileId) {
 		Profile profile = profileRepository.findById(profileId)
