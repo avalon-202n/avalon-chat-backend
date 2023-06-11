@@ -11,16 +11,12 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.avalon.avalonchat.core.profile.application.ProfileService;
 import com.avalon.avalonchat.core.profile.dto.BackgroundImageDeleteRequest;
-import com.avalon.avalonchat.core.profile.dto.ProfileAddRequest;
-import com.avalon.avalonchat.core.profile.dto.ProfileAddResponse;
 import com.avalon.avalonchat.core.profile.dto.ProfileDetailedGetResponse;
 import com.avalon.avalonchat.core.profile.dto.ProfileImageDeleteRequest;
 import com.avalon.avalonchat.core.profile.dto.ProfileListGetResponse;
@@ -42,19 +38,6 @@ import lombok.extern.slf4j.Slf4j;
 public class ProfileController {
 
 	private final ProfileService service;
-
-	@Operation(
-		summary = "프로필 생성",
-		description = "헤더의 user_id 를 사용하여 user 레코드와 매핑된 profile 레코드가 생성됩니다."
-	)
-	@PostMapping
-	public ResponseEntity<ProfileAddResponse> addProfile(
-		@RequestHeader("profile-id") Long profileId,
-		@RequestBody ProfileAddRequest request
-	) {
-		ProfileAddResponse response = service.addProfile(profileId, request);
-		return created(response);
-	}
 
 	@Operation(
 		summary = "내 프로필 조회",

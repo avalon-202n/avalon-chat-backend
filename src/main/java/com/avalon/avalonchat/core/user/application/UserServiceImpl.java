@@ -35,26 +35,32 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public SignUpResponse signUp(SignUpRequest signUpRequest) {
 
-		// phoneNumber check authenticated
+		// 1. phoneNumber check authenticated
 		String phoneNumber = signUpRequest.getPhoneNumber().getValue();
-		boolean authenticated = !phoneNumberKeyValueStore.isAuthenticated(PhoneNumberKey.fromString(phoneNumber));
-		if (authenticated) {
+		boolean authenticated = phoneNumberKeyValueStore.isAuthenticated(PhoneNumberKey.fromString(phoneNumber));
+		if (!authenticated) {
 			throw new BadRequestException("phonenumber.no-auth", phoneNumber);
 		}
 
-		// create user from request
+		// 2. create user from request
 		User user = new User(
 			signUpRequest.getEmail(),
 			signUpRequest.getPassword()
 		);
 
-		// save user
+		// 3. check user exist
+		boolean exists = userRepository.existsByEmail(signUpRequest.getEmail());
+		if (exists) {
+			throw new BadRequestException("save-failed.already-exists");
+		}
+
+		// 3. save user
 		User savedUser = userRepository.save(user);
 
-		// save profile
+		// 4. save profile
 		profileService.unitProfile(savedUser, signUpRequest.getPhoneNumber());
 
-		// convert to response
+		// 5. convert to response
 		return SignUpResponse.ofEntity(savedUser);
 	}
 

@@ -12,6 +12,7 @@ import com.avalon.avalonchat.core.profile.domain.PhoneNumber;
 import com.avalon.avalonchat.core.user.application.keyvalue.AuthCodeValue;
 import com.avalon.avalonchat.core.user.application.keyvalue.PhoneNumberKey;
 import com.avalon.avalonchat.core.user.domain.Email;
+import com.avalon.avalonchat.core.user.domain.UserRepository;
 import com.avalon.avalonchat.core.user.dto.EmailDuplicatedCheckRequest;
 import com.avalon.avalonchat.core.user.dto.EmailDuplicatedCheckResponse;
 import com.avalon.avalonchat.core.user.dto.PhoneNumberAuthenticationCheckRequest;
@@ -26,6 +27,9 @@ class UserServiceImplTest {
 
 	@Autowired
 	private UserServiceImpl sut;
+
+	@Autowired
+	private UserRepository userRepository;
 
 	@Autowired
 	private PhoneNumberAuthCodeStore phoneNumberAuthKeyValueStore;
