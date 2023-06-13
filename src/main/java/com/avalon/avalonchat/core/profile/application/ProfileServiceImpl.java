@@ -14,8 +14,6 @@ import com.avalon.avalonchat.core.profile.domain.PhoneNumber;
 import com.avalon.avalonchat.core.profile.domain.Profile;
 import com.avalon.avalonchat.core.profile.domain.ProfileRepository;
 import com.avalon.avalonchat.core.profile.dto.BackgroundImageDeleteRequest;
-import com.avalon.avalonchat.core.profile.dto.ProfileAddRequest;
-import com.avalon.avalonchat.core.profile.dto.ProfileAddResponse;
 import com.avalon.avalonchat.core.profile.dto.ProfileDetailedGetResponse;
 import com.avalon.avalonchat.core.profile.dto.ProfileImageDeleteRequest;
 import com.avalon.avalonchat.core.profile.dto.ProfileListGetResponse;
@@ -24,7 +22,6 @@ import com.avalon.avalonchat.core.profile.dto.ProfileUpdateResponse;
 import com.avalon.avalonchat.core.user.application.PhoneNumberAuthCodeStore;
 import com.avalon.avalonchat.core.user.domain.User;
 import com.avalon.avalonchat.core.user.domain.UserRepository;
-import com.avalon.avalonchat.global.error.exception.BadRequestException;
 import com.avalon.avalonchat.global.error.exception.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
@@ -38,32 +35,6 @@ public class ProfileServiceImpl implements ProfileService {
 	private final UserRepository userRepository;
 	private final FriendRepository friendRepository;
 	private final PhoneNumberAuthCodeStore phoneNumberKeyValueStore;
-
-	@Transactional
-	@Override
-	public ProfileAddResponse addProfile(long profileId, ProfileAddRequest request) {
-		// 1. find user
-		Profile profile = profileRepository.findById(profileId)
-			.orElseThrow(() -> new NotFoundException("profile", profileId));
-		User findUser = profile.getUser();
-
-		// 2. check profile 생성 여부
-		if (findUser.getIsCreateProfileStatus()) {
-			throw new BadRequestException("profile-add-failed.already-create");
-		}
-
-		// 3. update profile
-		profile.update(
-			request.getBio(), request.getBirthDate(), request.getNickname()
-		);
-
-		// 4. create images & add to profile
-		profile.addProfileImage(request.getProfileImageUrl());
-		profile.addBackgroundImage(request.getBackgroundImageUrl());
-
-		// 6. return
-		return ProfileAddResponse.from(profile);
-	}
 
 	@Override
 	public ProfileDetailedGetResponse getDetailedById(long profileId) {

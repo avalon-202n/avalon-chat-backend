@@ -67,9 +67,7 @@ public class LoginServiceImpl implements LoginService {
 			findUser.getEmail(),
 			accessToken,
 			refreshToken,
-			profile.getNickname(),
-			profile.getBio(),
-			profile.getLatestProfileImageUrl()
+			findUser.getStatus()
 		);
 	}
 

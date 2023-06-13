@@ -8,8 +8,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOf
 import java.time.LocalDate;
 import java.util.List;
 
-import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,8 +18,6 @@ import com.avalon.avalonchat.core.friend.domain.FriendRepository;
 import com.avalon.avalonchat.core.profile.domain.Profile;
 import com.avalon.avalonchat.core.profile.domain.ProfileRepository;
 import com.avalon.avalonchat.core.profile.dto.BackgroundImageDeleteRequest;
-import com.avalon.avalonchat.core.profile.dto.ProfileAddRequest;
-import com.avalon.avalonchat.core.profile.dto.ProfileAddResponse;
 import com.avalon.avalonchat.core.profile.dto.ProfileDetailedGetResponse;
 import com.avalon.avalonchat.core.profile.dto.ProfileImageDeleteRequest;
 import com.avalon.avalonchat.core.profile.dto.ProfileListGetResponse;
@@ -29,13 +25,8 @@ import com.avalon.avalonchat.core.profile.dto.ProfileUpdateRequest;
 import com.avalon.avalonchat.core.profile.dto.ProfileUpdateResponse;
 import com.avalon.avalonchat.core.user.application.PhoneNumberAuthCodeStore;
 import com.avalon.avalonchat.core.user.application.UserService;
-import com.avalon.avalonchat.core.user.application.keyvalue.AuthCodeValue;
-import com.avalon.avalonchat.core.user.application.keyvalue.PhoneNumberKey;
-import com.avalon.avalonchat.core.user.domain.Email;
-import com.avalon.avalonchat.core.user.domain.Password;
 import com.avalon.avalonchat.core.user.domain.User;
 import com.avalon.avalonchat.core.user.domain.UserRepository;
-import com.avalon.avalonchat.global.error.exception.BadRequestException;
 import com.avalon.avalonchat.global.error.exception.NotFoundException;
 
 @Transactional
@@ -59,60 +50,6 @@ class ProfileServiceImplTest {
 
 	@Autowired
 	private FriendRepository friendRepository;
-
-	@Test
-	@Disabled("TODO - add mocking or add new NullMessageService for test")
-	void addProfile_성공() {
-		// given - ready for the request
-		User savedUser = userRepository.save(createUser("email@gmail.com", "password"));
-
-		// when
-		ProfileAddResponse response = sut.addProfile(
-			savedUser.getId(),
-			new ProfileAddRequest(
-				LocalDate.now(),
-				"nickname",
-				"bio",
-				"profileImageUrl",
-				"backgroundImageUrl"
-			)
-		);
-
-		// then
-		assertThat(response.getBirthDate()).isEqualTo(LocalDate.now());
-		assertThat(response.getNickname()).isEqualTo("nickname");
-		assertThat(response.getBio()).isEqualTo("bio");
-		assertThat(response.getProfileImageUrl()).isEqualTo("profileImageUrl");
-		assertThat(response.getBackgroundImageUrls().get(0)).isEqualTo("backgroundImageUrl");
-	}
-
-	@Test
-	void addProfile_핸드폰인증되지않은사용자_예외던지기_성공() {
-		// given - send user certificationCode with no checking
-		String certificationCode = RandomStringUtils.randomNumeric(6);
-		String toPhoneNumber = "010-5511-0625";
-
-		phoneNumberAuthKeyValueStore.save(
-			PhoneNumberKey.fromString(toPhoneNumber),
-			AuthCodeValue.ofUnauthenticated(certificationCode)
-		);
-
-		// given - ready for the request
-		User user = new User(Email.of("email@gmail.com"), Password.of("password"));
-		User savedUser = userRepository.save(user);
-
-		LocalDate birthDate = LocalDate.now();
-		String nickname = "nickname";
-		String bio = "bio";
-		String profileImageUrl = "profileImageUrl";
-		String backgroundImageUrl = "backgroundImageUrl";
-		ProfileAddRequest request = new ProfileAddRequest(birthDate, nickname, bio, profileImageUrl,
-			backgroundImageUrl);
-
-		// when & then
-		assertThatExceptionOfType(BadRequestException.class)
-			.isThrownBy(() -> sut.addProfile(savedUser.getId(), request));
-	}
 
 	@Test
 	void profileId_로_profile_상세_조회_성공() {

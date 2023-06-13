@@ -60,9 +60,12 @@ public class LoginServiceImplTest {
 		//then
 		assertThat(loginResponse.getEmail().getValue()).isEqualTo(loginRequest.getEmail().getValue());
 		assertThat(loginResponse.getAccessToken()).isNotNull();
-		assertThat(loginResponse.getBio()).isEqualTo("bio");
-		assertThat(loginResponse.getNickname()).isEqualTo("haha");
-		assertThat(loginResponse.getProfileImageUrl()).isNull();
+		assertThat(loginResponse.getUserStatus()).isNotNull();
+	}
+
+	@Test
+	void 프로필_생성로그인_성공_() {
+
 	}
 
 	@CsvSource({
