@@ -121,7 +121,7 @@ public final class DtoFixture {
 	}
 
 	public static FriendEmailAddRequest friendEmailAddRequest(String email) {
-		return new FriendEmailAddRequest(email);
+		return new FriendEmailAddRequest(Email.of(email));
 	}
 	/* Friend Package DTO End */
 }
