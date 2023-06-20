@@ -20,7 +20,6 @@ import com.avalon.avalonchat.core.friend.dto.FriendSynchronizeResponse;
 import com.avalon.avalonchat.core.profile.domain.PhoneNumber;
 import com.avalon.avalonchat.core.profile.domain.Profile;
 import com.avalon.avalonchat.core.profile.domain.ProfileRepository;
-import com.avalon.avalonchat.core.user.domain.Email;
 import com.avalon.avalonchat.global.error.exception.BadRequestException;
 import com.avalon.avalonchat.global.error.exception.NotFoundException;
 
@@ -67,7 +66,7 @@ public class FriendServiceImpl implements FriendService {
 		Profile myProfile = profileRepository.findById(profileId)
 			.orElseThrow(() -> new NotFoundException("myProfile", profileId));
 
-		Profile friendProfile = profileRepository.findProfileByEmail(Email.of(request.getEmail()))
+		Profile friendProfile = profileRepository.findProfileByEmail(request.getEmail())
 			.orElseThrow(() -> new NotFoundException("friendProfile", request.getEmail()));
 
 		// 2. check if already exists
