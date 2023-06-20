@@ -6,8 +6,10 @@ import org.springframework.data.redis.serializer.SerializationException;
 
 import com.avalon.avalonchat.global.error.exception.InputValidationException;
 
+import lombok.extern.slf4j.Slf4j;
 import lombok.NoArgsConstructor;
 
+@Slf4j
 @NoArgsConstructor
 public final class Preconditions {
 
@@ -24,6 +26,10 @@ public final class Preconditions {
 	}
 
 	public static void checkPatternMatches(Pattern pattern, String value) {
+		log.info("확인! checkPatternMatches -> patter : {}, value : {}", pattern, value);
+		if (value == null) {
+			throw new NullPointerException("hey, dumb! value is null");
+		}
 		if (!pattern.matcher(value).find()) {
 			throw new InputValidationException("pattern", "email");
 		}
